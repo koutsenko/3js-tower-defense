@@ -37,6 +37,7 @@ Do not commit secrets, local environment files, or third-party assets without co
 - Follow the GitHub Spec Kit convention of `spec.md`, `plan.md`, and `tasks.md` feature artifacts without installing or using the Spec Kit CLI framework.
 - Store each feature under `specs/<NNN-feature-name>/`.
 - Use `spec.md` for approved requirements and acceptance criteria, `plan.md` for the technical design derived from the specification, and `tasks.md` for the implementation checklist derived from both.
+- In each `spec.md`, identify functional requirements as `FR-XXX` and acceptance criteria as `AC-XXX`.
 - Treat each feature's approved `spec.md` as the source of truth for product behavior. Keep `plan.md` and `tasks.md` consistent with it.
 - Before design, read the feature's `spec.md`; before task decomposition, read `spec.md` and `plan.md`; before implementation, read all three feature artifacts.
 - The user controls transitions between requirements, design, task decomposition, and implementation. Do not advance to the next stage without explicit approval.
