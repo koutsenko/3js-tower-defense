@@ -6,8 +6,8 @@
 
 ## 1. Design goals
 
-Реализовать минимальный законченный Tower Defense core loop как browser
-application на TypeScript, Vite и Three.js. Игровые правила должны быть
+Предлагается реализовать минимальный законченный Tower Defense core loop как
+browser application на TypeScript, Vite и Three.js. Игровые правила должны быть
 детерминированными и исполняться без зависимости от WebGL или DOM, а rendering
 и UI должны только отображать состояние и отправлять команды в game runtime.
 
@@ -21,9 +21,61 @@ parameter `PROJECTILE_SPEED = 8` клеток в секунду. Значени�
 детерминированным balance test и не изменяет описанные в `FR-008` правила
 назначения цели и нанесения урона.
 
-## 2. Technology and project structure
+## 2. Architecture overview
 
-### 2.1 Toolchain
+### 2.1 Runtime flow
+
+`GameRuntime` является единственным владельцем изменяемого gameplay state.
+Browser input передаётся в runtime как команды, а presentation получает только
+readonly snapshot и transient events. Three.js objects и DOM elements не входят
+в authoritative state.
+
+```text
+Mouse input ──> UI adapter ──> dispatch(command) ──> GameRuntime
+                                                     │
+requestAnimationFrame ──> application loop ──> advance(fixedStep)
+                                                     │
+                                  ┌──────────────────┴───────────────┐
+                                  │                                  │
+                           readonly snapshot                  transient events
+                                  │                                  │
+                           ┌──────┴──────┐                    visual feedback
+                           │             │
+                     Three.js scene   HTML/CSS HUD
+```
+
+`dispatch` синхронно проверяет и применяет одну command. Animation loop может
+выполнить от нуля до нескольких fixed simulation steps перед очередным render,
+после чего renderer и HUD получают актуальный snapshot. Events дополняют
+snapshot только одноразовыми visual cues и не являются источником gameplay
+данных.
+
+| Component | Responsibility | Must not own |
+|---|---|---|
+| Application composition root | Создание компонентов, browser clock и порядок вызовов | Gameplay rules |
+| `GameRuntime` | Commands, authoritative state, simulation и events | DOM и Three.js objects |
+| `LevelConfig` / `GameConfig` | Level geometry и balance parameters | Mutable session state |
+| Three.js renderer | Проекция snapshot в scene и world-space feedback | Gameplay decisions |
+| DOM UI | HUD, controls и presentation messages | Authoritative counters |
+
+### 2.2 Key design decisions
+
+Статус `Proposed` означает, что решение входит в текущий draft и станет
+`Accepted` только после явного утверждения всего technical design.
+
+| Question | Considered alternatives | Proposed decision | Rationale | Status |
+|---|---|---|---|---|
+| Toolchain | Vite; no-build; Webpack | TypeScript, Vite and Three.js | Простой development workflow, production build и стандартные ES module imports | Proposed |
+| Simulation clock | Variable delta; fixed timestep; hybrid | Fixed `1/60 s` gameplay steps with frame-driven rendering | Детерминированные timing rules и tests без привязки к FPS | Proposed |
+| Buildable cells | Заданные площадки; все клетки вне route | Все незанятые клетки вне route | Больше вариантов размещения при простом и видимом правиле | Proposed |
+| Visual direction | Placeholder geometry; procedural low-poly; external assets | Procedural low-poly из Three.js primitives | Читаемый игровой визуал без asset pipeline | Proposed |
+| HUD and final state | Three.js UI; HTML/CSS; hybrid | HTML/CSS overlay, world-space feedback в Three.js | Чёткий responsive text при сохранении привязанных к миру индикаторов | Proposed |
+| Presentation synchronization | Только events; только snapshots; snapshots plus events | Snapshot для состояния, events для одноразовых эффектов | Восстановимое представление без потери shot, hit и session-end cues | Proposed |
+| UI language | Russian; English; localization layer | English без localization layer | Один согласованный набор labels при localization вне scope | Proposed |
+
+## 3. Technology and project structure
+
+### 3.1 Toolchain
 
 - TypeScript с ES modules и strict type checking.
 - Vite для development server и production build.
@@ -42,7 +94,7 @@ parameter `PROJECTILE_SPEED = 8` клеток в секунду. Значени�
 Сгенерированный npm lockfile хранится в repository. `node_modules/` и `dist/`
 игнорируются.
 
-### 2.2 Modules and dependency direction
+### 3.2 Modules and dependency direction
 
 Runtime code размещается под `src/` и разделяется по ответственности:
 
@@ -59,9 +111,9 @@ src/
 `game`, но game runtime не вызывает presentation code. Application composition
 root создаёт runtime, renderer и UI, затем связывает их в animation loop.
 
-## 3. Level and balance configuration
+## 4. Level and balance configuration
 
-### 3.1 Coordinates and route
+### 4.1 Coordinates and route
 
 Уровень задаётся data-only `LevelConfig`:
 
@@ -85,7 +137,7 @@ objects не добавляют скрытых ограничений на ст�
 по segments. На повороте остаток пройденной за tick дистанции переносится на
 следующий segment, поэтому скорость остаётся равной одной клетке в секунду.
 
-### 3.2 Balance parameters
+### 4.2 Balance parameters
 
 Все правила хранятся в одном readonly `GameConfig`, отдельно от rendering:
 
@@ -108,13 +160,16 @@ objects не добавляют скрытых ограничений на ст�
 текущей interpolated monster position. Точка на границе `distance <= 3`
 считается находящейся в радиусе.
 
-Расстановка башен на `(6, 3)` и `(5, 5)` является эталонным balance fixture для
-`FR-016` и `AC-013`. При неизменных config values она должна завершать волну
-`Victory` без дальнейшего строительства. Расстановка не показывается игроку.
+Расстановка башен на `(6, 3)` и `(5, 5)` является initial candidate для
+balance fixture `FR-016` и `AC-013`. Она считается подтверждённой только после
+того, как deterministic simulation test завершит волну состоянием `Victory`
+без дальнейшего строительства. Если candidate не проходит test, level route,
+design balance parameters или fixture должны быть пересмотрены в этом document
+без ослабления `FR-016`. Расстановка не показывается игроку.
 
-## 4. Game model and public interfaces
+## 5. Game model and public interfaces
 
-### 4.1 State
+### 5.1 State
 
 `GameState` содержит только сериализуемые gameplay data:
 
@@ -149,7 +204,7 @@ Tower хранит cell, `nextShotAt` и id. Monster хранит `spawnIndex`, 
 position. Presentation-specific mesh, color, tooltip и animation data в
 `GameState` не входят.
 
-### 4.2 Commands and results
+### 5.2 Commands and results
 
 UI взаимодействует с runtime только командами:
 
@@ -191,9 +246,9 @@ interface GameRuntime {
 и session end. События используются только для visual feedback; authoritative
 HUD values и scene entities всегда берутся из snapshot.
 
-## 5. Deterministic simulation
+## 6. Deterministic simulation
 
-### 5.1 Clock
+### 6.1 Clock
 
 Gameplay обновляется fixed timestep `1/60 s`. Animation loop накапливает
 browser frame time и вызывает `advance(1 / 60)` необходимое число раз, затем
@@ -205,29 +260,29 @@ Renderer может интерполировать visual positions между �
 snapshot, но interpolation не влияет на range, targeting, collision или event
 timing.
 
-### 5.2 Tick order
+### 6.2 Tick order
 
 Каждый active simulation tick выполняет системы в фиксированном порядке:
 
-1. применить queued commands;
-2. создать всех monsters, срок spawn которых наступил;
-3. переместить живых monsters и разрешить достижение exit в порядке
+1. создать всех monsters, срок spawn которых наступил;
+2. переместить живых monsters и разрешить достижение exit в порядке
    `spawnIndex`;
-4. немедленно установить `Defeat`, если base HP достиг 0, и прекратить tick;
-5. для каждой готовой башни выбрать target и создать projectile;
-6. переместить projectiles, разрешить hits, deaths и rewards;
-7. установить `Victory`, если все 10 monsters resolved и base HP выше 0.
+3. немедленно установить `Defeat`, если base HP достиг 0, и прекратить tick;
+4. для каждой готовой башни выбрать target и создать projectile;
+5. переместить projectiles, разрешить hits, deaths и rewards;
+6. установить `Victory`, если все 10 monsters resolved и base HP выше 0.
 
-Первый monster создаётся в tick обработки `StartWave`. Готовая башня может
-выпустить в него projectile в том же tick. Построенная во время волны башня
-также участвует в targeting в tick успешной покупки (`FR-007`, `FR-011`).
+Первый monster создаётся в первом simulation tick после синхронной обработки
+`StartWave`. Готовая башня может выпустить в него projectile в том же tick.
+Построенная во время волны башня участвует в targeting начиная с первого
+simulation tick после успешной покупки (`FR-007`, `FR-011`).
 
 Если monster достигает exit в том же tick, в котором projectile мог бы в него
 попасть, exit разрешается первым: monster считается escaped, а назначенный ему
 projectile удаляется без эффекта. При достижении `Defeat` никакие последующие
 системы этого tick не выполняются.
 
-### 5.3 Targeting and projectiles
+### 6.3 Targeting and projectiles
 
 Башня, для которой `simulationTime >= nextShotAt`, выбирает живого monster в
 Euclidean range с максимальным `routeProgress`. При равном progress выбирается
@@ -245,7 +300,7 @@ projectiles удаляются без retargeting, damage, reward или ины�
 effects. Kill transition с HP выше нуля до 0 выполняется ровно один раз и
 атомарно обновляет `killedCount`, `remainingCount` и coins (`FR-008`, `FR-009`).
 
-### 5.4 Session completion and restart
+### 6.4 Session completion and restart
 
 `Defeat` устанавливается сразу при переходе base HP к 0. `Victory`
 устанавливается после разрешения десятого monster при положительном base HP.
@@ -257,9 +312,9 @@ final overlay, но gameplay state больше не изменяется.
 accumulator, events и presentation-only notifications. Renderer удаляет все
 entity objects, которых нет в новом snapshot (`FR-015`, `AC-012`).
 
-## 6. Rendering, input and UI
+## 7. Rendering, input and UI
 
-### 6.1 Three.js scene
+### 7.1 Three.js scene
 
 Scene использует только процедурную low-poly geometry и материалы:
 
@@ -281,7 +336,7 @@ frustum пересчитывается при resize по projected bounds вс�
 при viewport `1280×720` camera fit должен одновременно показывать весь level и
 активные entities (`AC-015`, `NFR-001`).
 
-### 6.2 Mouse input and placement feedback
+### 7.2 Mouse input and placement feedback
 
 Raycaster пересекает ground plane и преобразует hit point в `GridCell`. При
 hover UI вызывает `validateBuild`:
@@ -292,11 +347,11 @@ hover UI вызывает `validateBuild`:
 - при уходе cursor за grid highlight и hint скрываются.
 
 Клик по допустимой клетке отправляет `BuildTower`. Клик по недопустимой клетке
-показывает English toast с returned rejection reason на 2.5 s. Hint и toast —
-presentation state, поэтому их изменение не нарушает требование об отсутствии
-изменений игрового состояния при отказе (`FR-003`, `AC-003`).
+показывает кратковременный English toast с returned rejection reason. Hint и
+toast — presentation state, поэтому их изменение не нарушает требование об
+отсутствии изменений игрового состояния при отказе (`FR-003`, `AC-003`).
 
-### 6.3 HUD and final overlay
+### 7.3 HUD and final overlay
 
 HTML/CSS HUD расположен в верхней полосе и остаётся видимым одновременно с
 canvas. Он показывает English labels:
@@ -318,9 +373,9 @@ Final overlay показывает `Victory` либо `Defeat`, `Killed`, `Escap
 terminal session нельзя было изменить иначе чем через `Restart` (`FR-013`,
 `FR-014`). Система локализации не создаётся.
 
-## 7. Verification strategy
+## 8. Verification strategy
 
-### 7.1 Automated tests
+### 8.1 Automated tests
 
 Gameplay tests используют config и runtime напрямую, без browser и WebGL:
 
@@ -338,8 +393,9 @@ Gameplay tests используют config и runtime напрямую, без b
   (`AC-010`, `AC-011`);
 - full session reset including entities, counters, timer and identifiers
   (`AC-012`);
-- two towers at `(6, 3)` and `(5, 5)`, no later purchases, ending in `Victory`
-  (`AC-013`);
+- initial balance candidate with towers at `(6, 3)` and `(5, 5)`, no later
+  purchases, expected to end in `Victory`; failure requires design balance
+  revision rather than acceptance of the implementation (`AC-013`);
 - derived remaining count includes unspawned monsters (`AC-014`).
 
 UI/presenter tests в DOM environment проверяют HUD values, Start disabled
@@ -347,7 +403,7 @@ states, rejection text, terminal statistics и Restart dispatch. Rendering
 logic проверяется на корректное создание и удаление scene objects по snapshot;
 pixel-perfect output не входит в automated acceptance.
 
-### 7.2 Manual browser acceptance
+### 8.2 Manual browser acceptance
 
 Перед завершением feature обязательна проверка в desktop browser при
 `1280×720`:
@@ -363,7 +419,7 @@ pixel-perfect output не входит в automated acceptance.
 Verification gate для implementation: `npm test`, `npm run lint`,
 `npm run build` и описанная manual browser проверка.
 
-## 8. Requirement coverage
+## 9. Requirement coverage
 
 | Design area | Requirements and acceptance criteria |
 |---|---|
@@ -375,7 +431,11 @@ Verification gate для implementation: `npm test`, `npm run lint`,
 | HUD and final presentation | `FR-012`, `FR-014`; `AC-010`, `AC-011`, `AC-014` |
 | Two-tower balance fixture | `FR-016`; `AC-013` |
 
-## 9. Approved assumptions and scope boundaries
+## 10. Design assumptions and scope boundaries
+
+Если assumption ниже не следует непосредственно из approved specification, в
+этом draft оно считается proposed design decision, а не ранее полученным
+product approval.
 
 - UI использует только English text; localization остаётся out of scope.
 - Все клетки grid вне route являются buildable; hidden blockers отсутствуют.
