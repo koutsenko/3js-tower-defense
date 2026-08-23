@@ -31,3 +31,18 @@ The repository has no commit history from which to infer conventions. Use concis
 ## Security & Configuration
 
 Do not commit secrets, local environment files, or third-party assets without compatible licenses. Provide safe defaults in `.env.example` whenever configuration is introduced.
+
+## Specification-Driven Development
+
+- Treat approved files under `docs/specs/` as the source of truth for product behavior.
+- Do not resolve ambiguous requirements silently in implementation; stop and ask.
+- Update and approve the specification before changing documented behavior.
+- Reference requirement and acceptance-criterion IDs in implementation tasks and tests.
+- Keep game rules independent from Three.js rendering where practical.
+- Require manual browser verification for visual and interactive behavior.
+
+## Language
+
+- Repository instructions, code identifiers, filenames, and APIs use English.
+- Specifications use Russian prose with English technical identifiers.
+- Do not translate approved requirements in ways that change their meaning.
