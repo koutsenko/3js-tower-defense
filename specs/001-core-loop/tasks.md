@@ -56,7 +56,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-002 — Реализовать level и balance configuration
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-002`–`FR-010`, `FR-016`; поддерживает `AC-002`–`AC-009`,
 `AC-013`, `AC-015`.
