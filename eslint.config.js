@@ -63,6 +63,13 @@ export default tseslint.config(
                 'Gameplay and config modules must remain renderer-independent.',
             },
           ],
+          patterns: [
+            {
+              group: ['three/*'],
+              message:
+                'Gameplay and config modules must remain renderer-independent.',
+            },
+          ],
         },
       ],
     },
