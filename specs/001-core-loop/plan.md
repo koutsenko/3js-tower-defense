@@ -1,7 +1,8 @@
 # Technical Design: 001 Core Loop
 
 **Feature:** `001-core-loop`  
-**Status:** Draft  
+**Status:** Approved
+
 **Source of truth:** `spec.md`
 
 ## 1. Design goals
@@ -12,8 +13,9 @@ browser application на TypeScript, Vite и Three.js. Игровые прави
 и UI должны только отображать состояние и отправлять команды в game runtime.
 
 Design сохраняет границы утверждённой specification: один уровень, один тип
-башни, один тип монстра и одна конечная волна. Дополнительные gameplay-механики,
-camera controls, external assets и UI framework не вводятся.
+башни, один тип монстра, 20-секундная подготовка после запуска игры и одна
+конечная волна. Дополнительные gameplay-механики, camera controls, external
+assets и UI framework не вводятся.
 
 Specification не задаёт скорость видимого снаряда, хотя она влияет на
 разрешение атак и баланс `AC-013`. Design фиксирует её как технический balance
@@ -60,18 +62,18 @@ snapshot только одноразовыми visual cues и не являют�
 
 ### 2.2 Key design decisions
 
-Статус `Proposed` означает, что решение входит в текущий draft и станет
-`Accepted` только после явного утверждения всего technical design.
+Статус `Accepted` означает, что решение утверждено как часть этого technical
+design.
 
-| Question | Considered alternatives | Proposed decision | Rationale | Status |
+| Question | Considered alternatives | Decision | Rationale | Status |
 |---|---|---|---|---|
-| Toolchain | Vite; no-build; Webpack | TypeScript, Vite and Three.js | Простой development workflow, production build и стандартные ES module imports | Proposed |
-| Simulation clock | Variable delta; fixed timestep; hybrid | Fixed `1/60 s` gameplay steps with frame-driven rendering | Детерминированные timing rules и tests без привязки к FPS | Proposed |
-| Buildable cells | Заданные площадки; все клетки вне route | Все незанятые клетки вне route | Больше вариантов размещения при простом и видимом правиле | Proposed |
-| Visual direction | Placeholder geometry; procedural low-poly; external assets | Procedural low-poly из Three.js primitives | Читаемый игровой визуал без asset pipeline | Proposed |
-| HUD and final state | Three.js UI; HTML/CSS; hybrid | HTML/CSS overlay, world-space feedback в Three.js | Чёткий responsive text при сохранении привязанных к миру индикаторов | Proposed |
-| Presentation synchronization | Только events; только snapshots; snapshots plus events | Snapshot для состояния, events для одноразовых эффектов | Восстановимое представление без потери shot, hit и session-end cues | Proposed |
-| UI language | Russian; English; localization layer | English без localization layer | Один согласованный набор labels при localization вне scope | Proposed |
+| Toolchain | Vite; no-build; Webpack | TypeScript, Vite and Three.js | Простой development workflow, production build и стандартные ES module imports | Accepted |
+| Simulation clock | Variable delta; fixed timestep; hybrid | Fixed `1/60 s` gameplay steps with frame-driven rendering | Детерминированные timing rules и tests без привязки к FPS | Accepted |
+| Buildable cells | Заданные площадки; все клетки вне route | Все незанятые клетки вне route | Больше вариантов размещения при простом и видимом правиле | Accepted |
+| Visual direction | Functional placeholder geometry; defined art style; external assets | Functional placeholder geometry из простых Three.js primitives | Только различимость gameplay elements без определения финального art style | Accepted |
+| HUD and final state | Three.js UI; HTML/CSS; hybrid | HTML/CSS overlay, world-space feedback в Three.js | Чёткий responsive text при сохранении привязанных к миру индикаторов | Accepted |
+| Presentation synchronization | Только events; только snapshots; snapshots plus events | Snapshot для состояния, events для одноразовых эффектов | Восстановимое представление без потери shot, hit и session-end cues | Accepted |
+| UI language | Russian; English; localization layer | English без localization layer | Один согласованный набор labels при localization вне scope | Accepted |
 
 ## 3. Technology and project structure
 
@@ -79,7 +81,7 @@ snapshot только одноразовыми visual cues и не являют�
 
 - TypeScript с ES modules и strict type checking.
 - Vite для development server и production build.
-- Three.js для сцены, камеры, picking и процедурной low-poly graphics.
+- Three.js для сцены, камеры, picking и functional placeholder geometry.
 - Vanilla TypeScript и HTML/CSS для HUD и controls.
 - Vitest для unit и integration tests без WebGL.
 - ESLint и Prettier для static analysis и formatting checks.
@@ -145,6 +147,7 @@ objects не добавляют скрытых ограничений на ст�
 |---|---:|---|
 | `STARTING_COINS` | 100 | `FR-004` |
 | `TOWER_COST` | 50 | `FR-004` |
+| `PREPARATION_DURATION` | 20 s | `FR-005` |
 | `STARTING_BASE_HP` | 3 | `FR-010` |
 | `WAVE_SIZE` | 10 | `FR-006` |
 | `SPAWN_INTERVAL` | 2 s | `FR-006` |
@@ -175,6 +178,7 @@ design balance parameters или fixture должны быть пересмот�
 
 ```ts
 type SessionStatus =
+  | 'Ready'
   | 'Preparation'
   | 'WaveActive'
   | 'Victory'
@@ -183,6 +187,7 @@ type SessionStatus =
 interface GameState {
   status: SessionStatus;
   simulationTime: number;
+  phaseStartedAt: number;
   coins: number;
   baseHp: number;
   spawnedCount: number;
@@ -199,6 +204,13 @@ Entity identifiers — monotonically increasing integers, локальные д�
 `WAVE_SIZE - killedCount - escapedCount`; поэтому оно включает ещё не
 появившихся монстров (`FR-012`).
 
+В `Ready` таймер подготовки не запущен. Успешный `StartGame` устанавливает
+`Preparation` и `phaseStartedAt = simulationTime`. Во время `Preparation`
+оставшееся время является derived value
+`max(0, PREPARATION_DURATION - (simulationTime - phaseStartedAt))`. При
+автоматическом переходе в `WaveActive` значение `phaseStartedAt` фиксирует
+точный момент начала волны и становится базой для spawn schedule.
+
 Tower хранит cell, `nextShotAt` и id. Monster хранит `spawnIndex`, HP,
 `routeProgress` и id. Projectile хранит id, `targetId` и текущую grid/world
 position. Presentation-specific mesh, color, tooltip и animation data в
@@ -211,11 +223,12 @@ UI взаимодействует с runtime только командами:
 ```ts
 type GameCommand =
   | { type: 'BuildTower'; cell: GridCell }
-  | { type: 'StartWave' }
+  | { type: 'StartGame' }
   | { type: 'Restart' };
 
 type BuildRejectionCode =
   | 'SESSION_ENDED'
+  | 'GAME_NOT_STARTED'
   | 'OUT_OF_BOUNDS'
   | 'PATH_CELL'
   | 'OCCUPIED'
@@ -227,9 +240,13 @@ state. Отклонённая `BuildTower` возвращает rejection code �
 gameplay field. Проверки выполняются в указанном выше порядке, чтобы при
 совпадении условий причина была детерминированной.
 
-`StartWave` допустима только в `Preparation` при наличии хотя бы одной башни.
-После запуска и после завершения session повторный `StartWave` отклоняется.
-UI отражает это через disabled state кнопки `Start` (`FR-005`).
+`BuildTower` допустима только в `Preparation` и `WaveActive`. В `Ready` она
+отклоняется с `GAME_NOT_STARTED`; terminal states по-прежнему дают
+`SESSION_ENDED`. `StartGame` допустима только в `Ready` и не требует наличия
+башни. Она переводит session в `Preparation`, запускает 20-секундный таймер и
+сразу становится недоступной. После запуска и после завершения session
+повторная `StartGame` отклоняется. UI отражает это через enabled state кнопки
+`Start` только в `Ready` (`FR-004`, `FR-005`).
 
 Публичная runtime boundary:
 
@@ -242,9 +259,10 @@ interface GameRuntime {
 }
 ```
 
-`GameEvent` сообщает presentation layer о build, spawn, shot, hit, kill, escape
-и session end. События используются только для visual feedback; authoritative
-HUD values и scene entities всегда берутся из snapshot.
+`GameEvent` сообщает presentation layer о game start, automatic wave start,
+build, spawn, shot, hit, kill, escape и session end. События используются
+только для visual feedback; authoritative HUD values и scene entities всегда
+берутся из snapshot.
 
 ## 6. Deterministic simulation
 
@@ -256,26 +274,42 @@ browser frame time и вызывает `advance(1 / 60)` необходимое 
 чтобы background tab или debugger stop не вызывали spiral of death. Управляемая
 игроком pause или speed control не создаётся.
 
+Таймер подготовки использует тот же gameplay clock, а не отдельный DOM timer.
+Поэтому переход к волне воспроизводим в headless tests и не зависит от FPS.
+Состояния `Ready`, `Victory` и `Defeat` не продвигают phase lifecycle; countdown
+начинается только после успешной `StartGame`.
+
 Renderer может интерполировать visual positions между предыдущим и текущим
 snapshot, но interpolation не влияет на range, targeting, collision или event
 timing.
 
 ### 6.2 Tick order
 
-Каждый active simulation tick выполняет системы в фиксированном порядке:
+Каждый simulation tick выполняет lifecycle и gameplay systems в фиксированном
+порядке:
 
-1. создать всех monsters, срок spawn которых наступил;
-2. переместить живых monsters и разрешить достижение exit в порядке
+1. в `Ready` или terminal state не выполнять phase и gameplay systems;
+2. в `Preparation` обновить derived countdown; пока с момента `StartGame` не
+   прошло 20 секунд, не выполнять wave systems и завершить tick;
+3. на границе 20 секунд автоматически установить `WaveActive`, зафиксировать
+   время начала волны и создать `wave-start` event;
+4. создать всех monsters, срок spawn которых наступил относительно времени
+   начала волны;
+5. переместить живых monsters и разрешить достижение exit в порядке
    `spawnIndex`;
-3. немедленно установить `Defeat`, если base HP достиг 0, и прекратить tick;
-4. для каждой готовой башни выбрать target и создать projectile;
-5. переместить projectiles, разрешить hits, deaths и rewards;
-6. установить `Victory`, если все 10 monsters resolved и base HP выше 0.
+6. немедленно установить `Defeat`, если base HP достиг 0, и прекратить tick;
+7. для каждой готовой башни выбрать target и создать projectile;
+8. переместить projectiles, разрешить hits, deaths и rewards;
+9. установить `Victory`, если все 10 monsters resolved и base HP выше 0.
 
-Первый monster создаётся в первом simulation tick после синхронной обработки
-`StartWave`. Готовая башня может выпустить в него projectile в том же tick.
-Построенная во время волны башня участвует в targeting начиная с первого
-simulation tick после успешной покупки (`FR-007`, `FR-011`).
+Успешная `StartGame` только начинает `Preparation` и не создаёт monster. Первый
+monster создаётся в том же simulation tick, в котором истекают 20 секунд и
+состояние автоматически становится `WaveActive`. Следующие monsters имеют
+сроки появления `phaseStartedAt + 2`, `+4`, …, `+18` секунд, поэтому preparation
+не сдвигает двухсекундные интервалы внутри волны. Готовая башня может выпустить
+projectile в первого monster в том же tick. Построенная во время волны башня
+участвует в targeting начиная с первого simulation tick после успешной покупки
+(`FR-005`–`FR-007`, `FR-011`).
 
 Если monster достигает exit в том же tick, в котором projectile мог бы в него
 попасть, exit разрешается первым: monster считается escaped, а назначенный ему
@@ -310,20 +344,31 @@ final overlay, но gameplay state больше не изменяется.
 
 `Restart` заменяет state результатом `createInitialState()`, очищает runtime
 accumulator, events и presentation-only notifications. Renderer удаляет все
-entity objects, которых нет в новом snapshot (`FR-015`, `AC-012`).
+entity objects, которых нет в новом snapshot. Новый state имеет status `Ready`,
+доступную `StartGame`, незапущенный preparation timer и запрещённое до старта
+строительство (`FR-015`, `AC-012`).
 
 ## 7. Rendering, input and UI
 
 ### 7.1 Three.js scene
 
-Scene использует только процедурную low-poly geometry и материалы:
+Scene использует functional placeholder geometry из простых Three.js
+primitives:
 
-- слегка чередующиеся grass tiles для grid;
-- контрастные road tiles для route;
-- визуально разные entrance и exit/base markers;
-- один читаемый tower mesh и один monster mesh;
-- emissive sphere projectile;
+- простые плоские cells для границ level;
+- контрастные cells для route;
+- простые и визуально различимые entrance и exit/base markers;
+- различимые primitive meshes для tower и monster;
+- простой primitive для projectile;
 - camera-facing HP bar над каждым живым monster.
+
+Форма, цвет и движение placeholders служат только читаемости уровня, пути,
+башен, монстров, снарядов, входа и выхода и обязательной gameplay feedback.
+Renderer не добавляет фэнтезийные, декоративные или стилистически определяющие
+детали и не задаёт финальный art style. Визуальное направление, production
+models, textures и полноценные animations будут определяться позднее за
+пределами `001-core-loop`; движение monsters и projectiles остаётся только
+функциональным отображением gameplay state.
 
 Renderer хранит отображение `entityId → Object3D` и на каждом frame создаёт,
 обновляет или удаляет objects по snapshot. HP bar отражает отношение текущего
@@ -360,13 +405,17 @@ canvas. Он показывает English labels:
 - `Base HP`;
 - `Remaining`;
 - `Tower cost`;
-- `Wave`;
+- `Status`;
+- `Wave starts in` во время подготовки;
 - action `Start`.
 
 HUD обновляется после каждого command и simulation tick из current snapshot.
-Wave label показывает `Preparation` или `Wave active`; terminal result
-показывается отдельным centered overlay. `Start` disabled до первой башни и
-после первого запуска.
+Status label показывает `Ready`, `Preparation` или `Wave active`; terminal
+result показывается отдельным centered overlay. Сразу после `StartGame`
+preparation countdown показывает `20 s`, затем выводит округлённое вверх
+неотрицательное derived значение и исчезает при переходе в `WaveActive`. До
+`Start` он не отображается как активный. `Start` enabled только в `Ready` и
+disabled сразу после первого запуска независимо от числа башен.
 
 Final overlay показывает `Victory` либо `Defeat`, `Killed`, `Escaped`,
 `Coins remaining` и action `Restart`. Overlay перехватывает mouse input, чтобы
@@ -379,10 +428,12 @@ terminal session нельзя было изменить иначе чем чер
 
 Gameplay tests используют config и runtime напрямую, без browser и WebGL:
 
-- initial state, Start availability и successful build (`AC-001`, `AC-002`);
+- initial `Ready` state, enabled Start, blocked pre-start build и successful
+  build после запуска игры (`AC-001`–`AC-003`);
 - каждый build rejection и полная неизменность gameplay state (`AC-003`);
-- single-use Start, spawn at 0/2/…/18 seconds, route movement и wave size
-  (`AC-004`);
+- single-use `StartGame`, ровно 20 секунд `Preparation`, отсутствие monsters до
+  границы, automatic wave transition, spawn at 0/2/…/18 seconds относительно
+  начала волны, route movement и wave size (`AC-004`);
 - Euclidean range boundary, furthest-progress target, immediate first shot и
   exact one-second cooldown (`AC-005`);
 - homing after range exit, exact damage и cancellation for resolved targets
@@ -391,17 +442,20 @@ Gameplay tests используют config и runtime напрямую, без b
 - purchase and immediate attack from a new tower during active wave (`AC-009`);
 - immediate freeze on `Defeat` and correct `Victory` resolution
   (`AC-010`, `AC-011`);
-- full session reset including entities, counters, timer and identifiers
-  (`AC-012`);
-- initial balance candidate with towers at `(6, 3)` and `(5, 5)`, no later
-  purchases, expected to end in `Victory`; failure requires design balance
-  revision rather than acceptance of the implementation (`AC-013`);
-- derived remaining count includes unspawned monsters (`AC-014`).
+- full session reset including entities, counters, preparation timer,
+  identifiers, enabled Start и blocked build (`AC-012`);
+- initial balance candidate with towers at `(6, 3)` and `(5, 5)`, built during
+  preparation with no later purchases, expected to end in `Victory`; failure
+  requires design balance revision rather than acceptance of the implementation
+  (`AC-013`);
+- derived remaining count includes unspawned monsters; preparation countdown
+  starts at 20, never increases and reaches zero at automatic transition
+  (`AC-014`).
 
-UI/presenter tests в DOM environment проверяют HUD values, Start disabled
-states, rejection text, terminal statistics и Restart dispatch. Rendering
-logic проверяется на корректное создание и удаление scene objects по snapshot;
-pixel-perfect output не входит в automated acceptance.
+UI/presenter tests в DOM environment проверяют HUD values, Start enabled только
+в `Ready`, preparation countdown, rejection text, terminal statistics и Restart
+dispatch. Rendering logic проверяется на корректное создание и удаление scene
+objects по snapshot; pixel-perfect output не входит в automated acceptance.
 
 ### 8.2 Manual browser acceptance
 
@@ -410,8 +464,12 @@ pixel-perfect output не входит в automated acceptance.
 
 - весь route, entrance, exit и все buildable cells находятся в кадре;
 - hover feedback и каждая rejection reason читаемы;
+- до `Start` строительство недоступно, а само действие `Start` доступно без
+  предварительно построенной башни;
+- после `Start` виден 20-секундный countdown, башни можно строить, monsters не
+  появляются, а по истечении countdown волна начинается без дополнительного
+  действия;
 - towers, moving monsters, HP bars и in-flight projectiles видимы;
-- HUD и Start доступны до и во время wave;
 - строительство на заработанные coins работает во время wave;
 - `Victory` и `Defeat` полностью замораживают gameplay;
 - `Restart` визуально и логически возвращает initial state.
@@ -423,8 +481,8 @@ Verification gate для implementation: `npm test`, `npm run lint`,
 
 | Design area | Requirements and acceptance criteria |
 |---|---|
-| State, commands and lifecycle | `FR-001`, `FR-005`, `FR-013`–`FR-015`; `AC-001`, `AC-004`, `AC-010`–`AC-012` |
-| Level, building and camera | `FR-002`–`FR-004`, `NFR-001`; `AC-002`, `AC-003`, `AC-015` |
+| State, commands and lifecycle | `FR-001`, `FR-005`, `FR-013`–`FR-015`; `AC-001`, `AC-004`, `AC-010`–`AC-012`, `AC-014` |
+| Level, building and camera | `FR-002`–`FR-004`, `NFR-001`; `AC-001`–`AC-003`, `AC-015` |
 | Spawn and monster movement | `FR-006`; `AC-004`, `AC-014`, `AC-015` |
 | Targeting and projectiles | `FR-007`, `FR-008`; `AC-005`, `AC-006`, `AC-015` |
 | Economy and active-wave building | `FR-009`–`FR-011`; `AC-007`–`AC-009` |
@@ -433,14 +491,15 @@ Verification gate для implementation: `npm test`, `npm run lint`,
 
 ## 10. Design assumptions and scope boundaries
 
-Если assumption ниже не следует непосредственно из approved specification, в
-этом draft оно считается proposed design decision, а не ранее полученным
-product approval.
+Если assumption ниже не следует непосредственно из approved specification, оно
+считается design decision с указанным в разделе 2.2 статусом, а не отдельным
+product requirement.
 
 - UI использует только English text; localization остаётся out of scope.
 - Все клетки grid вне route являются buildable; hidden blockers отсутствуют.
 - Fixed camera не имеет pan, rotate или zoom controls.
-- External models, textures, sound и music не используются.
+- Финальное visual direction, production models, textures и полноценные
+  animations не определяются; sound и music не используются.
 - Projectile hit определяется достижением target position, без отдельного
   collision radius.
 - Background-tab catch-up ограничивается, но пользовательская pause mechanic не

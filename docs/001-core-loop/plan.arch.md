@@ -90,7 +90,7 @@ UI не вызывает gameplay operations напрямую, а создаёт
 
 ```ts
 { type: 'BuildTower', cell }
-{ type: 'StartWave' }
+{ type: 'StartGame' }
 { type: 'Restart' }
 ```
 
@@ -134,15 +134,26 @@ CQRS-inspired boundary.
 
 ```ts
 type SessionStatus =
+  | 'Ready'
   | 'Preparation'
   | 'WaveActive'
   | 'Victory'
   | 'Defeat';
 ```
 
-Допустимые команды и simulation behavior зависят от текущего состояния,
-переходы ограничены, а terminal states останавливают gameplay changes. Это
-конечный автомат — Finite State Machine.
+Основной переход состояний задаётся явно:
+
+```text
+Ready --StartGame--> Preparation --20 s elapsed--> WaveActive
+WaveActive --outcome--> Victory | Defeat
+Victory | Defeat --Restart--> Ready
+```
+
+`StartGame` является внешним trigger только для запуска игры. Переход из
+`Preparation` в `WaveActive` является внутренним timer-driven transition и не
+требует второй команды пользователя. Допустимые команды и simulation behavior
+зависят от текущего состояния, переходы ограничены, а terminal states
+останавливают gameplay changes. Это конечный автомат — Finite State Machine.
 
 Это пока не объектный GoF State Pattern: отдельные state objects отсутствуют,
 и runtime не делегирует им поведение.
@@ -172,6 +183,7 @@ Design использует:
 - simulation step `1/60 s`;
 - accumulator browser frame time;
 - от нуля до нескольких simulation steps на render frame;
+- preparation countdown и automatic wave transition на gameplay clock;
 - ограничение вклада одного frame значением `250 ms`;
 - visual interpolation между предыдущим и текущим snapshot;
 - защиту от `spiral of death`.
@@ -188,6 +200,7 @@ Design использует:
 
 - фиксированный timestep;
 - фиксированный порядок systems;
+- точную 20-секундную границу автоматического перехода к волне;
 - порядок обработки monsters по `spawnIndex`;
 - tie-breaker при одинаковом `routeProgress`;
 - порядок разрешения escape и projectile hit;
@@ -197,7 +210,8 @@ Design использует:
 
 ```text
 same initial state
-+ same command sequence
++ same command sequence at the same simulation ticks
++ same number of simulation ticks
 = same result
 ```
 
@@ -213,7 +227,8 @@ networking: network input log, rollback и state hashes не предусмот�
 Simulation tick разбит на упорядоченные фазы:
 
 ```text
-spawn
+preparation deadline and automatic wave activation
+-> spawn relative to wave start
 -> movement and escape
 -> defeat check
 -> targeting and firing
@@ -255,8 +270,8 @@ Presentation Model и unidirectional UI.
 Design разделяет два вида информации:
 
 - snapshot описывает, что истинно сейчас;
-- events описывают, что только что произошло: `shot`, `hit`, `kill`,
-  `session-end` и другие visual cues.
+- events описывают, что только что произошло: `game-start`, `wave-start`,
+  `shot`, `hit`, `kill`, `session-end` и другие visual cues.
 
 Events не являются источником gameplay data, поэтому это не Event Sourcing. При
 Event Sourcing состояние должно восстанавливаться из сохранённого event log.
@@ -274,10 +289,12 @@ transient event stream или notification events.
 
 ## 14. Minimal State / Derived Data
 
-`remainingCount` не хранится независимо, а вычисляется:
+`remainingCount` и оставшееся время подготовки не хранятся независимо, а
+вычисляются:
 
 ```ts
 WAVE_SIZE - killedCount - escapedCount
+max(0, PREPARATION_DURATION - (simulationTime - phaseStartedAt))
 ```
 
 Это minimal state / derived state: значения, которые можно однозначно получить
@@ -296,6 +313,7 @@ Level geometry и balance parameters вынесены в readonly `LevelConfig` 
 
 - правила получают параметры из конфигурации;
 - уровень описывается данными;
+- `PREPARATION_DURATION = 20 s` задаёт timing фазы независимо от UI;
 - balance можно тестировать и менять без изменения renderer;
 - design-time definitions отделены от session instances.
 
@@ -317,9 +335,11 @@ Gameplay tests запускают config и runtime напрямую, без bro
 
 ## 17. Executable Specification / Acceptance Tests
 
-Automated tests сформулированы как проверки `AC-001`–`AC-014`, а не как тесты
-конкретных методов или классов. Balance test, например, должен подтвердить
-победу с двумя стартовыми башнями.
+Automated tests сформулированы как проверки `AC-001`–`AC-015`, а не как тесты
+конкретных методов или классов. Lifecycle tests подтверждают, что `StartGame`
+запускает ровно 20 секунд подготовки и волна начинается автоматически; balance
+test должен подтвердить победу с двумя стартовыми башнями, построенными во
+время подготовки.
 
 Это сочетает:
 
@@ -352,9 +372,9 @@ requirement -> design area -> verification/test
 
 - рассматриваемый вопрос;
 - alternatives;
-- proposed decision;
+- decision;
 - rationale;
-- status `Proposed`.
+- status `Accepted`.
 
 Это формат, близкий к Architecture Decision Record, но несколько решений
 собраны в одном document вместо отдельных ADR files. Точное название — embedded
