@@ -233,6 +233,18 @@ type BuildRejectionCode =
   | 'PATH_CELL'
   | 'OCCUPIED'
   | 'INSUFFICIENT_FUNDS';
+
+type BuildValidation =
+  | { ok: true }
+  | { ok: false; code: BuildRejectionCode };
+
+type CommandRejectionCode =
+  | BuildRejectionCode
+  | 'INVALID_SESSION_STATE';
+
+type CommandResult =
+  | { ok: true }
+  | { ok: false; code: CommandRejectionCode };
 ```
 
 `dispatch(command)` возвращает typed result. Успешная команда атомарно изменяет
@@ -245,8 +257,12 @@ gameplay field. Проверки выполняются в указанном в
 `SESSION_ENDED`. `StartGame` допустима только в `Ready` и не требует наличия
 башни. Она переводит session в `Preparation`, запускает 20-секундный таймер и
 сразу становится недоступной. После запуска и после завершения session
-повторная `StartGame` отклоняется. UI отражает это через enabled state кнопки
-`Start` только в `Ready` (`FR-004`, `FR-005`).
+повторная `StartGame` отклоняется с `INVALID_SESSION_STATE`. `Restart` допустима
+только в `Victory` и `Defeat`; в остальных состояниях она также отклоняется с
+`INVALID_SESSION_STATE`. Любая команда, недопустимая в текущем состоянии, не
+изменяет gameplay state и не создаёт events. UI отражает контракт через enabled
+state кнопки `Start` только в `Ready` и доступность `Restart` только в terminal
+overlay (`FR-004`, `FR-005`, `FR-015`).
 
 Публичная runtime boundary:
 
