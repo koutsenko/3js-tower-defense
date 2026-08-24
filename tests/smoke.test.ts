@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { REVISION } from 'three';
 
 describe('project toolchain', () => {
   it('runs tests in the DOM environment', () => {
@@ -7,5 +8,9 @@ describe('project toolchain', () => {
     element.textContent = 'ready';
 
     expect(element.textContent).toBe('ready');
+  });
+
+  it('loads Three.js through the application toolchain', () => {
+    expect(Number(REVISION)).toBeGreaterThan(0);
   });
 });

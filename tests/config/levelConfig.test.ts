@@ -17,7 +17,13 @@ import {
   gameConfig,
 } from '../../src/config/gameConfig';
 import { levelConfig } from '../../src/config/levelConfig';
-import { getCellKey, isCellWithinGrid } from '../../src/game/grid';
+import {
+  createGridCell,
+  createRouteCells,
+  getCellKey,
+  getRouteLength,
+  isCellWithinGrid,
+} from '../../src/game/grid';
 
 describe('level configuration (FR-002, FR-003, AC-015)', () => {
   it('matches the approved grid, route, entrance, and exit', () => {
@@ -78,23 +84,7 @@ describe('level configuration (FR-002, FR-003, AC-015)', () => {
 
 describe('balance configuration (FR-004–FR-010, FR-016)', () => {
   it('matches every approved balance value', () => {
-    expect(gameConfig).toEqual({
-      STARTING_COINS: 100,
-      TOWER_COST: 50,
-      PREPARATION_DURATION: 20,
-      STARTING_BASE_HP: 3,
-      WAVE_SIZE: 10,
-      SPAWN_INTERVAL: 2,
-      MONSTER_HP: 100,
-      MONSTER_SPEED: 1,
-      TOWER_RANGE: 3,
-      SHOT_COOLDOWN: 1,
-      PROJECTILE_DAMAGE: 25,
-      KILL_REWARD: 10,
-      PROJECTILE_SPEED: 8,
-    });
-
-    expect([
+    const namedExports = {
       STARTING_COINS,
       TOWER_COST,
       PREPARATION_DURATION,
@@ -108,6 +98,71 @@ describe('balance configuration (FR-004–FR-010, FR-016)', () => {
       PROJECTILE_DAMAGE,
       KILL_REWARD,
       PROJECTILE_SPEED,
-    ]).toEqual([100, 50, 20, 3, 10, 2, 100, 1, 3, 1, 25, 10, 8]);
+    };
+
+    const approvedConfig = {
+      STARTING_COINS: 100,
+      TOWER_COST: 50,
+      PREPARATION_DURATION: 20,
+      STARTING_BASE_HP: 3,
+      WAVE_SIZE: 10,
+      SPAWN_INTERVAL: 2,
+      MONSTER_HP: 100,
+      MONSTER_SPEED: 1,
+      TOWER_RANGE: 3,
+      SHOT_COOLDOWN: 1,
+      PROJECTILE_DAMAGE: 25,
+      KILL_REWARD: 10,
+      PROJECTILE_SPEED: 8,
+    };
+
+    expect(gameConfig).toEqual(approvedConfig);
+    expect(namedExports).toEqual(approvedConfig);
+  });
+});
+
+describe('grid helpers', () => {
+  it('handles empty, single-cell, and reverse-direction routes', () => {
+    expect(createRouteCells([])).toEqual([]);
+    expect(createRouteCells([createGridCell(2, 3)])).toEqual([{ x: 2, y: 3 }]);
+
+    const reverseRoute = [createGridCell(2, 2), createGridCell(0, 2)];
+
+    expect(getRouteLength(reverseRoute)).toBe(2);
+    expect(createRouteCells(reverseRoute)).toEqual([
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
+      { x: 0, y: 2 },
+    ]);
+  });
+
+  it('rejects diagonal route segments', () => {
+    const diagonalRoute = [createGridCell(0, 0), createGridCell(1, 1)];
+
+    expect(() => getRouteLength(diagonalRoute)).toThrow(
+      'Route segments must be axis-aligned',
+    );
+    expect(() => createRouteCells(diagonalRoute)).toThrow(
+      'Route segments must be axis-aligned',
+    );
+  });
+
+  it('accepts only integer coordinates within grid bounds', () => {
+    expect(isCellWithinGrid(createGridCell(0, 0), 12, 8)).toBe(true);
+    expect(isCellWithinGrid(createGridCell(11, 7), 12, 8)).toBe(true);
+    expect(isCellWithinGrid(createGridCell(-1, 0), 12, 8)).toBe(false);
+    expect(isCellWithinGrid(createGridCell(12, 0), 12, 8)).toBe(false);
+    expect(isCellWithinGrid(createGridCell(0, 8), 12, 8)).toBe(false);
+    expect(isCellWithinGrid(createGridCell(0.5, 0), 12, 8)).toBe(false);
+  });
+
+  it('returns frozen route collections and cells', () => {
+    const cells = createRouteCells([
+      createGridCell(0, 0),
+      createGridCell(1, 0),
+    ]);
+
+    expect(Object.isFrozen(cells)).toBe(true);
+    expect(cells.every(Object.isFrozen)).toBe(true);
   });
 });
