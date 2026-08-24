@@ -10,6 +10,14 @@ export default tseslint.config(
   {
     files: ['**/*.ts'],
     extends: [...tseslint.configs.recommended],
+  },
+  {
+    files: [
+      'src/main.ts',
+      'src/app/**/*.ts',
+      'src/rendering/**/*.ts',
+      'src/ui/**/*.ts',
+    ],
     languageOptions: {
       globals: globals.browser,
     },
@@ -17,7 +25,46 @@ export default tseslint.config(
   {
     files: ['**/*.test.ts'],
     languageOptions: {
-      globals: globals.node,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+  {
+    files: ['src/config/**/*.ts', 'src/game/**/*.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        ...[
+          'window',
+          'document',
+          'navigator',
+          'performance',
+          'requestAnimationFrame',
+          'cancelAnimationFrame',
+          'setTimeout',
+          'clearTimeout',
+          'setInterval',
+          'clearInterval',
+        ].map((name) => ({
+          name,
+          message:
+            'Gameplay and config modules must remain independent of browser APIs and clocks.',
+        })),
+      ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'three',
+              message:
+                'Gameplay and config modules must remain renderer-independent.',
+            },
+          ],
+        },
+      ],
     },
   },
 );
