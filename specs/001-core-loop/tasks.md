@@ -504,9 +504,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-017 — Выполнить complete acceptance gate
 
-**Статус:** Pending.
-
-**Причина переоткрытия:** Human acceptance pending.
+**Статус:** Complete.
 
 **Связи:** все `FR-001`–`FR-016`, `AC-001`–`AC-015`, `NFR-001`.
 
@@ -533,7 +531,7 @@ assets.
 - `Victory` и `Defeat` замораживают gameplay, а `Restart` полностью возвращает
   initial state.
 
-**Verification evidence (2026-08-25):**
+**Verification evidence (2026-08-26):**
 
 - `npm test` — 18 test files, 96 tests passed;
 - `npm run lint` — ESLint и Prettier checks passed;
@@ -541,9 +539,51 @@ assets.
 - `npm run capture:acceptance` — browser flow при `1280×720` воспроизводит
   pre-start rejection, preparation с двумя towers, active wave, покупку на
   заработанные coins, `Victory`, `Restart` и отдельный `Defeat` flow;
-- screenshots сохранены в `artifacts/acceptance/` для предстоящей human
-  acceptance; ручное подтверждение visual и interactive behavior ещё не
-  выполнено.
+- screenshots сохранены в `artifacts/acceptance/`; human acceptance при
+  `1280×720` успешно выполнен пользователем 2026-08-26, включая visual и
+  interactive behavior.
+
+### 5.1 Итоговая acceptance matrix
+
+Новые tests и screenshots для итоговой проверки не создавались. Матрица
+ссылается на существующий automated suite, acceptance capture и подтверждённый
+пользователем human acceptance. Имена `.png` в колонке «Доказательство»
+относятся к `artifacts/acceptance/`, а capture выполняется существующим
+`artifacts/scripts/capture-core-loop-acceptance.mjs`.
+
+| ID | Способ проверки | Доказательство | Результат |
+|---|---|---|---|
+| `FR-001` | Unit, integration, capture, human | `tests/game/lifecycle.test.ts`, `tests/game/completion.test.ts`, `tests/app/browserApplication.test.ts`, `ready.png`, `victory.png`, `defeat.png` | Passed |
+| `FR-002` | Config/rendering tests, human | `tests/config/levelConfig.test.ts`, `tests/rendering/levelScene.test.ts`, `ready.png` | Passed |
+| `FR-003` | Unit/DOM tests, capture, human | `tests/game/building.test.ts`, `tests/ui/placement.test.ts`, `pre-start-rejection.png`, `wave-active.png` | Passed |
+| `FR-004` | Unit/DOM tests, capture, human | `tests/game/state.test.ts`, `tests/game/building.test.ts`, `tests/ui/placement.test.ts`, `preparation.png` | Passed |
+| `FR-005` | Unit/DOM tests, capture, human | `tests/game/lifecycle.test.ts`, `tests/ui/hud.test.ts`, `preparation.png`, `wave-active.png` | Passed |
+| `FR-006` | Unit/rendering tests, capture, human | `tests/game/monsters.test.ts`, `tests/rendering/reconciliation.test.ts`, `wave-active.png`, `wave-earned-build.png` | Passed |
+| `FR-007` | Unit tests, capture, human | `tests/game/targeting.test.ts`, `wave-active.png`, `wave-earned-build.png` | Passed |
+| `FR-008` | Unit/rendering tests, capture, human | `tests/game/projectiles.test.ts`, `tests/rendering/reconciliation.test.ts`, `tests/rendering/transientEffects.test.ts`, `wave-earned-build.png` | Passed |
+| `FR-009` | Unit test, capture, human | `tests/game/projectiles.test.ts`, `wave-earned-build.png`, `victory.png` | Passed |
+| `FR-010` | Unit tests, capture, human | `tests/game/monsters.test.ts`, `tests/game/completion.test.ts`, `defeat.png` | Passed |
+| `FR-011` | Unit/DOM tests, capture, human | `tests/game/building.test.ts`, `tests/game/targeting.test.ts`, `tests/ui/placement.test.ts`, `wave-earned-build.png` | Passed |
+| `FR-012` | Unit/DOM tests, capture, human | `tests/game/state.test.ts`, `tests/ui/hud.test.ts`, `ready.png`, `preparation.png`, `wave-active.png` | Passed |
+| `FR-013` | Unit/integration tests, capture, human | `tests/game/completion.test.ts`, `tests/app/fixedStepLoop.test.ts`, `victory.png`, `defeat.png` | Passed |
+| `FR-014` | DOM tests, capture, human | `tests/ui/hud.test.ts`, `victory.png`, `defeat.png` | Passed |
+| `FR-015` | Unit/DOM tests, capture, human | `tests/game/completion.test.ts`, `tests/ui/hud.test.ts`, `restarted.png` | Passed |
+| `FR-016` | Deterministic balance test, capture, human | `tests/game/balance.test.ts`, `preparation.png`, `victory.png` | Passed |
+| `AC-001` | Unit/DOM/integration tests, capture, human | `tests/game/state.test.ts`, `tests/ui/hud.test.ts`, `tests/app/browserApplication.test.ts`, `ready.png` | Passed |
+| `AC-002` | Unit/DOM tests, capture, human | `tests/game/building.test.ts`, `tests/ui/placement.test.ts`, `preparation.png` | Passed |
+| `AC-003` | Unit/DOM tests, capture, human | `tests/game/building.test.ts`, `tests/ui/placement.test.ts`, `pre-start-rejection.png`, `wave-active.png` | Passed |
+| `AC-004` | Timing/unit/DOM tests, capture, human | `tests/game/lifecycle.test.ts`, `tests/game/monsters.test.ts`, `tests/ui/hud.test.ts`, `preparation.png`, `wave-active.png` | Passed |
+| `AC-005` | Deterministic targeting tests, capture, human | `tests/game/targeting.test.ts`, `wave-active.png`, `wave-earned-build.png` | Passed |
+| `AC-006` | Projectile/rendering tests, capture, human | `tests/game/projectiles.test.ts`, `tests/rendering/reconciliation.test.ts`, `wave-earned-build.png` | Passed |
+| `AC-007` | Atomic combat test, capture, human | `tests/game/projectiles.test.ts`, `wave-earned-build.png`, `victory.png` | Passed |
+| `AC-008` | Movement/escape tests, capture, human | `tests/game/monsters.test.ts`, `tests/game/projectiles.test.ts`, `defeat.png` | Passed |
+| `AC-009` | Build/targeting tests, capture, human | `tests/game/building.test.ts`, `tests/game/targeting.test.ts`, `tests/ui/placement.test.ts`, `wave-earned-build.png` | Passed |
+| `AC-010` | Completion/DOM tests, capture, human | `tests/game/completion.test.ts`, `tests/ui/hud.test.ts`, `defeat.png` | Passed |
+| `AC-011` | Completion/DOM tests, capture, human | `tests/game/completion.test.ts`, `tests/ui/hud.test.ts`, `victory.png` | Passed |
+| `AC-012` | Reset/DOM/integration tests, capture, human | `tests/game/completion.test.ts`, `tests/ui/hud.test.ts`, `tests/app/browserApplication.test.ts`, `restarted.png` | Passed |
+| `AC-013` | Deterministic balance test, capture, human | `tests/game/balance.test.ts`, `preparation.png`, `victory.png` | Passed |
+| `AC-014` | State/DOM/rendering tests, capture, human | `tests/game/state.test.ts`, `tests/ui/hud.test.ts`, `tests/rendering/reconciliation.test.ts`, `ready.png`, `preparation.png`, `wave-active.png` | Passed |
+| `AC-015` | Rendering/DOM tests, capture, human | `tests/rendering/levelScene.test.ts`, `tests/rendering/reconciliation.test.ts`, `tests/ui/placement.test.ts`, `ready.png`, `wave-earned-build.png` | Passed |
 
 ## 6. Requirement coverage
 
