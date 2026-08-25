@@ -396,7 +396,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-013 — Реализовать snapshot reconciliation активных entities
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-006`, `FR-008`, `FR-012`; `AC-006`, `AC-014`, `AC-015`.
 
