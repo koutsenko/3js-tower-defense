@@ -73,8 +73,13 @@ describe('game start and preparation lifecycle (FR-001, FR-005, FR-006, FR-012)'
     expect(snapshot.status).toBe('WaveActive');
     expect(snapshot.simulationTime).toBeCloseTo(PREPARATION_DURATION, 10);
     expect(snapshot.phaseStartedAt).toBe(PREPARATION_DURATION);
-    expect(snapshot.monsters).toEqual([]);
-    expect(events).toEqual([{ type: 'wave-start' }]);
+    expect(snapshot.monsters).toEqual([
+      { id: 1, spawnIndex: 0, hp: 100, routeProgress: 0 },
+    ]);
+    expect(events).toEqual([
+      { type: 'wave-start' },
+      { type: 'monster-spawned', monsterId: 1, spawnIndex: 0 },
+    ]);
     expect(getPreparationCountdown(snapshot)).toBeNull();
     expect(runtime.advance(FIXED_STEP)).not.toContainEqual({
       type: 'wave-start',

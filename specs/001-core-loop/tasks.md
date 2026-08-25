@@ -184,7 +184,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-006 — Реализовать spawn, route movement и escape
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Изменение:** разблокирована после утверждения
 [`CR-001`](changes/CR-001.md).
