@@ -29,7 +29,10 @@ export function createApplication({
       previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
     previousTimestamp = timestamp;
     loop.advanceFrame(deltaSeconds);
-    animationFrameId = requestAnimationFrame(onAnimationFrame);
+
+    if (animationFrameId !== null) {
+      animationFrameId = requestAnimationFrame(onAnimationFrame);
+    }
   };
 
   return {
