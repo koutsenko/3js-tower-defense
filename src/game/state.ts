@@ -21,8 +21,8 @@ export interface EntityIdSequence {
   next(): number;
 }
 
-export function createEntityIdSequence(): EntityIdSequence {
-  let nextId = 1;
+export function createEntityIdSequence(startId = 1): EntityIdSequence {
+  let nextId = startId;
 
   return {
     next() {
