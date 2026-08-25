@@ -504,7 +504,9 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-017 — Выполнить complete acceptance gate
 
-**Статус:** Complete.
+**Статус:** Pending.
+
+**Причина переоткрытия:** Human acceptance pending.
 
 **Связи:** все `FR-001`–`FR-016`, `AC-001`–`AC-015`, `NFR-001`.
 
@@ -539,9 +541,9 @@ assets.
 - `npm run capture:acceptance` — browser flow при `1280×720` воспроизводит
   pre-start rejection, preparation с двумя towers, active wave, покупку на
   заработанные coins, `Victory`, `Restart` и отдельный `Defeat` flow;
-- screenshots сохранены в `docs/verification/001-core-loop/` и вручную
-  проверены на видимость level, route, entrance, exit, buildable cells, towers,
-  monsters, HP bars, projectile, feedback, HUD и terminal overlays.
+- screenshots сохранены в `docs/verification/001-core-loop/` для предстоящей
+  human acceptance; ручное подтверждение visual и interactive behavior ещё не
+  выполнено.
 
 ## 6. Requirement coverage
 
