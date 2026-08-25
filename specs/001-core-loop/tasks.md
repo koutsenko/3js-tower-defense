@@ -314,7 +314,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-010 — Подтвердить two-tower balance fixture
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-016`; `AC-013`.
 
