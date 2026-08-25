@@ -142,7 +142,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-005 — Реализовать запуск игры и preparation lifecycle
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Переоткрыта:** требуется привести lifecycle boundary и публичный
 `advance(deltaSeconds)` в соответствие с утверждённым
