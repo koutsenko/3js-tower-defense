@@ -16,8 +16,15 @@ await mkdir(OUTPUT_DIR, { recursive: true });
 
 const server = spawn(
   globalThis.process.execPath,
-  ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '4173'],
-  { stdio: 'ignore' },
+  [
+    'node_modules/vite/bin/vite.js',
+    '--host',
+    '127.0.0.1',
+    '--port',
+    '4173',
+    '--strictPort',
+  ],
+  { stdio: ['ignore', 'pipe', 'pipe'] },
 );
 
 try {
@@ -56,6 +63,7 @@ async function captureVictoryFlow(browser) {
   assert.equal(await hudValue(page, 'status'), 'WaveActive');
   await screenshot(page, 'wave-active.png');
 
+  let earnedCoinsBuildCompleted = false;
   for (let elapsed = 0; elapsed < 80; elapsed += 1) {
     const status = await hudValue(page, 'status');
     const coins = Number(await hudValue(page, 'coins'));
@@ -67,6 +75,7 @@ async function captureVictoryFlow(browser) {
       await page.waitForTimeout(200);
       assert.equal(Number(await hudValue(page, 'coins')), coins - 50);
       await screenshot(page, 'wave-earned-build.png');
+      earnedCoinsBuildCompleted = true;
       break;
     }
     assert.equal(
@@ -76,6 +85,10 @@ async function captureVictoryFlow(browser) {
     );
     await page.waitForTimeout(1_000);
   }
+  assert.ok(
+    earnedCoinsBuildCompleted,
+    'earned-coins build did not occur during the active wave',
+  );
 
   await waitForStatus(page, 'Victory');
   await screenshot(page, 'victory.png');
@@ -100,21 +113,39 @@ async function captureDefeatFlow(browser) {
 }
 
 async function waitForServer() {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
-    if (server.exitCode !== null) {
-      throw new Error(
-        `Vite exited before it became ready (${server.exitCode})`,
+  await new Promise((resolve, reject) => {
+    let output = '';
+    const timeout = globalThis.setTimeout(() => {
+      cleanup();
+      reject(new Error(`Timed out waiting for Vite\n${output}`));
+    }, 10_000);
+    const handleData = (chunk) => {
+      output += chunk.toString();
+      if (output.includes(`Local:   ${BASE_URL}/`)) {
+        cleanup();
+        resolve();
+      }
+    };
+    const handleExit = (code) => {
+      cleanup();
+      reject(
+        new Error(`Vite exited before it became ready (${code})\n${output}`),
       );
-    }
-    try {
-      const response = await globalThis.fetch(BASE_URL);
-      if (response.ok) return;
-    } catch {
-      // Vite is still starting.
-    }
-    await new Promise((resolve) => globalThis.setTimeout(resolve, 100));
-  }
-  throw new Error('Timed out waiting for Vite');
+    };
+    const cleanup = () => {
+      globalThis.clearTimeout(timeout);
+      server.stdout.off('data', handleData);
+      server.stderr.off('data', handleData);
+      server.off('exit', handleExit);
+    };
+
+    server.stdout.on('data', handleData);
+    server.stderr.on('data', handleData);
+    server.once('exit', handleExit);
+  });
+
+  const response = await globalThis.fetch(BASE_URL);
+  assert.ok(response.ok, `Vite returned HTTP ${response.status}`);
 }
 
 async function waitForStatus(page, expected) {
