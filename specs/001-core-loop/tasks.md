@@ -142,7 +142,11 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-005 — Реализовать запуск игры и preparation lifecycle
 
-**Статус:** Complete.
+**Статус:** Pending.
+
+**Переоткрыта:** требуется привести lifecycle boundary и публичный
+`advance(deltaSeconds)` в соответствие с утверждённым
+[`CR-001`](changes/CR-001.md).
 
 **Связи:** `FR-001`, `FR-005`, `FR-006`, `FR-012`; `AC-004`, часть `AC-014`.
 
@@ -157,6 +161,11 @@ acceptance criteria и поддерживает `NFR-001`.
   `phaseStartedAt` и создавать `game-start` event;
 - через ровно 20 gameplay seconds автоматически выполнять
   `Preparation → WaveActive` и создавать `wave-start` event;
+- фиксировать точное время lifecycle boundary и передавать wave systems только
+  остаток interval после `wave-start`;
+- принимать любой конечный неотрицательный `deltaSeconds`, использовать
+  `advance(0)` только для drain command-events и отклонять остальные значения с
+  `RangeError` без мутаций или извлечения events;
 - не создавать monsters непосредственно командой `StartGame`;
 - отклонять `StartGame` вне `Ready` с `INVALID_SESSION_STATE` без мутаций и
   events.
@@ -166,11 +175,19 @@ acceptance criteria и поддерживает `NFR-001`.
 - сразу после `StartGame` countdown равен 20 секундам и не увеличивается;
 - до 20-секундной границы monsters отсутствуют;
 - повторный `StartGame` оставляет полный state без изменений;
-- transition timing воспроизводим при fixed simulation steps.
+- `phaseStartedAt` фиксирует точную boundary независимо от размера interval;
+- preparation-часть interval не передаётся wave systems;
+- transition timing воспроизводим при fixed simulation steps и эквивалентном
+  coarse interval;
+- invalid `deltaSeconds` не меняет state и не извлекает накопленные events, а
+  `advance(0)` не запускает gameplay systems.
 
 ### T-006 — Реализовать spawn, route movement и escape
 
 **Статус:** Pending.
+
+**Изменение:** разблокирована после утверждения
+[`CR-001`](changes/CR-001.md).
 
 **Связи:** `FR-006`, `FR-010`, `FR-012`; `AC-004`, `AC-008`, часть `AC-014`.
 
@@ -185,14 +202,24 @@ acceptance criteria и поддерживает `NFR-001`.
 - задавать каждому monster 100 HP, `spawnIndex`, ID и `routeProgress`;
 - двигать monsters по route со скоростью `1 cell/s`, перенося остаток движения
   между segments;
+- хронологически разбивать interval по wave и spawn boundaries;
+- двигать каждого monster только за его active time после scheduled spawn и до
+  resolution;
+- сохранять partition invariance и хронологический порядок events;
 - разрешать достижение exit в порядке `spawnIndex`.
 
 **Проверки:**
 
-- первый monster появляется в tick автоматического запуска wave;
+- первый monster появляется на boundary автоматического запуска wave с
+  `routeProgress = 0`;
 - spawn schedule и wave size точны;
+- пересечение одной или нескольких spawn boundaries начисляет каждому monster
+  только собственный active time;
+- coarse interval и эквивалентные fixed steps дают эквивалентные snapshot и
+  последовательность events;
 - escape удаляет monster, уменьшает base HP ровно на 1, увеличивает
-  `escapedCount` и не начисляет coins.
+  `escapedCount` и не начисляет coins;
+- monster не достигает exit преждевременно из-за времени до scheduled spawn.
 
 ### T-007 — Реализовать targeting и firing
 
@@ -211,13 +238,17 @@ acceptance criteria и поддерживает `NFR-001`.
   `routeProgress`;
 - при равном progress выбирать меньший `spawnIndex`;
 - готовой tower стрелять немедленно и устанавливать cooldown ровно 1 секунду;
+- учитывать cooldown и target availability на хронологических gameplay
+  boundaries с сохранением partition invariance;
 - отсутствие target не должно сдвигать готовность tower.
 
 **Проверки:**
 
 - покрыты range boundary, furthest-progress selection и tie-breaker;
 - первый shot выполняется без задержки, последующие — с точным cooldown;
-- tower, построенная во время wave, участвует со следующего simulation tick.
+- coarse interval и эквивалентные fixed steps дают одинаковые target и shot
+  events;
+- tower, построенная во время wave, участвует со следующей simulation boundary.
 
 ### T-008 — Реализовать projectiles, damage и kill economy
 
@@ -233,6 +264,7 @@ acceptance criteria и поддерживает `NFR-001`.
 **Реализация:**
 
 - двигать homing projectile к назначенной живой цели со скоростью `8 cells/s`;
+- учитывать только active time projectile после shot и до resolution;
 - при достижении цели наносить ровно 25 damage без retargeting;
 - при death или escape цели удалять все назначенные unresolved projectiles без
   gameplay effects;
@@ -243,7 +275,9 @@ acceptance criteria и поддерживает `NFR-001`.
 - projectile продолжает homing после выхода цели из tower range;
 - invalidated projectile не изменяет HP, coins или counters;
 - kill удаляет monster, увеличивает `killedCount` и начисляет ровно 10 coins;
-- escape в одном tick имеет приоритет перед projectile hit.
+- escape на одной boundary имеет приоритет перед projectile hit;
+- coarse interval и эквивалентные fixed steps дают одинаковые projectile, hit и
+  kill events.
 
 ### T-009 — Реализовать terminal outcomes и Restart
 
@@ -261,6 +295,8 @@ acceptance criteria и поддерживает `NFR-001`.
 - немедленно устанавливать `Defeat` при переходе base HP к 0;
 - устанавливать `Victory` после resolution всех 10 monsters при положительном
   base HP;
+- немедленно прекращать обработку systems и остатка interval после terminal
+  transition;
 - блокировать в terminal state spawn, movement, building, attacks и economy;
 - разрешать `Restart` только из `Victory` и `Defeat` и полностью создавать новый
   `Ready` state;
@@ -268,7 +304,10 @@ acceptance criteria и поддерживает `NFR-001`.
 
 **Проверки:**
 
-- terminal freeze покрывает текущий и последующие ticks;
+- terminal freeze покрывает текущую boundary, остаток interval и последующие
+  вызовы `advance`;
+- coarse interval и эквивалентные fixed steps дают одинаковые terminal outcome,
+  `simulationTime`, counters и последовательность events;
 - reset очищает entities, counters, timers, accumulator, events и ID sequence;
 - после reset `StartGame` снова доступна, а строительство заблокировано до неё.
 
@@ -293,6 +332,8 @@ acceptance criteria и поддерживает `NFR-001`.
 **Проверки:**
 
 - ожидаемый outcome — `Victory`;
+- outcome, counters и remaining coins одинаковы при штатных fixed steps и при
+  другом допустимом разбиении того же gameplay time;
 - если fixture не проходит, остановить implementation и вынести изменение
   route, balance parameters или fixture на повторное утверждение design;
 - не подбирать значения и не ослаблять `FR-016` молча.

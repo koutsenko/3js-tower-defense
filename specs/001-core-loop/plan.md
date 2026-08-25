@@ -69,6 +69,7 @@ design.
 |---|---|---|---|---|
 | Toolchain | Vite; no-build; Webpack | TypeScript, Vite and Three.js | Простой development workflow, production build и стандартные ES module imports | Accepted |
 | Simulation clock | Variable delta; fixed timestep; hybrid | Fixed `1/60 s` gameplay steps with frame-driven rendering | Детерминированные timing rules и tests без привязки к FPS | Accepted |
+| Advancement across boundaries | Требовать только точный fixed step; применять полный delta после due events; хронологически разбивать interval | `advance(deltaSeconds)` хронологически обрабатывает interval по lifecycle, spawn и gameplay boundaries | Сущности получают только фактический active time, а результат не зависит от разбиения gameplay time | Accepted |
 | Buildable cells | Заданные площадки; все клетки вне route | Все незанятые клетки вне route | Больше вариантов размещения при простом и видимом правиле | Accepted |
 | Visual direction | Functional placeholder geometry; defined art style; external assets | Functional placeholder geometry из простых Three.js primitives | Только различимость gameplay elements без определения финального art style | Accepted |
 | HUD and final state | Three.js UI; HTML/CSS; hybrid | HTML/CSS overlay, world-space feedback в Three.js | Чёткий responsive text при сохранении привязанных к миру индикаторов | Accepted |
@@ -136,8 +137,9 @@ objects не добавляют скрытых ограничений на ст�
 `FR-003`, `AC-015`).
 
 Позиция монстра определяется scalar `routeProgress` и линейной интерполяцией
-по segments. На повороте остаток пройденной за tick дистанции переносится на
-следующий segment, поэтому скорость остаётся равной одной клетке в секунду.
+по segments. На повороте остаток пройденной за active sub-interval дистанции
+переносится на следующий segment, поэтому скорость остаётся равной одной клетке
+в секунду.
 
 ### 4.2 Balance parameters
 
@@ -280,6 +282,24 @@ build, spawn, shot, hit, kill, escape и session end. События испол�
 только для visual feedback; authoritative HUD values и scene entities всегда
 берутся из snapshot.
 
+`advance(deltaSeconds)` принимает любой конечный неотрицательный interval:
+
+- положительное значение продвигает gameplay time на указанный interval;
+- `0` не запускает gameplay systems и только возвращает накопленные
+  command-events;
+- отрицательное, `NaN` или бесконечное значение выбрасывает `RangeError`, не
+  изменяя gameplay state и не извлекая накопленные events;
+- сущность получает simulation updates только за часть interval после её
+  создания и до её resolution;
+- events возвращаются в хронологическом порядке; при одинаковом timestamp
+  используется утверждённый system order, а однотипные monster events
+  упорядочиваются по `spawnIndex`.
+
+Для одинаковой последовательности commands один крупный вызов `advance` и
+эквивалентная последовательность меньших вызовов должны давать эквивалентное
+authoritative state и одинаковую объединённую последовательность events. Это
+свойство далее называется partition invariance.
+
 ## 6. Deterministic simulation
 
 ### 6.1 Clock
@@ -290,6 +310,12 @@ browser frame time и вызывает `advance(1 / 60)` необходимое 
 чтобы background tab или debugger stop не вызывали spiral of death. Управляемая
 игроком pause или speed control не создаётся.
 
+Fixed step является штатным application cadence, а не ограничением публичного
+runtime contract. Headless tests и другие допустимые callers могут передавать
+любой конечный неотрицательный interval. Runtime обязан хронологически разбить
+его по всем пересечённым boundaries, чтобы сохранить partition invariance и не
+начислить entity время до создания либо после resolution.
+
 Таймер подготовки использует тот же gameplay clock, а не отдельный DOM timer.
 Поэтому переход к волне воспроизводим в headless tests и не зависит от FPS.
 Состояния `Ready`, `Victory` и `Defeat` не продвигают phase lifecycle; countdown
@@ -299,38 +325,47 @@ Renderer может интерполировать visual positions между �
 snapshot, но interpolation не влияет на range, targeting, collision или event
 timing.
 
-### 6.2 Tick order
+### 6.2 Interval processing and system order
 
-Каждый simulation tick выполняет lifecycle и gameplay systems в фиксированном
-порядке:
+Каждый положительный вызов `advance` обрабатывает gameplay interval от текущего
+`simulationTime` до целевого времени хронологически:
 
-1. в `Ready` или terminal state не выполнять phase и gameplay systems;
-2. в `Preparation` обновить derived countdown; пока с момента `StartGame` не
-   прошло 20 секунд, не выполнять wave systems и завершить tick;
-3. на границе 20 секунд автоматически установить `WaveActive`, зафиксировать
-   время начала волны и создать `wave-start` event;
-4. создать всех monsters, срок spawn которых наступил относительно времени
-   начала волны;
-5. переместить живых monsters и разрешить достижение exit в порядке
+1. в `Ready` или terminal state не продвигать clock и не выполнять phase либо
+   gameplay systems;
+2. определить ближайшую lifecycle, spawn, cooldown, collision или terminal
+   boundary, но не дальше конца interval;
+3. продвинуть только уже активные entities до этой boundary; movement каждого
+   monster и projectile использует только фактическую продолжительность этого
+   sub-interval;
+4. установить `simulationTime` в точное время boundary;
+5. применить все due transitions и discrete systems в фиксированном порядке:
+   `wave-start` → spawn → escape → `Defeat` → targeting и shot → projectile hit,
+   death и reward → `Victory`;
+6. при нескольких monster transitions одного типа использовать порядок
    `spawnIndex`;
-6. немедленно установить `Defeat`, если base HP достиг 0, и прекратить tick;
-7. для каждой готовой башни выбрать target и создать projectile;
-8. переместить projectiles, разрешить hits, deaths и rewards;
-9. установить `Victory`, если все 10 monsters resolved и base HP выше 0.
+7. при terminal transition немедленно прекратить обработку systems и остатка
+   interval;
+8. повторять шаги 2–7 до исчерпания interval.
+
+Entity, созданная на правой границе interval, имеет нулевой active time в этом
+вызове. Monster поэтому создаётся с `routeProgress = 0`, а новый projectile не
+получает движение до следующего положительного sub-interval. Discrete decision,
+не требующий течения времени, выполняется на самой boundary: готовая tower может
+выстрелить в monster сразу после его spawn.
 
 Успешная `StartGame` только начинает `Preparation` и не создаёт monster. Первый
-monster создаётся в том же simulation tick, в котором истекают 20 секунд и
-состояние автоматически становится `WaveActive`. Следующие monsters имеют
-сроки появления `phaseStartedAt + 2`, `+4`, …, `+18` секунд, поэтому preparation
-не сдвигает двухсекундные интервалы внутри волны. Готовая башня может выпустить
-projectile в первого monster в том же tick. Построенная во время волны башня
-участвует в targeting начиная с первого simulation tick после успешной покупки
-(`FR-005`–`FR-007`, `FR-011`).
+monster создаётся на boundary, где истекают 20 секунд и состояние становится
+`WaveActive`, с `routeProgress = 0`. Следующие monsters имеют сроки появления
+`phaseStartedAt + 2`, `+4`, …, `+18` секунд. Preparation и часть interval до
+scheduled spawn не входят в active time monster. Готовая tower может выпустить
+projectile в первого monster на той же boundary. Построенная во время волны
+tower участвует в targeting начиная со следующей simulation boundary после
+успешной покупки (`FR-005`–`FR-007`, `FR-011`).
 
-Если monster достигает exit в том же tick, в котором projectile мог бы в него
-попасть, exit разрешается первым: monster считается escaped, а назначенный ему
-projectile удаляется без эффекта. При достижении `Defeat` никакие последующие
-системы этого tick не выполняются.
+Если monster достигает exit на той же boundary, на которой projectile мог бы в
+него попасть, exit разрешается первым: monster считается escaped, а назначенный
+ему projectile удаляется без эффекта. При достижении `Defeat` никакие
+последующие systems этой boundary и остатка interval не выполняются.
 
 ### 6.3 Targeting and projectiles
 
@@ -340,10 +375,11 @@ Euclidean range с максимальным `routeProgress`. При равном
 `nextShotAt = simulationTime + SHOT_COOLDOWN`; отсутствие target не сдвигает
 готовность и не создаёт искусственной задержки.
 
-Projectile каждый tick движется со скоростью `PROJECTILE_SPEED` напрямую к
-текущей позиции назначенного живого target. Выход target из tower range не
-влияет на projectile. Если расстояние до target не превышает travel distance
-текущего tick, projectile достигает target и наносит ровно 25 damage.
+Projectile в каждом положительном active sub-interval движется со скоростью
+`PROJECTILE_SPEED` напрямую к текущей позиции назначенного живого target. Выход
+target из tower range не влияет на projectile. Если расстояние до target не
+превышает travel distance этого sub-interval, projectile достигает target и
+наносит ровно 25 damage.
 
 При death target либо его достижении exit все назначенные ему unresolved
 projectiles удаляются без retargeting, damage, reward или иных gameplay
@@ -450,11 +486,19 @@ Gameplay tests используют config и runtime напрямую, без b
 - single-use `StartGame`, ровно 20 секунд `Preparation`, отсутствие monsters до
   границы, automatic wave transition, spawn at 0/2/…/18 seconds относительно
   начала волны, route movement и wave size (`AC-004`);
+- нулевой `routeProgress` на точной wave/spawn boundary, корректный active time
+  при пересечении одной или нескольких boundaries и partition invariance между
+  coarse interval и эквивалентными fixed steps (`AC-004`);
+- отклонение отрицательного, `NaN` и бесконечного `deltaSeconds` без мутаций и
+  извлечения events, а также drain command-events без gameplay systems через
+  `advance(0)`;
 - Euclidean range boundary, furthest-progress target, immediate first shot и
   exact one-second cooldown (`AC-005`);
 - homing after range exit, exact damage и cancellation for resolved targets
   (`AC-006`);
 - atomic kill reward и escape/base damage transitions (`AC-007`, `AC-008`);
+- отсутствие преждевременного escape при interval, пересекающем spawn boundary
+  (`AC-008`);
 - purchase and immediate attack from a new tower during active wave (`AC-009`);
 - immediate freeze on `Defeat` and correct `Victory` resolution
   (`AC-010`, `AC-011`);
@@ -499,9 +543,9 @@ Verification gate для implementation: `npm test`, `npm run lint`,
 |---|---|
 | State, commands and lifecycle | `FR-001`, `FR-005`, `FR-013`–`FR-015`; `AC-001`, `AC-004`, `AC-010`–`AC-012`, `AC-014` |
 | Level, building and camera | `FR-002`–`FR-004`, `NFR-001`; `AC-001`–`AC-003`, `AC-015` |
-| Spawn and monster movement | `FR-006`; `AC-004`, `AC-014`, `AC-015` |
+| Spawn and monster movement | `FR-006`, `FR-010`; `AC-004`, `AC-008`, `AC-014`, `AC-015` |
 | Targeting and projectiles | `FR-007`, `FR-008`; `AC-005`, `AC-006`, `AC-015` |
-| Economy and active-wave building | `FR-009`–`FR-011`; `AC-007`–`AC-009` |
+| Economy and active-wave building | `FR-009`–`FR-011`; `AC-007`, `AC-009` |
 | HUD and final presentation | `FR-012`, `FR-014`; `AC-010`, `AC-011`, `AC-014` |
 | Two-tower balance fixture | `FR-016`; `AC-013` |
 
