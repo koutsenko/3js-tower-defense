@@ -1,9 +1,57 @@
-import { PROJECTILE_SPEED } from '../config/gameConfig';
+import { MONSTER_SPEED, PROJECTILE_SPEED } from '../config/gameConfig';
 import { getRoutePosition } from './movement';
 import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 const PROJECTILE_STEP = 1 / 60;
+const projectileImpactTimes = new WeakMap<object, number>();
+
+export function scheduleProjectileImpact(
+  state: Readonly<GameState>,
+  projectile: GameState['projectiles'][number],
+  currentTime: number,
+): void {
+  if (projectileImpactTimes.has(projectile)) {
+    return;
+  }
+
+  const target = state.monsters.find(({ id }) => id === projectile.targetId);
+  if (target === undefined) {
+    return;
+  }
+
+  const distance = getDistance(
+    projectile.position,
+    getRoutePosition(target.routeProgress),
+  );
+  projectileImpactTimes.set(
+    projectile,
+    currentTime + distance / (PROJECTILE_SPEED - MONSTER_SPEED),
+  );
+}
+
+export function getNextProjectileImpactTime(
+  state: Readonly<GameState>,
+  currentTime: number,
+): number | null {
+  const impactTimes = state.projectiles.flatMap((projectile) => {
+    scheduleProjectileImpact(state, projectile, currentTime);
+    const impactTime = projectileImpactTimes.get(projectile);
+    return impactTime === undefined ? [] : [impactTime];
+  });
+
+  return impactTimes.length === 0 ? null : Math.min(...impactTimes);
+}
+
+export function isProjectileImpactDue(
+  projectile: GameState['projectiles'][number],
+  currentTime: number,
+): boolean {
+  const impactTime = projectileImpactTimes.get(projectile);
+  return (
+    impactTime !== undefined && impactTime <= currentTime + DISTANCE_TOLERANCE
+  );
+}
 
 export function getNextProjectileStepTime(
   state: Readonly<GameState>,

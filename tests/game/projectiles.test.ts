@@ -86,6 +86,29 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     expect(runtime.getSnapshot().projectiles).toEqual([]);
   });
 
+  it('does not resolve a hit at an arbitrary advance endpoint', () => {
+    const coarseState = createCombatState();
+    coarseState.monsters[0]!.routeProgress = 25;
+    coarseState.projectiles = [
+      { id: 3, targetId: 2, position: { x: 10.5, y: 6 } },
+    ];
+    const splitState = structuredClone(coarseState);
+    const coarseRuntime = new GameRuntime(coarseState);
+    const splitRuntime = new GameRuntime(splitState);
+
+    const coarseEvents = coarseRuntime.advance(1);
+    const splitEvents = [
+      ...splitRuntime.advance(0.06),
+      ...splitRuntime.advance(0.94),
+    ];
+
+    expect(splitEvents).toEqual(coarseEvents);
+    expectSnapshotsEquivalent(
+      splitRuntime.getSnapshot(),
+      coarseRuntime.getSnapshot(),
+    );
+  });
+
   it('produces equivalent hit and kill events for coarse and fixed intervals', () => {
     const coarseRuntime = createRuntimeWithTower();
     const fixedRuntime = createRuntimeWithTower();

@@ -8,6 +8,7 @@ import {
 } from './movement';
 import { getNextSpawnTime, spawnDueMonsters } from './spawning';
 import {
+  getNextProjectileImpactTime,
   getNextProjectileStepTime,
   moveProjectiles,
   removeInvalidProjectiles,
@@ -46,9 +47,19 @@ export function advanceWave(
       state,
       currentTime,
     );
+    const nextProjectileImpactTime = getNextProjectileImpactTime(
+      state,
+      currentTime,
+    );
     const nextBoundary = minDefined(
-      minDefined(minDefined(nextSpawnTime, nextEscapeTime), nextTargetingTime),
-      nextProjectileStepTime,
+      minDefined(
+        minDefined(
+          minDefined(nextSpawnTime, nextEscapeTime),
+          nextTargetingTime,
+        ),
+        nextProjectileStepTime,
+      ),
+      nextProjectileImpactTime,
     );
 
     if (

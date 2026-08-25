@@ -1,17 +1,14 @@
 import { KILL_REWARD, PROJECTILE_DAMAGE } from '../config/gameConfig';
 import type { GameEvent } from './events';
-import { getProjectileTargetDistance } from './projectiles';
+import { isProjectileImpactDue } from './projectiles';
 import type { GameState } from './types';
-
-const DISTANCE_TOLERANCE = 1e-9;
 
 export function resolveProjectileHits(state: GameState): readonly GameEvent[] {
   const events: GameEvent[] = [];
   const dueProjectiles = state.projectiles
-    .filter((projectile) => {
-      const distance = getProjectileTargetDistance(state, projectile.id);
-      return distance !== null && distance <= DISTANCE_TOLERANCE;
-    })
+    .filter((projectile) =>
+      isProjectileImpactDue(projectile, state.simulationTime),
+    )
     .sort((left, right) => left.id - right.id);
 
   for (const projectile of dueProjectiles) {
