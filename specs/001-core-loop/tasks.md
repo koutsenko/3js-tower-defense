@@ -541,8 +541,8 @@ assets.
 - `npm run capture:acceptance` — browser flow при `1280×720` воспроизводит
   pre-start rejection, preparation с двумя towers, active wave, покупку на
   заработанные coins, `Victory`, `Restart` и отдельный `Defeat` flow;
-- screenshots сохранены в `docs/verification/001-core-loop/` для предстоящей
-  human acceptance; ручное подтверждение visual и interactive behavior ещё не
+- screenshots сохранены в `artifacts/acceptance/` для предстоящей human
+  acceptance; ручное подтверждение visual и interactive behavior ещё не
   выполнено.
 
 ## 6. Requirement coverage

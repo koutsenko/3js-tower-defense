@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
 
 const BASE_URL = 'http://127.0.0.1:4173';
-const OUTPUT_DIR = 'docs/verification/001-core-loop';
+const OUTPUT_DIR = 'specs/001-core-loop/artifacts/acceptance';
 const VIEWPORT = { width: 1280, height: 720 };
 const BUILD_CELLS = {
   first: { x: 683, y: 427 }, // Grid cell (6, 3) at the acceptance viewport.
