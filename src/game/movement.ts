@@ -1,5 +1,5 @@
 import { MONSTER_SPEED } from '../config/gameConfig';
-import { levelConfig } from '../config/levelConfig';
+import { levelConfig, type LevelConfig } from '../config/levelConfig';
 import type { GameEvent } from './events';
 import type { GameState, Position } from './types';
 
@@ -58,15 +58,21 @@ export function resolveEscapedMonsters(state: GameState): readonly GameEvent[] {
   }));
 }
 
-export function getRoutePosition(routeProgress: number): Position {
+export function getRoutePosition(
+  routeProgress: number,
+  level: Pick<
+    LevelConfig,
+    'routeLength' | 'routeWaypoints' | 'exit'
+  > = levelConfig,
+): Position {
   let remainingProgress = Math.min(
     Math.max(routeProgress, 0),
-    levelConfig.routeLength,
+    level.routeLength,
   );
 
-  for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
-    const start = levelConfig.routeWaypoints[index - 1]!;
-    const end = levelConfig.routeWaypoints[index]!;
+  for (let index = 1; index < level.routeWaypoints.length; index += 1) {
+    const start = level.routeWaypoints[index - 1]!;
+    const end = level.routeWaypoints[index]!;
     const segmentLength = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 
     if (remainingProgress <= segmentLength) {
@@ -80,5 +86,5 @@ export function getRoutePosition(routeProgress: number): Position {
     remainingProgress -= segmentLength;
   }
 
-  return { ...levelConfig.exit };
+  return { ...level.exit };
 }

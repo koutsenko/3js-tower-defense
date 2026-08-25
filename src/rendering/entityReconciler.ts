@@ -79,7 +79,11 @@ export class EntityReconciler {
   private reconcileTower(tower: Readonly<TowerState>): void {
     const object = this.getOrCreate(tower.id, 'tower', () => {
       const mesh = new Mesh(
-        new BoxGeometry(0.55, 0.9, 0.55),
+        new BoxGeometry(
+          0.55 * this.level.cellSize,
+          0.9 * this.level.cellSize,
+          0.55 * this.level.cellSize,
+        ),
         new MeshBasicMaterial({ color: COLORS.tower }),
       );
       mesh.name = `tower:${tower.id}`;
@@ -97,16 +101,20 @@ export class EntityReconciler {
       const root = new Group();
       root.name = `monster:${monster.id}`;
       const body = new Mesh(
-        new BoxGeometry(0.5, 0.5, 0.5),
+        new BoxGeometry(
+          0.5 * this.level.cellSize,
+          0.5 * this.level.cellSize,
+          0.5 * this.level.cellSize,
+        ),
         new MeshBasicMaterial({ color: COLORS.monster }),
       );
       body.name = 'monster-body';
-      const healthBar = createHealthBar();
+      const healthBar = createHealthBar(this.level.cellSize);
       healthBar.position.y = 0.55 * this.level.cellSize;
       root.add(body, healthBar);
       return root;
     });
-    const position = getRoutePosition(monster.routeProgress);
+    const position = getRoutePosition(monster.routeProgress, this.level);
     object.position.set(
       position.x * this.level.cellSize,
       0.3 * this.level.cellSize,
@@ -123,7 +131,7 @@ export class EntityReconciler {
   private reconcileProjectile(projectile: Readonly<ProjectileState>): void {
     const object = this.getOrCreate(projectile.id, 'projectile', () => {
       const mesh = new Mesh(
-        new SphereGeometry(0.11, 8, 6),
+        new SphereGeometry(0.11 * this.level.cellSize, 8, 6),
         new MeshBasicMaterial({ color: COLORS.projectile }),
       );
       mesh.name = `projectile:${projectile.id}`;
