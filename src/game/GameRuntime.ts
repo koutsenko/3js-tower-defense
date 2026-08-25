@@ -2,6 +2,7 @@ import type { GridCell } from './grid';
 import type { GameEvent } from './events';
 import { TOWER_COST } from '../config/gameConfig';
 import { validateBuild as validateBuildState } from './building';
+import { advanceLifecycle, startGame } from './lifecycle';
 import {
   createEntityIdSequence,
   createInitialState,
@@ -27,11 +28,18 @@ export class GameRuntime {
   }
 
   dispatch(command: GameCommand): CommandResult {
-    if (command.type !== 'BuildTower') {
-      return { ok: false, code: 'INVALID_SESSION_STATE' };
+    switch (command.type) {
+      case 'BuildTower':
+        return this.buildTower(command.cell);
+      case 'StartGame':
+        return this.startGame();
+      case 'Restart':
+        return { ok: false, code: 'INVALID_SESSION_STATE' };
     }
+  }
 
-    const validation = this.validateBuild(command.cell);
+  private buildTower(cell: GridCell): CommandResult {
+    const validation = this.validateBuild(cell);
 
     if (!validation.ok) {
       return validation;
@@ -39,7 +47,7 @@ export class GameRuntime {
 
     const tower = {
       id: this.entityIds.next(),
-      cell: { ...command.cell },
+      cell: { ...cell },
       nextShotAt: this.state.simulationTime,
     };
 
@@ -54,9 +62,20 @@ export class GameRuntime {
     return { ok: true };
   }
 
+  private startGame(): CommandResult {
+    if (this.state.status !== 'Ready') {
+      return { ok: false, code: 'INVALID_SESSION_STATE' };
+    }
+
+    this.pendingEvents.push(startGame(this.state));
+    return { ok: true };
+  }
+
   advance(deltaSeconds: number): readonly GameEvent[] {
-    void deltaSeconds;
-    const events = this.pendingEvents;
+    const events = [
+      ...this.pendingEvents,
+      ...advanceLifecycle(this.state, deltaSeconds),
+    ];
     this.pendingEvents = [];
     return events;
   }

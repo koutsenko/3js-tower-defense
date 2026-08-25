@@ -142,7 +142,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-005 — Реализовать запуск игры и preparation lifecycle
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-001`, `FR-005`, `FR-006`, `FR-012`; `AC-004`, часть `AC-014`.
 
