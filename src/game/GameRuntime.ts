@@ -72,10 +72,20 @@ export class GameRuntime {
   }
 
   advance(deltaSeconds: number): readonly GameEvent[] {
-    const events = [
-      ...this.pendingEvents,
-      ...advanceLifecycle(this.state, deltaSeconds),
-    ];
+    assertValidDelta(deltaSeconds);
+
+    if (deltaSeconds === 0) {
+      return this.drainPendingEvents();
+    }
+
+    const lifecycleResult = advanceLifecycle(this.state, deltaSeconds);
+    const events = [...this.pendingEvents, ...lifecycleResult.events];
+    this.pendingEvents = [];
+    return events;
+  }
+
+  private drainPendingEvents(): readonly GameEvent[] {
+    const events = this.pendingEvents;
     this.pendingEvents = [];
     return events;
   }
@@ -86,6 +96,12 @@ export class GameRuntime {
 
   validateBuild(cell: GridCell): BuildValidation {
     return validateBuildState(this.state, cell);
+  }
+}
+
+function assertValidDelta(deltaSeconds: number): void {
+  if (!Number.isFinite(deltaSeconds) || deltaSeconds < 0) {
+    throw new RangeError('deltaSeconds must be a finite non-negative number');
   }
 }
 

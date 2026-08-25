@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { PREPARATION_DURATION } from '../../src/config/gameConfig';
 import { GameRuntime } from '../../src/game/GameRuntime';
+import { advanceLifecycle } from '../../src/game/lifecycle';
 import { getPreparationCountdown } from '../../src/game/selectors';
+import { createInitialState } from '../../src/game/state';
 
 const FIXED_STEP = 1 / 60;
 
@@ -78,4 +80,91 @@ describe('game start and preparation lifecycle (FR-001, FR-005, FR-006, FR-012)'
       type: 'wave-start',
     });
   });
+
+  it('passes only the post-boundary remainder to wave systems', () => {
+    const state = createInitialState();
+    state.status = 'Preparation';
+
+    const result = advanceLifecycle(state, 25);
+
+    expect(result).toEqual({
+      events: [{ type: 'wave-start' }],
+      waveActiveDuration: 5,
+    });
+    expect(state).toMatchObject({
+      status: 'WaveActive',
+      simulationTime: 25,
+      phaseStartedAt: PREPARATION_DURATION,
+      monsters: [],
+    });
+  });
+
+  it('has no wave-active remainder when the interval ends on the boundary', () => {
+    const state = createInitialState();
+    state.status = 'Preparation';
+
+    expect(advanceLifecycle(state, PREPARATION_DURATION)).toEqual({
+      events: [{ type: 'wave-start' }],
+      waveActiveDuration: 0,
+    });
+    expect(state.simulationTime).toBe(PREPARATION_DURATION);
+    expect(state.phaseStartedAt).toBe(PREPARATION_DURATION);
+  });
+
+  it('does not start the wave immediately before the exact boundary', () => {
+    const state = createInitialState();
+    state.status = 'Preparation';
+
+    expect(advanceLifecycle(state, PREPARATION_DURATION - 5e-10)).toEqual({
+      events: [],
+      waveActiveDuration: 0,
+    });
+    expect(state.status).toBe('Preparation');
+  });
+
+  it('produces equivalent lifecycle results for coarse and fixed intervals', () => {
+    const coarseRuntime = new GameRuntime();
+    const fixedRuntime = new GameRuntime();
+    coarseRuntime.dispatch({ type: 'StartGame' });
+    fixedRuntime.dispatch({ type: 'StartGame' });
+
+    const coarseEvents = coarseRuntime.advance(25);
+    const fixedEvents = [];
+    for (let tick = 0; tick < 1_500; tick += 1) {
+      fixedEvents.push(...fixedRuntime.advance(FIXED_STEP));
+    }
+
+    expect(coarseEvents).toEqual(fixedEvents);
+    expect(fixedRuntime.getSnapshot()).toMatchObject({
+      status: coarseRuntime.getSnapshot().status,
+      phaseStartedAt: coarseRuntime.getSnapshot().phaseStartedAt,
+    });
+    expect(fixedRuntime.getSnapshot().simulationTime).toBeCloseTo(
+      coarseRuntime.getSnapshot().simulationTime,
+      10,
+    );
+  });
+
+  it('uses advance(0) only to drain command events', () => {
+    const runtime = new GameRuntime();
+    runtime.dispatch({ type: 'StartGame' });
+    const before = runtime.getSnapshot();
+
+    expect(runtime.advance(0)).toEqual([{ type: 'game-start' }]);
+    expect(runtime.getSnapshot()).toEqual(before);
+    expect(runtime.advance(0)).toEqual([]);
+  });
+
+  it.each([-1, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+    'rejects invalid delta %s without state changes or draining events',
+    (deltaSeconds) => {
+      const runtime = new GameRuntime();
+      runtime.dispatch({ type: 'StartGame' });
+      const before = runtime.getSnapshot();
+
+      expect(() => runtime.advance(deltaSeconds)).toThrow(RangeError);
+      expect(runtime.getSnapshot()).toEqual(before);
+      expect(runtime.advance(0)).toEqual([{ type: 'game-start' }]);
+    },
+  );
 });
