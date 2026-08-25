@@ -543,9 +543,9 @@ Verification gate для implementation: `npm test`, `npm run lint`,
 |---|---|
 | State, commands and lifecycle | `FR-001`, `FR-005`, `FR-013`–`FR-015`; `AC-001`, `AC-004`, `AC-010`–`AC-012`, `AC-014` |
 | Level, building and camera | `FR-002`–`FR-004`, `NFR-001`; `AC-001`–`AC-003`, `AC-015` |
-| Spawn and monster movement | `FR-006`; `AC-004`, `AC-014`, `AC-015` |
+| Spawn and monster movement | `FR-006`, `FR-010`; `AC-004`, `AC-008`, `AC-014`, `AC-015` |
 | Targeting and projectiles | `FR-007`, `FR-008`; `AC-005`, `AC-006`, `AC-015` |
-| Economy and active-wave building | `FR-009`–`FR-011`; `AC-007`–`AC-009` |
+| Economy and active-wave building | `FR-009`–`FR-011`; `AC-007`, `AC-009` |
 | HUD and final presentation | `FR-012`, `FR-014`; `AC-010`, `AC-011`, `AC-014` |
 | Two-tower balance fixture | `FR-016`; `AC-013` |
 

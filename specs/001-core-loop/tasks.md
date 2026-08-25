@@ -306,6 +306,8 @@ acceptance criteria и поддерживает `NFR-001`.
 
 - terminal freeze покрывает текущую boundary, остаток interval и последующие
   вызовы `advance`;
+- coarse interval и эквивалентные fixed steps дают одинаковые terminal outcome,
+  `simulationTime`, counters и последовательность events;
 - reset очищает entities, counters, timers, accumulator, events и ID sequence;
 - после reset `StartGame` снова доступна, а строительство заблокировано до неё.
 
