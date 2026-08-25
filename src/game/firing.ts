@@ -15,29 +15,45 @@ export function fireReadyTowers(
   for (const tower of [...state.towers].sort(
     (left, right) => left.id - right.id,
   )) {
-    if (tower.nextShotAt > state.simulationTime + TIME_TOLERANCE) {
-      continue;
+    const event = fireTower(state, tower.id, entityIds);
+    if (event !== null) {
+      events.push(event);
     }
-
-    const target = selectTarget(state, tower);
-    if (target === null) {
-      continue;
-    }
-
-    const projectile = {
-      id: entityIds.next(),
-      targetId: target.id,
-      position: { x: tower.cell.x, y: tower.cell.y },
-    };
-    state.projectiles.push(projectile);
-    tower.nextShotAt = state.simulationTime + SHOT_COOLDOWN;
-    events.push({
-      type: 'projectile-shot',
-      projectileId: projectile.id,
-      towerId: tower.id,
-      targetId: target.id,
-    });
   }
 
   return events;
+}
+
+export function fireTower(
+  state: GameState,
+  towerId: number,
+  entityIds: EntityIdSequence,
+): GameEvent | null {
+  const tower = state.towers.find(({ id }) => id === towerId);
+  if (
+    tower === undefined ||
+    tower.nextShotAt > state.simulationTime + TIME_TOLERANCE
+  ) {
+    return null;
+  }
+
+  const target = selectTarget(state, tower);
+  if (target === null) {
+    return null;
+  }
+
+  const projectile = {
+    id: entityIds.next(),
+    targetId: target.id,
+    position: { x: tower.cell.x, y: tower.cell.y },
+  };
+  state.projectiles.push(projectile);
+  tower.nextShotAt = state.simulationTime + SHOT_COOLDOWN;
+
+  return {
+    type: 'projectile-shot',
+    projectileId: projectile.id,
+    towerId: tower.id,
+    targetId: target.id,
+  };
 }

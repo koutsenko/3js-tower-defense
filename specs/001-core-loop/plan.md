@@ -359,8 +359,9 @@ monster создаётся на boundary, где истекают 20 секун�
 `phaseStartedAt + 2`, `+4`, …, `+18` секунд. Preparation и часть interval до
 scheduled spawn не входят в active time monster. Готовая tower может выпустить
 projectile в первого monster на той же boundary. Построенная во время волны
-tower участвует в targeting начиная со следующей simulation boundary после
-успешной покупки (`FR-005`–`FR-007`, `FR-011`).
+tower немедленно участвует в targeting на boundary успешной покупки и при
+наличии допустимой цели выпускает первый projectile (`FR-005`–`FR-007`,
+`FR-011`, `AC-009`).
 
 Если monster достигает exit на той же boundary, на которой projectile мог бы в
 него попасть, exit разрешается первым: monster считается escaped, а назначенный

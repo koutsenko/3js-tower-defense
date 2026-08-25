@@ -81,7 +81,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
     );
   });
 
-  it('uses a tower built during a wave on the next simulation boundary', () => {
+  it('fires a tower built during a wave immediately at the build boundary (AC-009)', () => {
     const runtime = new GameRuntime();
     runtime.dispatch({ type: 'StartGame' });
     runtime.advance(PREPARATION_DURATION);
@@ -95,15 +95,19 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
         towerId: 2,
         cell: { x: 1, y: 3 },
       },
+      {
+        type: 'projectile-shot',
+        projectileId: 3,
+        towerId: 2,
+        targetId: 1,
+      },
     ]);
-    expect(runtime.getSnapshot().projectiles).toEqual([]);
-
-    expect(runtime.advance(FIXED_STEP)).toContainEqual({
-      type: 'projectile-shot',
-      projectileId: 3,
-      towerId: 2,
-      targetId: 1,
-    });
+    expect(runtime.getSnapshot().projectiles).toEqual([
+      { id: 3, targetId: 1, position: { x: 1, y: 3 } },
+    ]);
+    expect(runtime.advance(FIXED_STEP)).not.toContainEqual(
+      expect.objectContaining({ type: 'projectile-shot', towerId: 2 }),
+    );
   });
 });
 
