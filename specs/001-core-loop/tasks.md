@@ -369,7 +369,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-012 — Создать functional placeholder level scene и fixed camera
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-002`, `FR-003`; `AC-015`; `NFR-001`.
 
