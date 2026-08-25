@@ -1,4 +1,5 @@
 import './styles.css';
+import { createBrowserApplication } from './app/createApplication';
 
 const app = document.querySelector<HTMLElement>('#app');
 
@@ -6,9 +7,9 @@ if (!app) {
   throw new Error('Application root not found');
 }
 
-app.innerHTML = `
-  <section class="shell">
-    <h1>Three.js Tower Defense</h1>
-    <p>Core loop initialization complete.</p>
-  </section>
-`;
+const application = createBrowserApplication(app);
+application.start();
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => application.dispose());
+}

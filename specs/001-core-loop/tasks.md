@@ -475,7 +475,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-016 — Собрать browser application
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** интеграционное покрытие `FR-001`–`FR-015`; `AC-001`–`AC-012`,
 `AC-014`, `AC-015`; `NFR-001`.
