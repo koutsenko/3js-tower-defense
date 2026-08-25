@@ -253,7 +253,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-008 — Реализовать projectiles, damage и kill economy
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-008`, `FR-009`; `AC-006`, `AC-007`, часть `AC-009`.
 
