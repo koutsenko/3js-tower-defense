@@ -46,12 +46,13 @@ export function resolveEscapedMonsters(state: GameState): readonly GameEvent[] {
     return [];
   }
 
-  const escapedIds = new Set(escapedMonsters.map(({ id }) => id));
+  const resolvedEscapes = escapedMonsters.slice(0, state.baseHp);
+  const escapedIds = new Set(resolvedEscapes.map(({ id }) => id));
   state.monsters = state.monsters.filter(({ id }) => !escapedIds.has(id));
-  state.baseHp -= escapedMonsters.length;
-  state.escapedCount += escapedMonsters.length;
+  state.baseHp -= resolvedEscapes.length;
+  state.escapedCount += resolvedEscapes.length;
 
-  return escapedMonsters.map(({ id }) => ({
+  return resolvedEscapes.map(({ id }) => ({
     type: 'monster-escaped',
     monsterId: id,
   }));
