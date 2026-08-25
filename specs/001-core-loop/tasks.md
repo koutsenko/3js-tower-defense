@@ -343,7 +343,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-011 — Реализовать fixed-step application loop
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** поддерживает timing в `FR-005`–`FR-008` и freeze в `FR-013`;
 `AC-004`–`AC-006`, `AC-010`, `AC-011`.
