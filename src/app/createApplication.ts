@@ -69,6 +69,7 @@ interface SceneView {
   readonly scene: Scene;
   readonly camera: Camera;
   resize(width: number, height: number, pixelRatio?: number): void;
+  presentEvents(events: readonly GameEvent[], snapshot: GameSnapshot): void;
   reconcile(snapshot: GameSnapshot): void;
   render(): void;
   dispose(): void;
@@ -142,6 +143,7 @@ export function createBrowserApplication(
   scene.scene.add(placement.root);
 
   const renderFrame: RenderFrame = ({ snapshot, events }) => {
+    scene.presentEvents(events, snapshot);
     scene.reconcile(snapshot);
     hud.render(snapshot);
     finalOverlay.render(snapshot);

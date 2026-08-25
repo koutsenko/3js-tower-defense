@@ -4,6 +4,7 @@ import {
   createBrowserApplication,
   type BrowserApplicationOptions,
 } from '../../src/app/createApplication';
+import type { GameEvent } from '../../src/game/events';
 import type { GameSnapshot } from '../../src/game/types';
 
 describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-014, AC-015)', () => {
@@ -22,6 +23,10 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
     expect(fixture.scene.reconcile).toHaveBeenCalledWith(
       application.runtime.getSnapshot(),
     );
+    expect(fixture.scene.presentEvents).toHaveBeenCalledWith(
+      [],
+      application.runtime.getSnapshot(),
+    );
     expect(fixture.hud.render).toHaveBeenCalled();
     expect(fixture.overlay.render).toHaveBeenCalled();
     expect(fixture.scene.render).toHaveBeenCalled();
@@ -29,6 +34,10 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
     application.runtime.dispatch({ type: 'StartGame' });
     application.start();
     fixture.runFrame(0);
+    expect(fixture.scene.presentEvents).toHaveBeenLastCalledWith(
+      [{ type: 'game-start' }],
+      application.runtime.getSnapshot(),
+    );
     expect(fixture.onEvents).toHaveBeenCalledWith([{ type: 'game-start' }]);
 
     application.dispose();
@@ -149,6 +158,8 @@ function createSceneSpy() {
     scene: new Scene(),
     camera: new Camera(),
     resize: vi.fn(),
+    presentEvents:
+      vi.fn<(events: readonly GameEvent[], snapshot: GameSnapshot) => void>(),
     reconcile: vi.fn<(snapshot: GameSnapshot) => void>(),
     render: vi.fn(),
     dispose: vi.fn(),

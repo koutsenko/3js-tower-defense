@@ -1,9 +1,11 @@
 import { LineSegments, Mesh, Scene, WebGLRenderer } from 'three';
 import { levelConfig, type LevelConfig } from '../config/levelConfig';
+import type { GameEvent } from '../game/events';
 import type { GameSnapshot } from '../game/types';
 import { createLevelCamera, resizeLevelCamera } from './camera';
 import { EntityReconciler } from './entityReconciler';
 import { createLevelPlaceholders } from './placeholders';
+import { TransientEffects } from './transientEffects';
 
 export class SceneRenderer {
   readonly scene = new Scene();
@@ -11,6 +13,7 @@ export class SceneRenderer {
   private readonly renderer: WebGLRenderer;
   private readonly level: Readonly<LevelConfig>;
   private readonly entityReconciler: EntityReconciler;
+  private readonly transientEffects: TransientEffects;
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -21,7 +24,8 @@ export class SceneRenderer {
     this.renderer = new WebGLRenderer({ canvas, antialias: true });
     this.scene.add(createLevelPlaceholders(level));
     this.entityReconciler = new EntityReconciler(level, this.camera);
-    this.scene.add(this.entityReconciler.root);
+    this.transientEffects = new TransientEffects(level);
+    this.scene.add(this.entityReconciler.root, this.transientEffects.root);
   }
 
   resize(width: number, height: number, pixelRatio = 1): void {
@@ -38,8 +42,13 @@ export class SceneRenderer {
     this.entityReconciler.reconcile(snapshot);
   }
 
+  presentEvents(events: readonly GameEvent[], snapshot: GameSnapshot): void {
+    this.transientEffects.present(events, snapshot, this.entityReconciler);
+  }
+
   dispose(): void {
     this.entityReconciler.dispose();
+    this.transientEffects.dispose();
     this.scene.traverse((object) => {
       if (object instanceof Mesh || object instanceof LineSegments) {
         object.geometry.dispose();
