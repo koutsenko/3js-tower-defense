@@ -448,7 +448,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-015 — Реализовать HUD, Start и final overlay
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-005`, `FR-012`, `FR-014`, `FR-015`; `AC-001`, `AC-004`,
 `AC-010`–`AC-012`, `AC-014`; `NFR-001`.

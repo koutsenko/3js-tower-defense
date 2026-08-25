@@ -24,3 +24,71 @@ body {
 .shell {
   text-align: center;
 }
+
+.hud {
+  position: absolute;
+  z-index: 10;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.75rem;
+  color: #f4f7f5;
+  background: rgb(16 24 20 / 88%);
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 0.5rem;
+}
+
+.hud-stats,
+.final-panel dl {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.hud-stats div,
+.final-panel dl div {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.hud-stats dd,
+.final-panel dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.hud-countdown {
+  margin: 0.75rem 0;
+}
+
+button {
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.final-overlay {
+  position: absolute;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(5 8 7 / 72%);
+  pointer-events: auto;
+}
+
+.final-overlay[hidden] {
+  display: none;
+}
+
+.final-panel {
+  min-width: 18rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: #17201c;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 0.75rem;
+}
