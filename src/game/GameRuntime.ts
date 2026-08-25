@@ -20,8 +20,8 @@ import type {
 } from './types';
 
 export class GameRuntime {
-  private readonly state: GameState;
-  private readonly entityIds: EntityIdSequence;
+  private state: GameState;
+  private entityIds: EntityIdSequence;
   private pendingEvents: GameEvent[] = [];
 
   constructor(initialState: GameState = createInitialState()) {
@@ -36,7 +36,7 @@ export class GameRuntime {
       case 'StartGame':
         return this.startGame();
       case 'Restart':
-        return { ok: false, code: 'INVALID_SESSION_STATE' };
+        return this.restart();
     }
   }
 
@@ -76,6 +76,17 @@ export class GameRuntime {
     }
 
     this.pendingEvents.push(startGame(this.state));
+    return { ok: true };
+  }
+
+  private restart(): CommandResult {
+    if (this.state.status !== 'Victory' && this.state.status !== 'Defeat') {
+      return { ok: false, code: 'INVALID_SESSION_STATE' };
+    }
+
+    this.state = createInitialState();
+    this.entityIds = createEntityIdSequence();
+    this.pendingEvents = [];
     return { ok: true };
   }
 

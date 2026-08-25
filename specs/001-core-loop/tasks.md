@@ -282,7 +282,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-009 — Реализовать terminal outcomes и Restart
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-001`, `FR-010`, `FR-013`–`FR-015`; `AC-008`, `AC-010`–`AC-012`.
 

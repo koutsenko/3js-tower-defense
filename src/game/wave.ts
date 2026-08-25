@@ -1,5 +1,6 @@
 import type { GameEvent } from './events';
 import { resolveProjectileHits } from './combat';
+import { resolveDefeat, resolveVictory } from './completion';
 import { fireReadyTowers } from './firing';
 import {
   getNextEscapeTime,
@@ -36,9 +37,19 @@ export function advanceWave(
   while (true) {
     events.push(...spawnDueMonsters(state, entityIds));
     events.push(...resolveEscapedMonsters(state));
+    const defeatEvent = resolveDefeat(state);
+    if (defeatEvent !== null) {
+      events.push(defeatEvent);
+      return events;
+    }
     removeInvalidProjectiles(state);
     events.push(...fireReadyTowers(state, entityIds));
     events.push(...resolveProjectileHits(state));
+    const victoryEvent = resolveVictory(state);
+    if (victoryEvent !== null) {
+      events.push(victoryEvent);
+      return events;
+    }
 
     const nextSpawnTime = getNextSpawnTime(state);
     const nextEscapeTime = getNextEscapeTime(state, currentTime);
