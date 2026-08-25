@@ -504,7 +504,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-017 — Выполнить complete acceptance gate
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** все `FR-001`–`FR-016`, `AC-001`–`AC-015`, `NFR-001`.
 
@@ -530,6 +530,18 @@ assets.
 - hover/rejection feedback читаемы;
 - `Victory` и `Defeat` замораживают gameplay, а `Restart` полностью возвращает
   initial state.
+
+**Verification evidence (2026-08-25):**
+
+- `npm test` — 18 test files, 96 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- `npm run capture:acceptance` — browser flow при `1280×720` воспроизводит
+  pre-start rejection, preparation с двумя towers, active wave, покупку на
+  заработанные coins, `Victory`, `Restart` и отдельный `Defeat` flow;
+- screenshots сохранены в `docs/verification/001-core-loop/` и вручную
+  проверены на видимость level, route, entrance, exit, buildable cells, towers,
+  monsters, HP bars, projectile, feedback, HUD и terminal overlays.
 
 ## 6. Requirement coverage
 
