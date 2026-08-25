@@ -23,7 +23,7 @@ export class GameRuntime {
 
   constructor(initialState: GameState = createInitialState()) {
     this.state = cloneState(initialState);
-    this.entityIds = createEntityIdSequence();
+    this.entityIds = createEntityIdSequence(getNextEntityId(this.state));
   }
 
   dispatch(command: GameCommand): CommandResult {
@@ -68,6 +68,16 @@ export class GameRuntime {
   validateBuild(cell: GridCell): BuildValidation {
     return validateBuildState(this.state, cell);
   }
+}
+
+function getNextEntityId(state: GameState): number {
+  const entityIds = [
+    ...state.towers.map(({ id }) => id),
+    ...state.monsters.map(({ id }) => id),
+    ...state.projectiles.map(({ id }) => id),
+  ];
+
+  return Math.max(0, ...entityIds) + 1;
 }
 
 function cloneState(state: GameState): GameState {

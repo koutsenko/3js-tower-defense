@@ -80,4 +80,21 @@ describe('tower building validation (FR-003, FR-004, FR-011)', () => {
       expect(runtime.advance(0)).toEqual([]);
     },
   );
+
+  it('allocates a tower ID above every entity in populated state', () => {
+    const runtime = createRuntime('WaveActive', {
+      coins: 100,
+      towers: [{ id: 3, cell: { x: 6, y: 3 }, nextShotAt: 0 }],
+      monsters: [{ id: 8, spawnIndex: 0, hp: 100, routeProgress: 0 }],
+      projectiles: [{ id: 5, targetId: 8, position: { x: 0, y: 1 } }],
+    });
+
+    expect(
+      runtime.dispatch({ type: 'BuildTower', cell: { x: 5, y: 5 } }),
+    ).toEqual({ ok: true });
+    expect(runtime.getSnapshot().towers.at(-1)?.id).toBe(9);
+    expect(runtime.advance(0)).toEqual([
+      { type: 'tower-built', towerId: 9, cell: { x: 5, y: 5 } },
+    ]);
+  });
 });
