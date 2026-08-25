@@ -1,5 +1,6 @@
 import { SHOT_COOLDOWN } from '../config/gameConfig';
 import type { GameEvent } from './events';
+import { scheduleProjectileImpact } from './projectiles';
 import { selectTarget } from './targeting';
 import type { EntityIdSequence } from './state';
 import type { GameState } from './types';
@@ -48,6 +49,7 @@ export function fireTower(
     position: { x: tower.cell.x, y: tower.cell.y },
   };
   state.projectiles.push(projectile);
+  scheduleProjectileImpact(state, projectile, state.simulationTime);
   tower.nextShotAt = state.simulationTime + SHOT_COOLDOWN;
 
   return {

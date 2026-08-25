@@ -1,4 +1,5 @@
 import type { GameEvent } from './events';
+import { resolveProjectileHits } from './combat';
 import { fireReadyTowers } from './firing';
 import {
   getNextEscapeTime,
@@ -6,6 +7,12 @@ import {
   resolveEscapedMonsters,
 } from './movement';
 import { getNextSpawnTime, spawnDueMonsters } from './spawning';
+import {
+  getNextProjectileImpactTime,
+  getNextProjectileStepTime,
+  moveProjectiles,
+  removeInvalidProjectiles,
+} from './projectiles';
 import type { EntityIdSequence } from './state';
 import { getNextTargetingTime } from './targeting';
 import type { GameState } from './types';
@@ -29,14 +36,30 @@ export function advanceWave(
   while (true) {
     events.push(...spawnDueMonsters(state, entityIds));
     events.push(...resolveEscapedMonsters(state));
+    removeInvalidProjectiles(state);
     events.push(...fireReadyTowers(state, entityIds));
+    events.push(...resolveProjectileHits(state));
 
     const nextSpawnTime = getNextSpawnTime(state);
     const nextEscapeTime = getNextEscapeTime(state, currentTime);
     const nextTargetingTime = getNextTargetingTime(state, currentTime);
+    const nextProjectileStepTime = getNextProjectileStepTime(
+      state,
+      currentTime,
+    );
+    const nextProjectileImpactTime = getNextProjectileImpactTime(
+      state,
+      currentTime,
+    );
     const nextBoundary = minDefined(
-      minDefined(nextSpawnTime, nextEscapeTime),
-      nextTargetingTime,
+      minDefined(
+        minDefined(
+          minDefined(nextSpawnTime, nextEscapeTime),
+          nextTargetingTime,
+        ),
+        nextProjectileStepTime,
+      ),
+      nextProjectileImpactTime,
     );
 
     if (
@@ -53,6 +76,7 @@ export function advanceWave(
 
     const boundaryTime = Math.min(endTime, nextBoundary ?? endTime);
     moveMonsters(state, boundaryTime - currentTime);
+    moveProjectiles(state, boundaryTime - currentTime);
     currentTime = boundaryTime;
     state.simulationTime = currentTime;
   }
