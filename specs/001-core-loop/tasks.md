@@ -422,7 +422,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-014 — Реализовать mouse placement и rejection feedback
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-003`, `FR-004`, `FR-011`; `AC-002`, `AC-003`, `AC-009`,
 `AC-015`; `NFR-001`.
