@@ -86,7 +86,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-003 — Определить domain model и публичную runtime boundary
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-001`, `FR-004`–`FR-006`, `FR-010`, `FR-012`, `FR-015`;
 `AC-001`, `AC-014`.
