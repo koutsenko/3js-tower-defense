@@ -223,7 +223,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-007 — Реализовать targeting и firing
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-007`, `FR-011`; `AC-005`, часть `AC-009`.
 
@@ -248,7 +248,8 @@ acceptance criteria и поддерживает `NFR-001`.
 - первый shot выполняется без задержки, последующие — с точным cooldown;
 - coarse interval и эквивалентные fixed steps дают одинаковые target и shot
   events;
-- tower, построенная во время wave, участвует со следующей simulation boundary.
+- tower, построенная во время wave, немедленно выбирает допустимую цель и
+  стреляет на boundary успешной покупки (`AC-009`).
 
 ### T-008 — Реализовать projectiles, damage и kill economy
 

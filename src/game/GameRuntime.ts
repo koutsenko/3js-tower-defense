@@ -2,6 +2,7 @@ import type { GridCell } from './grid';
 import type { GameEvent } from './events';
 import { TOWER_COST } from '../config/gameConfig';
 import { validateBuild as validateBuildState } from './building';
+import { fireTower } from './firing';
 import { advanceLifecycle, startGame } from './lifecycle';
 import { advanceWave } from './wave';
 import {
@@ -59,6 +60,12 @@ export class GameRuntime {
       towerId: tower.id,
       cell: { ...tower.cell },
     });
+    if (this.state.status === 'WaveActive') {
+      const shotEvent = fireTower(this.state, tower.id, this.entityIds);
+      if (shotEvent !== null) {
+        this.pendingEvents.push(shotEvent);
+      }
+    }
 
     return { ok: true };
   }
