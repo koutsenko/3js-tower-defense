@@ -59,6 +59,12 @@ describe('monster spawning, movement, and escape (FR-006, FR-010, FR-012)', () =
     expect(runtime.getSnapshot().spawnedCount).toBe(WAVE_SIZE);
     expect(runtime.getSnapshot().monsters).toHaveLength(WAVE_SIZE);
     expect(runtime.getSnapshot().monsters.at(-1)?.routeProgress).toBe(0);
+
+    const eventsAfterSchedule = runtime.advance(5);
+    expect(
+      eventsAfterSchedule.filter(({ type }) => type === 'monster-spawned'),
+    ).toEqual([]);
+    expect(runtime.getSnapshot().spawnedCount).toBe(WAVE_SIZE);
   });
 
   it('produces equivalent state and events for coarse and fixed intervals', () => {
