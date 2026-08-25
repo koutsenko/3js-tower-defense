@@ -3,6 +3,7 @@ import type { GameEvent } from './events';
 import { TOWER_COST } from '../config/gameConfig';
 import { validateBuild as validateBuildState } from './building';
 import { advanceLifecycle, startGame } from './lifecycle';
+import { advanceWave } from './wave';
 import {
   createEntityIdSequence,
   createInitialState,
@@ -79,7 +80,15 @@ export class GameRuntime {
     }
 
     const lifecycleResult = advanceLifecycle(this.state, deltaSeconds);
-    const events = [...this.pendingEvents, ...lifecycleResult.events];
+    const events = [
+      ...this.pendingEvents,
+      ...lifecycleResult.events,
+      ...advanceWave(
+        this.state,
+        lifecycleResult.waveActiveDuration,
+        this.entityIds,
+      ),
+    ];
     this.pendingEvents = [];
     return events;
   }
