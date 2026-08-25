@@ -223,7 +223,7 @@ acceptance criteria и поддерживает `NFR-001`.
 
 ### T-007 — Реализовать targeting и firing
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** `FR-007`, `FR-011`; `AC-005`, часть `AC-009`.
 

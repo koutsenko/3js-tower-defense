@@ -1,4 +1,5 @@
 import type { GameEvent } from './events';
+import { fireReadyTowers } from './firing';
 import {
   getNextEscapeTime,
   moveMonsters,
@@ -6,6 +7,7 @@ import {
 } from './movement';
 import { getNextSpawnTime, spawnDueMonsters } from './spawning';
 import type { EntityIdSequence } from './state';
+import { getNextTargetingTime } from './targeting';
 import type { GameState } from './types';
 
 const TIME_TOLERANCE = 1e-9;
@@ -27,10 +29,15 @@ export function advanceWave(
   while (true) {
     events.push(...spawnDueMonsters(state, entityIds));
     events.push(...resolveEscapedMonsters(state));
+    events.push(...fireReadyTowers(state, entityIds));
 
     const nextSpawnTime = getNextSpawnTime(state);
     const nextEscapeTime = getNextEscapeTime(state, currentTime);
-    const nextBoundary = minDefined(nextSpawnTime, nextEscapeTime);
+    const nextTargetingTime = getNextTargetingTime(state, currentTime);
+    const nextBoundary = minDefined(
+      minDefined(nextSpawnTime, nextEscapeTime),
+      nextTargetingTime,
+    );
 
     if (
       nextBoundary !== null &&
