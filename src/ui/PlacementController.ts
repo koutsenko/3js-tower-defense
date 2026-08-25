@@ -10,7 +10,7 @@ import {
   Vector3,
   type Camera,
 } from 'three';
-import { levelConfig, type LevelConfig } from '../config/levelConfig';
+import { levelConfig } from '../config/levelConfig';
 import { createGridCell, type GridCell } from '../game/grid';
 import type {
   BuildRejectionCode,
@@ -50,11 +50,13 @@ export class PlacementController {
     private readonly camera: Camera,
     private readonly runtime: PlacementRuntime,
     private readonly feedback: BuildFeedback,
-    private readonly level: Readonly<LevelConfig> = levelConfig,
   ) {
     this.root.name = 'placement-feedback';
     this.highlight = new Mesh(
-      new PlaneGeometry(level.cellSize * 0.92, level.cellSize * 0.92),
+      new PlaneGeometry(
+        levelConfig.cellSize * 0.92,
+        levelConfig.cellSize * 0.92,
+      ),
       this.highlightMaterial,
     );
     this.highlight.name = 'placement-highlight';
@@ -89,9 +91,9 @@ export class PlacementController {
     const validation = this.runtime.validateBuild(cell);
     this.highlight.visible = true;
     this.highlight.position.set(
-      cell.x * this.level.cellSize,
+      cell.x * levelConfig.cellSize,
       0.04,
-      cell.y * this.level.cellSize,
+      cell.y * levelConfig.cellSize,
     );
     this.highlightMaterial.color.setHex(
       validation.ok ? VALID_COLOR : INVALID_COLOR,
@@ -140,9 +142,9 @@ export class PlacementController {
       return null;
     }
 
-    const x = Math.floor(hit.x / this.level.cellSize + 0.5);
-    const y = Math.floor(hit.z / this.level.cellSize + 0.5);
-    if (x < 0 || y < 0 || x >= this.level.width || y >= this.level.height) {
+    const x = Math.floor(hit.x / levelConfig.cellSize + 0.5);
+    const y = Math.floor(hit.z / levelConfig.cellSize + 0.5);
+    if (x < 0 || y < 0 || x >= levelConfig.width || y >= levelConfig.height) {
       return null;
     }
 
