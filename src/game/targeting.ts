@@ -1,5 +1,6 @@
 import { MONSTER_SPEED, TOWER_RANGE } from '../config/gameConfig';
 import { levelConfig } from '../config/levelConfig';
+import { MathExtra } from './math/MathExtra';
 import { getRoutePosition } from './movement';
 import type { GameState, MonsterState, TowerState } from './types';
 
@@ -84,11 +85,14 @@ function getNextRangeEntryProgress(
       const b = 2 * (offsetX * dx + offsetY * dy);
       const c =
         offsetX * offsetX + offsetY * offsetY - TOWER_RANGE * TOWER_RANGE;
-      const discriminant = b * b - 4 * a * c;
+      const entryRatio = MathExtra.findSmallerQuadraticRoot(
+        a,
+        b,
+        c,
+        DISTANCE_TOLERANCE,
+      );
 
-      if (discriminant >= -DISTANCE_TOLERANCE) {
-        const entryRatio =
-          (-b - Math.sqrt(Math.max(0, discriminant))) / (2 * a);
+      if (entryRatio !== null) {
         const earliestRatio = Math.max(
           0,
           (monster.routeProgress - segmentStartProgress) / segmentLength,
