@@ -67,12 +67,18 @@ globalThis.console.log(
  * Для каждого Identifier TypeChecker определяет связанный символ. Имена,
  * объявленные только в стандартных lib.*.d.ts TypeScript, пропускаются, поэтому
  * глобальные API вроде Object и Math не смешиваются с локальной лексикой.
+ * Узлы, которые парсер представляет как Identifier для ключевого слова
+ * (например, const в выражении as const), также не учитываются.
  * Локальные имена, TypeScript-типы и явно импортированные имена сохраняются.
  *
  * @param {import('typescript').Node} node Текущий узел синтаксического дерева.
  */
 function visit(node) {
-  if (ts.isIdentifier(node) && !isStandardLibraryIdentifier(node)) {
+  if (
+    ts.isIdentifier(node) &&
+    ts.identifierToKeywordKind(node) === undefined &&
+    !isStandardLibraryIdentifier(node)
+  ) {
     const name = node.text;
     frequencies.set(name, (frequencies.get(name) ?? 0) + 1);
   }
