@@ -1,0 +1,2325 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Частотная карта идентификаторов</title>
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { margin: 0 auto; max-width: 56rem; padding: 2rem 1rem; }
+      h1 { margin-bottom: 0.35rem; }
+      .meta { color: #777; margin: 0 0 1.5rem; }
+      label { display: grid; gap: 0.4rem; font-weight: 600; }
+      input { font: inherit; padding: 0.65rem 0.8rem; }
+      table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
+      th, td { border-bottom: 1px solid #8886; padding: 0.55rem 0.7rem; text-align: left; }
+      th { position: sticky; top: 0; background: Canvas; }
+      .count { text-align: right; font-variant-numeric: tabular-nums; }
+      [hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Частотная карта идентификаторов</h1>
+      <p class="meta">src · 31 файлов · 568 названий · 4254 вхождений · 2026-08-27T18:54:16.176Z</p>
+      <label>
+        Фильтр по названию
+        <input id="filter" type="search" autocomplete="off" placeholder="gameState, monster, tower…">
+      </label>
+      <p id="result-count" aria-live="polite">Показано: 568</p>
+      <table>
+        <thead><tr><th scope="col">Название</th><th scope="col" class="count">Вхождения</th></tr></thead>
+        <tbody>
+        <tr data-name="state">
+          <td><code>state</code></td>
+          <td class="count">162</td>
+        </tr>
+        <tr data-name="level">
+          <td><code>level</code></td>
+          <td class="count">94</td>
+        </tr>
+        <tr data-name="id">
+          <td><code>id</code></td>
+          <td class="count">84</td>
+        </tr>
+        <tr data-name="x">
+          <td><code>x</code></td>
+          <td class="count">82</td>
+        </tr>
+        <tr data-name="y">
+          <td><code>y</code></td>
+          <td class="count">80</td>
+        </tr>
+        <tr data-name="root">
+          <td><code>root</code></td>
+          <td class="count">70</td>
+        </tr>
+        <tr data-name="cell">
+          <td><code>cell</code></td>
+          <td class="count">66</td>
+        </tr>
+        <tr data-name="cellsize">
+          <td><code>cellSize</code></td>
+          <td class="count">62</td>
+        </tr>
+        <tr data-name="tower">
+          <td><code>tower</code></td>
+          <td class="count">51</td>
+        </tr>
+        <tr data-name="projectile">
+          <td><code>projectile</code></td>
+          <td class="count">50</td>
+        </tr>
+        <tr data-name="events">
+          <td><code>events</code></td>
+          <td class="count">47</td>
+        </tr>
+        <tr data-name="gamestate">
+          <td><code>GameState</code></td>
+          <td class="count">47</td>
+        </tr>
+        <tr data-name="position">
+          <td><code>position</code></td>
+          <td class="count">44</td>
+        </tr>
+        <tr data-name="math">
+          <td><code>Math</code></td>
+          <td class="count">43</td>
+        </tr>
+        <tr data-name="snapshot">
+          <td><code>snapshot</code></td>
+          <td class="count">40</td>
+        </tr>
+        <tr data-name="monster">
+          <td><code>monster</code></td>
+          <td class="count">38</td>
+        </tr>
+        <tr data-name="camera">
+          <td><code>camera</code></td>
+          <td class="count">37</td>
+        </tr>
+        <tr data-name="gameevent">
+          <td><code>GameEvent</code></td>
+          <td class="count">36</td>
+        </tr>
+        <tr data-name="gridcell">
+          <td><code>GridCell</code></td>
+          <td class="count">34</td>
+        </tr>
+        <tr data-name="object">
+          <td><code>object</code></td>
+          <td class="count">34</td>
+        </tr>
+        <tr data-name="readonly">
+          <td><code>Readonly</code></td>
+          <td class="count">34</td>
+        </tr>
+        <tr data-name="dispose">
+          <td><code>dispose</code></td>
+          <td class="count">31</td>
+        </tr>
+        <tr data-name="runtime">
+          <td><code>runtime</code></td>
+          <td class="count">31</td>
+        </tr>
+        <tr data-name="start">
+          <td><code>start</code></td>
+          <td class="count">31</td>
+        </tr>
+        <tr data-name="levelconfig">
+          <td><code>levelConfig</code></td>
+          <td class="count">30</td>
+        </tr>
+        <tr data-name="type">
+          <td><code>type</code></td>
+          <td class="count">30</td>
+        </tr>
+        <tr data-name="target">
+          <td><code>target</code></td>
+          <td class="count">29</td>
+        </tr>
+        <tr data-name="htmlelement">
+          <td><code>HTMLElement</code></td>
+          <td class="count">27</td>
+        </tr>
+        <tr data-name="currenttime">
+          <td><code>currentTime</code></td>
+          <td class="count">26</td>
+        </tr>
+        <tr data-name="status">
+          <td><code>status</code></td>
+          <td class="count">26</td>
+        </tr>
+        <tr data-name="canvas">
+          <td><code>canvas</code></td>
+          <td class="count">25</td>
+        </tr>
+        <tr data-name="gamesnapshot">
+          <td><code>GameSnapshot</code></td>
+          <td class="count">25</td>
+        </tr>
+        <tr data-name="monsters">
+          <td><code>monsters</code></td>
+          <td class="count">25</td>
+        </tr>
+        <tr data-name="event">
+          <td><code>event</code></td>
+          <td class="count">24</td>
+        </tr>
+        <tr data-name="entityid">
+          <td><code>EntityId</code></td>
+          <td class="count">23</td>
+        </tr>
+        <tr data-name="mesh">
+          <td><code>Mesh</code></td>
+          <td class="count">23</td>
+        </tr>
+        <tr data-name="name">
+          <td><code>name</code></td>
+          <td class="count">23</td>
+        </tr>
+        <tr data-name="width">
+          <td><code>width</code></td>
+          <td class="count">23</td>
+        </tr>
+        <tr data-name="index">
+          <td><code>index</code></td>
+          <td class="count">22</td>
+        </tr>
+        <tr data-name="left">
+          <td><code>left</code></td>
+          <td class="count">22</td>
+        </tr>
+        <tr data-name="levelconfig">
+          <td><code>LevelConfig</code></td>
+          <td class="count">22</td>
+        </tr>
+        <tr data-name="push">
+          <td><code>push</code></td>
+          <td class="count">22</td>
+        </tr>
+        <tr data-name="height">
+          <td><code>height</code></td>
+          <td class="count">21</td>
+        </tr>
+        <tr data-name="max">
+          <td><code>max</code></td>
+          <td class="count">21</td>
+        </tr>
+        <tr data-name="projectiles">
+          <td><code>projectiles</code></td>
+          <td class="count">21</td>
+        </tr>
+        <tr data-name="end">
+          <td><code>end</code></td>
+          <td class="count">20</td>
+        </tr>
+        <tr data-name="ok">
+          <td><code>ok</code></td>
+          <td class="count">20</td>
+        </tr>
+        <tr data-name="right">
+          <td><code>right</code></td>
+          <td class="count">20</td>
+        </tr>
+        <tr data-name="vector3">
+          <td><code>Vector3</code></td>
+          <td class="count">20</td>
+        </tr>
+        <tr data-name="routeprogress">
+          <td><code>routeProgress</code></td>
+          <td class="count">19</td>
+        </tr>
+        <tr data-name="code">
+          <td><code>code</code></td>
+          <td class="count">18</td>
+        </tr>
+        <tr data-name="freeze">
+          <td><code>freeze</code></td>
+          <td class="count">18</td>
+        </tr>
+        <tr data-name="object">
+          <td><code>Object</code></td>
+          <td class="count">18</td>
+        </tr>
+        <tr data-name="simulationtime">
+          <td><code>simulationTime</code></td>
+          <td class="count">18</td>
+        </tr>
+        <tr data-name="targetid">
+          <td><code>targetId</code></td>
+          <td class="count">18</td>
+        </tr>
+        <tr data-name="add">
+          <td><code>add</code></td>
+          <td class="count">17</td>
+        </tr>
+        <tr data-name="entityids">
+          <td><code>entityIds</code></td>
+          <td class="count">17</td>
+        </tr>
+        <tr data-name="group">
+          <td><code>Group</code></td>
+          <td class="count">17</td>
+        </tr>
+        <tr data-name="healthbar">
+          <td><code>healthBar</code></td>
+          <td class="count">17</td>
+        </tr>
+        <tr data-name="material">
+          <td><code>material</code></td>
+          <td class="count">17</td>
+        </tr>
+        <tr data-name="gameruntime">
+          <td><code>GameRuntime</code></td>
+          <td class="count">16</td>
+        </tr>
+        <tr data-name="map">
+          <td><code>map</code></td>
+          <td class="count">16</td>
+        </tr>
+        <tr data-name="ratio">
+          <td><code>ratio</code></td>
+          <td class="count">16</td>
+        </tr>
+        <tr data-name="container">
+          <td><code>container</code></td>
+          <td class="count">15</td>
+        </tr>
+        <tr data-name="getelement">
+          <td><code>getElement</code></td>
+          <td class="count">15</td>
+        </tr>
+        <tr data-name="length">
+          <td><code>length</code></td>
+          <td class="count">15</td>
+        </tr>
+        <tr data-name="min">
+          <td><code>min</code></td>
+          <td class="count">15</td>
+        </tr>
+        <tr data-name="scene">
+          <td><code>scene</code></td>
+          <td class="count">15</td>
+        </tr>
+        <tr data-name="color">
+          <td><code>color</code></td>
+          <td class="count">14</td>
+        </tr>
+        <tr data-name="meshbasicmaterial">
+          <td><code>MeshBasicMaterial</code></td>
+          <td class="count">14</td>
+        </tr>
+        <tr data-name="textcontent">
+          <td><code>textContent</code></td>
+          <td class="count">14</td>
+        </tr>
+        <tr data-name="towers">
+          <td><code>towers</code></td>
+          <td class="count">14</td>
+        </tr>
+        <tr data-name="undefined">
+          <td><code>undefined</code></td>
+          <td class="count">14</td>
+        </tr>
+        <tr data-name="bounds">
+          <td><code>bounds</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="creategridcell">
+          <td><code>createGridCell</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="deltaseconds">
+          <td><code>deltaSeconds</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="distance_tolerance">
+          <td><code>DISTANCE_TOLERANCE</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="entities">
+          <td><code>entities</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="render">
+          <td><code>render</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="routewaypoints">
+          <td><code>routeWaypoints</code></td>
+          <td class="count">13</td>
+        </tr>
+        <tr data-name="effect">
+          <td><code>effect</code></td>
+          <td class="count">12</td>
+        </tr>
+        <tr data-name="entityidsequence">
+          <td><code>EntityIdSequence</code></td>
+          <td class="count">11</td>
+        </tr>
+        <tr data-name="getrouteposition">
+          <td><code>getRoutePosition</code></td>
+          <td class="count">11</td>
+        </tr>
+        <tr data-name="hint">
+          <td><code>hint</code></td>
+          <td class="count">11</td>
+        </tr>
+        <tr data-name="mesh">
+          <td><code>mesh</code></td>
+          <td class="count">11</td>
+        </tr>
+        <tr data-name="set">
+          <td><code>set</code></td>
+          <td class="count">11</td>
+        </tr>
+        <tr data-name="colors">
+          <td><code>COLORS</code></td>
+          <td class="count">10</td>
+        </tr>
+        <tr data-name="element">
+          <td><code>element</code></td>
+          <td class="count">10</td>
+        </tr>
+        <tr data-name="highlight">
+          <td><code>highlight</code></td>
+          <td class="count">10</td>
+        </tr>
+        <tr data-name="monster_speed">
+          <td><code>MONSTER_SPEED</code></td>
+          <td class="count">10</td>
+        </tr>
+        <tr data-name="animationframeid">
+          <td><code>animationFrameId</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="filter">
+          <td><code>filter</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="find">
+          <td><code>find</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="geometry">
+          <td><code>geometry</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="orthographiccamera">
+          <td><code>OrthographicCamera</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="pendingevents">
+          <td><code>pendingEvents</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="phasestartedat">
+          <td><code>phaseStartedAt</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="projectedbounds">
+          <td><code>projectedBounds</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="segmentlength">
+          <td><code>segmentLength</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="spawnindex">
+          <td><code>spawnIndex</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="toast">
+          <td><code>toast</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="tower_cost">
+          <td><code>TOWER_COST</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="wave_size">
+          <td><code>WAVE_SIZE</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="waypoints">
+          <td><code>waypoints</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="z">
+          <td><code>z</code></td>
+          <td class="count">9</td>
+        </tr>
+        <tr data-name="buildablecells">
+          <td><code>buildableCells</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="buildrejectioncode">
+          <td><code>BuildRejectionCode</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="commandresult">
+          <td><code>CommandResult</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="endtime">
+          <td><code>endTime</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="fill">
+          <td><code>fill</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="getcellkey">
+          <td><code>getCellKey</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="has">
+          <td><code>has</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="hidden">
+          <td><code>hidden</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="mindefined">
+          <td><code>minDefined</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="monster_hp">
+          <td><code>MONSTER_HP</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="monsterstate">
+          <td><code>MonsterState</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="object3d">
+          <td><code>Object3D</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="renderframe">
+          <td><code>renderFrame</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="routecells">
+          <td><code>routeCells</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="string">
+          <td><code>String</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="t">
+          <td><code>T</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="tower_range">
+          <td><code>TOWER_RANGE</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="towerstate">
+          <td><code>TowerState</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="waveactiveduration">
+          <td><code>waveActiveDuration</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="window">
+          <td><code>window</code></td>
+          <td class="count">8</td>
+        </tr>
+        <tr data-name="abs">
+          <td><code>abs</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="barwidth">
+          <td><code>barWidth</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="basehp">
+          <td><code>baseHp</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="buildvalidation">
+          <td><code>BuildValidation</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="camera">
+          <td><code>Camera</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="coins">
+          <td><code>coins</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="countdown">
+          <td><code>countdown</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="entityid">
+          <td><code>entityId</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="entityreconciler">
+          <td><code>EntityReconciler</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="entrance">
+          <td><code>entrance</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="error">
+          <td><code>Error</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="getsnapshot">
+          <td><code>getSnapshot</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="hp">
+          <td><code>hp</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="message">
+          <td><code>message</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="monsterid">
+          <td><code>monsterId</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="planegeometry">
+          <td><code>PlaneGeometry</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="position">
+          <td><code>Position</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="preparation_duration">
+          <td><code>PREPARATION_DURATION</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="projected">
+          <td><code>projected</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="resize">
+          <td><code>resize</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="routelength">
+          <td><code>routeLength</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="towerid">
+          <td><code>towerId</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="validation">
+          <td><code>validation</code></td>
+          <td class="count">7</td>
+        </tr>
+        <tr data-name="addeventlistener">
+          <td><code>addEventListener</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="boundary">
+          <td><code>boundary</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="boxgeometry">
+          <td><code>BoxGeometry</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="child">
+          <td><code>child</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="classname">
+          <td><code>className</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="coinsvalue">
+          <td><code>coinsValue</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="document">
+          <td><code>document</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="duration">
+          <td><code>duration</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="effects">
+          <td><code>effects</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="elementtype">
+          <td><code>ElementType</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="entityreconciler">
+          <td><code>entityReconciler</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="escapedcount">
+          <td><code>escapedCount</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="exit">
+          <td><code>exit</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="framedeltaseconds">
+          <td><code>frameDeltaSeconds</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="gameruntime">
+          <td><code>gameRuntime</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="halfheight">
+          <td><code>halfHeight</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="halfwidth">
+          <td><code>halfWidth</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="impacttime">
+          <td><code>impactTime</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="killedcount">
+          <td><code>killedCount</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="kind">
+          <td><code>kind</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="level_padding">
+          <td><code>LEVEL_PADDING</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="materials">
+          <td><code>materials</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="nextspawntime">
+          <td><code>nextSpawnTime</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="nexttime">
+          <td><code>nextTime</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="outcome">
+          <td><code>outcome</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="previoustimestamp">
+          <td><code>previousTimestamp</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="projectile_damage">
+          <td><code>PROJECTILE_DAMAGE</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="projectile_speed">
+          <td><code>PROJECTILE_SPEED</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="projectileid">
+          <td><code>projectileId</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="remove">
+          <td><code>remove</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="removeeventlistener">
+          <td><code>removeEventListener</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="renderer">
+          <td><code>renderer</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="selector">
+          <td><code>selector</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="set">
+          <td><code>Set</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="setattribute">
+          <td><code>setAttribute</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="spawnedcount">
+          <td><code>spawnedCount</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="time_tolerance">
+          <td><code>TIME_TOLERANCE</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="userdata">
+          <td><code>userData</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="validatebuild">
+          <td><code>validateBuild</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="wavestartsat">
+          <td><code>waveStartsAt</code></td>
+          <td class="count">6</td>
+        </tr>
+        <tr data-name="accumulatorseconds">
+          <td><code>accumulatorSeconds</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="activeids">
+          <td><code>activeIds</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="cells">
+          <td><code>cells</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="clientx">
+          <td><code>clientX</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="clienty">
+          <td><code>clientY</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="dispatch">
+          <td><code>dispatch</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="distance">
+          <td><code>distance</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="dx">
+          <td><code>dx</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="dy">
+          <td><code>dy</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="feedback">
+          <td><code>feedback</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="fixed_step_seconds">
+          <td><code>FIXED_STEP_SECONDS</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="getnextspawntime">
+          <td><code>getNextSpawnTime</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="halfcell">
+          <td><code>halfCell</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="htmlcanvaselement">
+          <td><code>HTMLCanvasElement</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="kill_reward">
+          <td><code>KILL_REWARD</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="line">
+          <td><code>Line</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="linesegments">
+          <td><code>LineSegments</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="next">
+          <td><code>next</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="nextboundary">
+          <td><code>nextBoundary</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="nextshotat">
+          <td><code>nextShotAt</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="number">
+          <td><code>Number</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="origin">
+          <td><code>origin</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="previous">
+          <td><code>previous</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="projectileimpacttimes">
+          <td><code>projectileImpactTimes</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="reconcile">
+          <td><code>reconcile</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="removefromparent">
+          <td><code>removeFromParent</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="renderframe">
+          <td><code>RenderFrame</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="resolvedescapes">
+          <td><code>resolvedEscapes</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="segmentstartprogress">
+          <td><code>segmentStartProgress</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="shot_cooldown">
+          <td><code>SHOT_COOLDOWN</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="spawn_interval">
+          <td><code>SPAWN_INTERVAL</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="startbutton">
+          <td><code>startButton</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="startgame">
+          <td><code>startGame</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="starting_base_hp">
+          <td><code>STARTING_BASE_HP</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="starting_coins">
+          <td><code>STARTING_COINS</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="stop">
+          <td><code>stop</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="targetposition">
+          <td><code>targetPosition</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="targettime">
+          <td><code>targetTime</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="toasttimer">
+          <td><code>toastTimer</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="transienteffects">
+          <td><code>transientEffects</code></td>
+          <td class="count">5</td>
+        </tr>
+        <tr data-name="animation">
+          <td><code>animation</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="append">
+          <td><code>append</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="b">
+          <td><code>b</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="body">
+          <td><code>body</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="boundarytime">
+          <td><code>boundaryTime</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="box3">
+          <td><code>Box3</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="buildfeedback">
+          <td><code>BuildFeedback</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="camera_distance">
+          <td><code>CAMERA_DISTANCE</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="center">
+          <td><code>center</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="command">
+          <td><code>command</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="corner">
+          <td><code>corner</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="createelement">
+          <td><code>createElement</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="createentityidsequence">
+          <td><code>createEntityIdSequence</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="createinitialstate">
+          <td><code>createInitialState</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="currentx">
+          <td><code>currentX</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="currenty">
+          <td><code>currentY</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="deepreadonly">
+          <td><code>DeepReadonly</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="entry">
+          <td><code>entry</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="existing">
+          <td><code>existing</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="firetower">
+          <td><code>fireTower</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="first">
+          <td><code>first</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="flash">
+          <td><code>flash</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="floor">
+          <td><code>floor</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="framesremaining">
+          <td><code>framesRemaining</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="get">
+          <td><code>get</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="getbuildrejectionmessage">
+          <td><code>getBuildRejectionMessage</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="getdistance">
+          <td><code>getDistance</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="getorcreate">
+          <td><code>getOrCreate</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="group">
+          <td><code>group</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="handlepointermove">
+          <td><code>handlePointerMove</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="highlightmaterial">
+          <td><code>highlightMaterial</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="hit">
+          <td><code>hit</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="htmlbuttonelement">
+          <td><code>HTMLButtonElement</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="hypot">
+          <td><code>hypot</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="linebasicmaterial">
+          <td><code>LineBasicMaterial</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="marker">
+          <td><code>marker</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="offsetx">
+          <td><code>offsetX</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="offsety">
+          <td><code>offsetY</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="projectilestate">
+          <td><code>ProjectileState</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="remainingprogress">
+          <td><code>remainingProgress</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="resolveposition">
+          <td><code>resolvePosition</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="restartbutton">
+          <td><code>restartButton</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="result">
+          <td><code>result</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="routecellkeys">
+          <td><code>routeCellKeys</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="scene">
+          <td><code>Scene</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="scheduleprojectileimpact">
+          <td><code>scheduleProjectileImpact</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="selecttarget">
+          <td><code>selectTarget</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="sort">
+          <td><code>sort</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="spheregeometry">
+          <td><code>SphereGeometry</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="transienteffects">
+          <td><code>TransientEffects</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="updatehealthbar">
+          <td><code>updateHealthBar</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="updatematrixworld">
+          <td><code>updateMatrixWorld</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="viewportaspect">
+          <td><code>viewportAspect</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="waypoint">
+          <td><code>waypoint</code></td>
+          <td class="count">4</td>
+        </tr>
+        <tr data-name="a">
+          <td><code>a</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="addeffect">
+          <td><code>addEffect</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="advance">
+          <td><code>advance</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="advancelifecycle">
+          <td><code>advanceLifecycle</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="advancewave">
+          <td><code>advanceWave</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="app">
+          <td><code>app</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="application">
+          <td><code>application</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="application">
+          <td><code>Application</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="array">
+          <td><code>Array</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="assertaxisaligned">
+          <td><code>assertAxisAligned</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="background">
+          <td><code>background</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="barheight">
+          <td><code>barHeight</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="basehpvalue">
+          <td><code>baseHpValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="box3withcorners">
+          <td><code>Box3WithCorners</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="buildfeedbackview">
+          <td><code>BuildFeedbackView</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="cellkey">
+          <td><code>cellKey</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="clear">
+          <td><code>clear</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="clearhover">
+          <td><code>clearHover</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="corners">
+          <td><code>corners</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="countdownvalue">
+          <td><code>countdownValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createbrowserapplication">
+          <td><code>createBrowserApplication</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createcellgroup">
+          <td><code>createCellGroup</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createfeedbackelement">
+          <td><code>createFeedbackElement</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createfinaloverlay">
+          <td><code>createFinalOverlay</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createhealthbar">
+          <td><code>createHealthBar</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createhud">
+          <td><code>createHud</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createlevelcamera">
+          <td><code>createLevelCamera</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createlevelplaceholders">
+          <td><code>createLevelPlaceholders</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createmarker">
+          <td><code>createMarker</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createplacement">
+          <td><code>createPlacement</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createroutecells">
+          <td><code>createRouteCells</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createscene">
+          <td><code>createScene</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="createsnapshot">
+          <td><code>createSnapshot</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="cursorposition">
+          <td><code>CursorPosition</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="defeatevent">
+          <td><code>defeatEvent</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="discriminant">
+          <td><code>discriminant</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="disposed">
+          <td><code>disposed</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="disposeeffect">
+          <td><code>disposeEffect</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="entitykind">
+          <td><code>EntityKind</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="entryprogress">
+          <td><code>entryProgress</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="escapedmonsters">
+          <td><code>escapedMonsters</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="escapedvalue">
+          <td><code>escapedValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="finaloverlay">
+          <td><code>finalOverlay</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="finaloverlay">
+          <td><code>FinalOverlay</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="firereadytowers">
+          <td><code>fireReadyTowers</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="fixedsteploop">
+          <td><code>FixedStepLoop</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="gamecommand">
+          <td><code>GameCommand</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getcorners">
+          <td><code>getCorners</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getlevelbounds">
+          <td><code>getLevelBounds</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getnextescapetime">
+          <td><code>getNextEscapeTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getnextprojectileimpacttime">
+          <td><code>getNextProjectileImpactTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getnextprojectilesteptime">
+          <td><code>getNextProjectileStepTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getnexttargetingtime">
+          <td><code>getNextTargetingTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getpreparationcountdown">
+          <td><code>getPreparationCountdown</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getremainingcount">
+          <td><code>getRemainingCount</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="getroutelength">
+          <td><code>getRouteLength</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="grid_height">
+          <td><code>GRID_HEIGHT</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="grid_width">
+          <td><code>GRID_WIDTH</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="handleclick">
+          <td><code>handleClick</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="handlepointerleave">
+          <td><code>handlePointerLeave</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="htmldivelement">
+          <td><code>HTMLDivElement</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="hud">
+          <td><code>hud</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="hudview">
+          <td><code>HudView</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="impacttimes">
+          <td><code>impactTimes</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="interpolationalpha">
+          <td><code>interpolationAlpha</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="isarray">
+          <td><code>isArray</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="iscellwithingrid">
+          <td><code>isCellWithinGrid</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="isprojectileimpactdue">
+          <td><code>isProjectileImpactDue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="isterminal">
+          <td><code>isTerminal</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="killedvalue">
+          <td><code>killedValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="lastcursorposition">
+          <td><code>lastCursorPosition</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="lifecycleresult">
+          <td><code>lifecycleResult</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="min_viewport_size">
+          <td><code>MIN_VIEWPORT_SIZE</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="movemonsters">
+          <td><code>moveMonsters</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="moveprojectiles">
+          <td><code>moveProjectiles</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="nextid">
+          <td><code>nextId</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="nextprogress">
+          <td><code>nextProgress</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="normalizedtargettime">
+          <td><code>normalizedTargetTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="onanimationframe">
+          <td><code>onAnimationFrame</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="onevents">
+          <td><code>onEvents</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="onrestart">
+          <td><code>onRestart</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="onstart">
+          <td><code>onStart</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="pickcell">
+          <td><code>pickCell</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="pixelratio">
+          <td><code>pixelRatio</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="placement">
+          <td><code>placement</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="placementcontroller">
+          <td><code>PlacementController</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="presentevents">
+          <td><code>presentEvents</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="projectedcenterx">
+          <td><code>projectedCenterX</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="projectedcentery">
+          <td><code>projectedCenterY</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="projectile_step">
+          <td><code>PROJECTILE_STEP</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="queryselector">
+          <td><code>querySelector</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="raycaster">
+          <td><code>raycaster</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="readablegamestate">
+          <td><code>ReadableGameState</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="readyat">
+          <td><code>readyAt</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="remainingvalue">
+          <td><code>remainingValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="removeentity">
+          <td><code>removeEntity</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="removeinvalidprojectiles">
+          <td><code>removeInvalidProjectiles</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="rendered">
+          <td><code>rendered</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="requiredheight">
+          <td><code>requiredHeight</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="requiredwidth">
+          <td><code>requiredWidth</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="resizelevelcamera">
+          <td><code>resizeLevelCamera</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="resolvedefeat">
+          <td><code>resolveDefeat</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="resolveescapedmonsters">
+          <td><code>resolveEscapedMonsters</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="resolveprojectilehits">
+          <td><code>resolveProjectileHits</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="resolvevictory">
+          <td><code>resolveVictory</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="scenerenderer">
+          <td><code>SceneRenderer</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="segmentendprogress">
+          <td><code>segmentEndProgress</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="shotevent">
+          <td><code>shotEvent</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="showhint">
+          <td><code>showHint</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="showtoast">
+          <td><code>showToast</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="snapshotview">
+          <td><code>SnapshotView</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="spawnduemonsters">
+          <td><code>spawnDueMonsters</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="spawnedmonsterids">
+          <td><code>spawnedMonsterIds</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="statusvalue">
+          <td><code>statusValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="stepcount">
+          <td><code>stepCount</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="timestamp">
+          <td><code>timestamp</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="top">
+          <td><code>top</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="towercostvalue">
+          <td><code>towerCostValue</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="trail">
+          <td><code>trail</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="traveldistance">
+          <td><code>travelDistance</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="valid_color">
+          <td><code>VALID_COLOR</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="victoryevent">
+          <td><code>victoryEvent</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="visible">
+          <td><code>visible</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="webglrenderer">
+          <td><code>WebGLRenderer</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="activeeffect">
+          <td><code>ActiveEffect</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="activeprojectile">
+          <td><code>activeProjectile</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="addhitflash">
+          <td><code>addHitFlash</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="addshottrail">
+          <td><code>addShotTrail</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="advanceframe">
+          <td><code>advanceFrame</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="applicationoptions">
+          <td><code>ApplicationOptions</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="assertvaliddelta">
+          <td><code>assertValidDelta</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="assertvalidframedelta">
+          <td><code>assertValidFrameDelta</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="bar_height_in_cells">
+          <td><code>BAR_HEIGHT_IN_CELLS</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="bar_width_in_cells">
+          <td><code>BAR_WIDTH_IN_CELLS</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="browserapplication">
+          <td><code>BrowserApplication</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="browserapplicationoptions">
+          <td><code>BrowserApplicationOptions</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="buffergeometry">
+          <td><code>BufferGeometry</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="build_rejection_messages">
+          <td><code>BUILD_REJECTION_MESSAGES</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="buildable">
+          <td><code>buildable</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="buildtower">
+          <td><code>buildTower</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="c">
+          <td><code>c</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="classlist">
+          <td><code>classList</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="cleartimeout">
+          <td><code>clearTimeout</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="clonestate">
+          <td><code>cloneState</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="commandrejectioncode">
+          <td><code>CommandRejectionCode</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="completedsteps">
+          <td><code>completedSteps</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="const">
+          <td><code>const</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="contentaspect">
+          <td><code>contentAspect</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="copy">
+          <td><code>copy</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="create">
+          <td><code>create</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="createapplication">
+          <td><code>createApplication</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="createboundary">
+          <td><code>createBoundary</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="damage">
+          <td><code>damage</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="doubleside">
+          <td><code>DoubleSide</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="drainpendingevents">
+          <td><code>drainPendingEvents</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="dueprojectiles">
+          <td><code>dueProjectiles</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="earliestratio">
+          <td><code>earliestRatio</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="edgesgeometry">
+          <td><code>EdgesGeometry</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="effect_lifetime_frames">
+          <td><code>EFFECT_LIFETIME_FRAMES</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="elapsedwavetime">
+          <td><code>elapsedWaveTime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="entityentry">
+          <td><code>EntityEntry</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="entryratio">
+          <td><code>entryRatio</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="escapedids">
+          <td><code>escapedIds</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="expireeffects">
+          <td><code>expireEffects</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="gameconfig">
+          <td><code>GameConfig</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getboundingclientrect">
+          <td><code>getBoundingClientRect</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getlevelcenter">
+          <td><code>getLevelCenter</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getnextentityid">
+          <td><code>getNextEntityId</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getnextrangeentryprogress">
+          <td><code>getNextRangeEntryProgress</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getobject">
+          <td><code>getObject</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getobjectbyname">
+          <td><code>getObjectByName</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="getprojectedlevelbounds">
+          <td><code>getProjectedLevelBounds</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="groundplane">
+          <td><code>groundPlane</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="hitpoint">
+          <td><code>hitPoint</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="hot">
+          <td><code>hot</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="initialstate">
+          <td><code>initialState</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="innerhtml">
+          <td><code>innerHTML</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="invalid_color">
+          <td><code>INVALID_COLOR</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="isbuildrejectioncode">
+          <td><code>isBuildRejectionCode</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="isfinite">
+          <td><code>isFinite</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="isinrange">
+          <td><code>isInRange</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="isinteger">
+          <td><code>isInteger</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="item">
+          <td><code>Item</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="key">
+          <td><code>Key</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="lifecycleadvanceresult">
+          <td><code>LifecycleAdvanceResult</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="livingmonsterids">
+          <td><code>livingMonsterIds</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="loop">
+          <td><code>loop</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="max_frame_delta_seconds">
+          <td><code>MAX_FRAME_DELTA_SECONDS</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="meta">
+          <td><code>meta</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="nextescapetime">
+          <td><code>nextEscapeTime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="nextprojectileimpacttime">
+          <td><code>nextProjectileImpactTime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="nextprojectilesteptime">
+          <td><code>nextProjectileStepTime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="nexttargetingtime">
+          <td><code>nextTargetingTime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="pi">
+          <td><code>PI</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="pick">
+          <td><code>Pick</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="placementruntime">
+          <td><code>PlacementRuntime</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="placementview">
+          <td><code>PlacementView</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="plane">
+          <td><code>Plane</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="pointer">
+          <td><code>pointer</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="pointerevent">
+          <td><code>PointerEvent</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="present">
+          <td><code>present</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="presentationframe">
+          <td><code>PresentationFrame</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="quaternion">
+          <td><code>quaternion</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="rangeerror">
+          <td><code>RangeError</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="raycaster">
+          <td><code>Raycaster</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="reconcilemonster">
+          <td><code>reconcileMonster</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="reconcileprojectile">
+          <td><code>reconcileProjectile</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="reconciletower">
+          <td><code>reconcileTower</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="requestanimationframe">
+          <td><code>requestAnimationFrame</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="restart">
+          <td><code>restart</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="route">
+          <td><code>route</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="runtimeboundary">
+          <td><code>RuntimeBoundary</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="sceneview">
+          <td><code>SceneView</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="sessionstatus">
+          <td><code>SessionStatus</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="sign">
+          <td><code>sign</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="slice">
+          <td><code>slice</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="spawnedthisframe">
+          <td><code>spawnedThisFrame</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="splice">
+          <td><code>splice</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="startid">
+          <td><code>startId</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="stepx">
+          <td><code>stepX</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="stepy">
+          <td><code>stepY</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="style">
+          <td><code>style</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="targets">
+          <td><code>targets</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="toast_duration_ms">
+          <td><code>TOAST_DURATION_MS</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="traverse">
+          <td><code>traverse</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="validatebuildstate">
+          <td><code>validateBuildState</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="vector2">
+          <td><code>Vector2</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="viewportheight">
+          <td><code>viewportHeight</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="viewportwidth">
+          <td><code>viewportWidth</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="antialias">
+          <td><code>antialias</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="applymatrix4">
+          <td><code>applyMatrix4</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="args">
+          <td><code>args</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="at">
+          <td><code>at</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="bottom">
+          <td><code>bottom</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="cancelanimationframe">
+          <td><code>cancelAnimationFrame</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="ceil">
+          <td><code>ceil</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="clone">
+          <td><code>clone</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="delete">
+          <td><code>delete</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="depthwrite">
+          <td><code>depthWrite</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="devicepixelratio">
+          <td><code>devicePixelRatio</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="disabled">
+          <td><code>disabled</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="entitykind">
+          <td><code>entityKind</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="epsilon">
+          <td><code>EPSILON</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="every">
+          <td><code>every</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="expandbypoint">
+          <td><code>expandByPoint</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="flatmap">
+          <td><code>flatMap</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="frame">
+          <td><code>frame</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="game_not_started">
+          <td><code>GAME_NOT_STARTED</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="gameconfig">
+          <td><code>gameConfig</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="getprojectiletargetdistance">
+          <td><code>getProjectileTargetDistance</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="getworldposition">
+          <td><code>getWorldPosition</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="innerheight">
+          <td><code>innerHeight</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="innerwidth">
+          <td><code>innerWidth</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="insufficient_funds">
+          <td><code>INSUFFICIENT_FUNDS</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="intersectplane">
+          <td><code>intersectPlane</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="islevelinsidefrustum">
+          <td><code>isLevelInsideFrustum</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="lookat">
+          <td><code>lookAt</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="map">
+          <td><code>Map</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="matrixworldinverse">
+          <td><code>matrixWorldInverse</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="mouseevent">
+          <td><code>MouseEvent</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="occupied">
+          <td><code>OCCUPIED</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="opacity">
+          <td><code>opacity</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="out_of_bounds">
+          <td><code>OUT_OF_BOUNDS</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="path_cell">
+          <td><code>PATH_CELL</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="project">
+          <td><code>project</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="ray">
+          <td><code>ray</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="record">
+          <td><code>Record</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="reduce">
+          <td><code>reduce</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="replacechildren">
+          <td><code>replaceChildren</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="rotatex">
+          <td><code>rotateX</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="rotation">
+          <td><code>rotation</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="scale">
+          <td><code>scale</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="session_ended">
+          <td><code>SESSION_ENDED</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="setfromcamera">
+          <td><code>setFromCamera</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="setfrompoints">
+          <td><code>setFromPoints</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="sethex">
+          <td><code>setHex</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="setpixelratio">
+          <td><code>setPixelRatio</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="setsize">
+          <td><code>setSize</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="settimeout">
+          <td><code>setTimeout</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="side">
+          <td><code>side</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="some">
+          <td><code>some</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="sqrt">
+          <td><code>sqrt</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="transparent">
+          <td><code>transparent</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="up">
+          <td><code>up</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="updateprojectionmatrix">
+          <td><code>updateProjectionMatrix</code></td>
+          <td class="count">1</td>
+        </tr>
+        <tr data-name="weakmap">
+          <td><code>WeakMap</code></td>
+          <td class="count">1</td>
+        </tr>
+        </tbody>
+      </table>
+    </main>
+    <script>
+      const filter = document.querySelector('#filter');
+      const rows = [...document.querySelectorAll('tbody tr')];
+      const resultCount = document.querySelector('#result-count');
+
+      filter.addEventListener('input', () => {
+        const query = filter.value.trim().toLocaleLowerCase('en');
+        let visibleCount = 0;
+        for (const row of rows) {
+          const visible = row.dataset.name.includes(query);
+          row.hidden = !visible;
+          if (visible) visibleCount += 1;
+        }
+        resultCount.textContent = `Показано: ${visibleCount}`;
+      });
+    </script>
+  </body>
+</html>

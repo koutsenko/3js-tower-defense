@@ -1,0 +1,196 @@
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import ts from 'typescript';
+
+const SOURCE_DIR = path.resolve('src');
+const OUTPUT_FILE = path.resolve(
+  'specs/001-core-loop/artifacts/identifier-frequency.html',
+);
+const SOURCE_EXTENSIONS = [
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.ts',
+  '.tsx',
+  '.mts',
+  '.cts',
+];
+
+const sourceFiles = await collectSourceFiles(SOURCE_DIR);
+const frequencies = new Map();
+
+for (const filePath of sourceFiles) {
+  const sourceText = await readFile(filePath, 'utf8');
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    sourceText,
+    ts.ScriptTarget.Latest,
+    true,
+    scriptKindFor(filePath),
+  );
+
+  if (sourceFile.parseDiagnostics.length > 0) {
+    throw new Error(formatParseError(sourceFile, sourceFile.parseDiagnostics[0]));
+  }
+
+  visit(sourceFile);
+}
+
+const identifiers = [...frequencies.entries()].sort(
+  ([leftName, leftCount], [rightName, rightCount]) =>
+    rightCount - leftCount || leftName.localeCompare(rightName, 'en'),
+);
+const totalOccurrences = identifiers.reduce(
+  (total, [, count]) => total + count,
+  0,
+);
+const generatedAt = new Date().toISOString();
+const html = renderHtml({
+  identifiers,
+  generatedAt,
+  sourceFileCount: sourceFiles.length,
+  totalOccurrences,
+});
+
+await mkdir(path.dirname(OUTPUT_FILE), { recursive: true });
+await writeFile(OUTPUT_FILE, html, 'utf8');
+
+globalThis.console.log(
+  `Identifier report: ${path.relative(globalThis.process.cwd(), OUTPUT_FILE)} ` +
+    `(${identifiers.length} names, ${totalOccurrences} occurrences, ` +
+    `${sourceFiles.length} files)`,
+);
+
+function visit(node) {
+  if (ts.isIdentifier(node)) {
+    const name = node.text;
+    frequencies.set(name, (frequencies.get(name) ?? 0) + 1);
+  }
+
+  ts.forEachChild(node, visit);
+}
+
+async function collectSourceFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await collectSourceFiles(entryPath)));
+    } else if (entry.isFile() && isSourceFile(entry.name)) {
+      files.push(entryPath);
+    }
+  }
+
+  return files.sort((left, right) => left.localeCompare(right, 'en'));
+}
+
+function isSourceFile(fileName) {
+  return SOURCE_EXTENSIONS.some((extension) => fileName.endsWith(extension));
+}
+
+function scriptKindFor(filePath) {
+  if (filePath.endsWith('.tsx')) return ts.ScriptKind.TSX;
+  if (filePath.endsWith('.jsx')) return ts.ScriptKind.JSX;
+  if (
+    filePath.endsWith('.ts') ||
+    filePath.endsWith('.mts') ||
+    filePath.endsWith('.cts')
+  ) {
+    return ts.ScriptKind.TS;
+  }
+  return ts.ScriptKind.JS;
+}
+
+function formatParseError(sourceFile, diagnostic) {
+  const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+  if (diagnostic.start === undefined) {
+    return `${sourceFile.fileName}: ${message}`;
+  }
+
+  const position = sourceFile.getLineAndCharacterOfPosition(diagnostic.start);
+  return `${sourceFile.fileName}:${position.line + 1}:${position.character + 1}: ${message}`;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function renderHtml({
+  identifiers,
+  generatedAt,
+  sourceFileCount,
+  totalOccurrences,
+}) {
+  const rows = identifiers
+    .map(
+      ([name, count]) => `
+        <tr data-name="${escapeHtml(name.toLocaleLowerCase('en'))}">
+          <td><code>${escapeHtml(name)}</code></td>
+          <td class="count">${count}</td>
+        </tr>`,
+    )
+    .join('');
+
+  return `<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Частотная карта идентификаторов</title>
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { margin: 0 auto; max-width: 56rem; padding: 2rem 1rem; }
+      h1 { margin-bottom: 0.35rem; }
+      .meta { color: #777; margin: 0 0 1.5rem; }
+      label { display: grid; gap: 0.4rem; font-weight: 600; }
+      input { font: inherit; padding: 0.65rem 0.8rem; }
+      table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
+      th, td { border-bottom: 1px solid #8886; padding: 0.55rem 0.7rem; text-align: left; }
+      th { position: sticky; top: 0; background: Canvas; }
+      .count { text-align: right; font-variant-numeric: tabular-nums; }
+      [hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Частотная карта идентификаторов</h1>
+      <p class="meta">src · ${sourceFileCount} файлов · ${identifiers.length} названий · ${totalOccurrences} вхождений · ${escapeHtml(generatedAt)}</p>
+      <label>
+        Фильтр по названию
+        <input id="filter" type="search" autocomplete="off" placeholder="gameState, monster, tower…">
+      </label>
+      <p id="result-count" aria-live="polite">Показано: ${identifiers.length}</p>
+      <table>
+        <thead><tr><th scope="col">Название</th><th scope="col" class="count">Вхождения</th></tr></thead>
+        <tbody>${rows}
+        </tbody>
+      </table>
+    </main>
+    <script>
+      const filter = document.querySelector('#filter');
+      const rows = [...document.querySelectorAll('tbody tr')];
+      const resultCount = document.querySelector('#result-count');
+
+      filter.addEventListener('input', () => {
+        const query = filter.value.trim().toLocaleLowerCase('en');
+        let visibleCount = 0;
+        for (const row of rows) {
+          const visible = row.dataset.name.includes(query);
+          row.hidden = !visible;
+          if (visible) visibleCount += 1;
+        }
+        resultCount.textContent = \`Показано: \${visibleCount}\`;
+      });
+    </script>
+  </body>
+</html>
+`;
+}
