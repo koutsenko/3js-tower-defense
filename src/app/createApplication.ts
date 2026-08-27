@@ -20,10 +20,7 @@ export interface ApplicationOptions {
   readonly runtime?: GameRuntime;
 }
 
-export function createApplication({
-  renderFrame,
-  runtime = new GameRuntime(),
-}: ApplicationOptions): Application {
+export function createApplication({ renderFrame, runtime = new GameRuntime() }: ApplicationOptions): Application {
   const loop = new FixedStepLoop(runtime, renderFrame);
   let animationFrameId: number | null = null;
   let previousTimestamp: number | null = null;
@@ -33,8 +30,7 @@ export function createApplication({
       return;
     }
 
-    const deltaSeconds =
-      previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
+    const deltaSeconds = previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
     previousTimestamp = timestamp;
     loop.advanceFrame(deltaSeconds);
 
@@ -93,14 +89,8 @@ export interface BrowserApplication extends Application {
 export interface BrowserApplicationOptions {
   readonly runtime?: GameRuntime;
   readonly createScene?: (canvas: HTMLCanvasElement) => SceneView;
-  readonly createHud?: (
-    container: HTMLElement,
-    runtime: GameRuntime,
-  ) => SnapshotView;
-  readonly createFinalOverlay?: (
-    container: HTMLElement,
-    runtime: GameRuntime,
-  ) => SnapshotView;
+  readonly createHud?: (container: HTMLElement, runtime: GameRuntime) => SnapshotView;
+  readonly createFinalOverlay?: (container: HTMLElement, runtime: GameRuntime) => SnapshotView;
   readonly createPlacement?: (
     canvas: HTMLCanvasElement,
     camera: Camera,
@@ -116,15 +106,9 @@ export function createBrowserApplication(
     runtime = new GameRuntime(),
     createScene = (canvas) => new SceneRenderer(canvas),
     createHud = (container, gameRuntime) => new HudView(container, gameRuntime),
-    createFinalOverlay = (container, gameRuntime) =>
-      new FinalOverlay(container, gameRuntime),
+    createFinalOverlay = (container, gameRuntime) => new FinalOverlay(container, gameRuntime),
     createPlacement = (canvas, camera, gameRuntime, container) =>
-      new PlacementController(
-        canvas,
-        camera,
-        gameRuntime,
-        new BuildFeedbackView(container),
-      ),
+      new PlacementController(canvas, camera, gameRuntime, new BuildFeedbackView(container)),
     onEvents = () => undefined,
   }: BrowserApplicationOptions = {},
 ): BrowserApplication {

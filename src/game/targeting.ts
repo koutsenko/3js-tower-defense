@@ -6,25 +6,15 @@ import type { GameState, MonsterState, TowerState } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
-export function selectTarget(
-  state: Readonly<GameState>,
-  tower: Readonly<TowerState>,
-): Readonly<MonsterState> | null {
+export function selectTarget(state: Readonly<GameState>, tower: Readonly<TowerState>): Readonly<MonsterState> | null {
   const targets = state.monsters
     .filter((monster) => isInRange(tower, monster))
-    .sort(
-      (left, right) =>
-        right.routeProgress - left.routeProgress ||
-        left.spawnIndex - right.spawnIndex,
-    );
+    .sort((left, right) => right.routeProgress - left.routeProgress || left.spawnIndex - right.spawnIndex);
 
   return targets[0] ?? null;
 }
 
-export function getNextTargetingTime(
-  state: Readonly<GameState>,
-  currentTime: number,
-): number | null {
+export function getNextTargetingTime(state: Readonly<GameState>, currentTime: number): number | null {
   let nextTime: number | null = null;
 
   for (const tower of state.towers) {
@@ -42,10 +32,7 @@ export function getNextTargetingTime(
     for (const monster of state.monsters) {
       const entryProgress = getNextRangeEntryProgress(tower, monster);
       if (entryProgress !== null) {
-        nextTime = minDefined(
-          nextTime,
-          currentTime + (entryProgress - monster.routeProgress) / MONSTER_SPEED,
-        );
+        nextTime = minDefined(nextTime, currentTime + (entryProgress - monster.routeProgress) / MONSTER_SPEED);
       }
     }
   }
@@ -53,21 +40,12 @@ export function getNextTargetingTime(
   return nextTime;
 }
 
-function isInRange(
-  tower: Readonly<TowerState>,
-  monster: Readonly<MonsterState>,
-): boolean {
+function isInRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): boolean {
   const position = getRoutePosition(monster.routeProgress);
-  return (
-    Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <=
-    TOWER_RANGE + DISTANCE_TOLERANCE
-  );
+  return Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE;
 }
 
-function getNextRangeEntryProgress(
-  tower: Readonly<TowerState>,
-  monster: Readonly<MonsterState>,
-): number | null {
+function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): number | null {
   let segmentStartProgress = 0;
 
   for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
@@ -83,29 +61,17 @@ function getNextRangeEntryProgress(
       const offsetY = start.y - tower.cell.y;
       const a = dx * dx + dy * dy;
       const b = 2 * (offsetX * dx + offsetY * dy);
-      const c =
-        offsetX * offsetX + offsetY * offsetY - TOWER_RANGE * TOWER_RANGE;
-      const entryRatio = MathExtra.findSmallerQuadraticRoot(
-        a,
-        b,
-        c,
-        DISTANCE_TOLERANCE,
-      );
+      const c = offsetX * offsetX + offsetY * offsetY - TOWER_RANGE * TOWER_RANGE;
+      const entryRatio = MathExtra.findSmallerQuadraticRoot(a, b, c, DISTANCE_TOLERANCE);
 
       if (entryRatio !== null) {
-        const earliestRatio = Math.max(
-          0,
-          (monster.routeProgress - segmentStartProgress) / segmentLength,
-        );
+        const earliestRatio = Math.max(0, (monster.routeProgress - segmentStartProgress) / segmentLength);
         const ratio = Math.max(entryRatio, earliestRatio);
 
         if (ratio <= 1 + DISTANCE_TOLERANCE) {
           const x = start.x + dx * ratio;
           const y = start.y + dy * ratio;
-          if (
-            Math.hypot(x - tower.cell.x, y - tower.cell.y) <=
-            TOWER_RANGE + DISTANCE_TOLERANCE
-          ) {
+          if (Math.hypot(x - tower.cell.x, y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE) {
             return segmentStartProgress + ratio * segmentLength;
           }
         }

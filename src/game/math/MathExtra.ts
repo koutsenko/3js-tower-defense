@@ -13,12 +13,7 @@ export class MathExtra {
     return b * b - 4 * a * c;
   }
 
-  static findSmallerQuadraticRoot(
-    a: number,
-    b: number,
-    c: number,
-    discriminantTolerance = 0,
-  ): number | null {
+  static findSmallerQuadraticRoot(a: number, b: number, c: number, discriminantTolerance = 0): number | null {
     const discriminant = MathExtra.calculateDiscriminant(a, b, c);
 
     if (discriminant < -discriminantTolerance) {

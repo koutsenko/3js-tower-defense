@@ -11,11 +11,7 @@ export function getCellKey(cell: GridCell): string {
   return `${cell.x},${cell.y}`;
 }
 
-export function isCellWithinGrid(
-  cell: GridCell,
-  width: number,
-  height: number,
-): boolean {
+export function isCellWithinGrid(cell: GridCell, width: number, height: number): boolean {
   return (
     Number.isInteger(cell.x) &&
     Number.isInteger(cell.y) &&
@@ -36,17 +32,11 @@ export function getRouteLength(waypoints: readonly GridCell[]): number {
 
     assertAxisAligned(previous, waypoint);
 
-    return (
-      length +
-      Math.abs(waypoint.x - previous.x) +
-      Math.abs(waypoint.y - previous.y)
-    );
+    return length + Math.abs(waypoint.x - previous.x) + Math.abs(waypoint.y - previous.y);
   }, 0);
 }
 
-export function createRouteCells(
-  waypoints: readonly GridCell[],
-): readonly GridCell[] {
+export function createRouteCells(waypoints: readonly GridCell[]): readonly GridCell[] {
   if (waypoints.length === 0) {
     return Object.freeze([]);
   }

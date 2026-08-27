@@ -17,13 +17,7 @@ import {
   gameConfig,
 } from '../../src/config/gameConfig';
 import { levelConfig } from '../../src/config/levelConfig';
-import {
-  createGridCell,
-  createRouteCells,
-  getCellKey,
-  getRouteLength,
-  isCellWithinGrid,
-} from '../../src/game/grid';
+import { createGridCell, createRouteCells, getCellKey, getRouteLength, isCellWithinGrid } from '../../src/game/grid';
 
 describe('level configuration (FR-002, FR-003, AC-015)', () => {
   it('matches the approved grid, route, entrance, and exit', () => {
@@ -59,8 +53,7 @@ describe('level configuration (FR-002, FR-003, AC-015)', () => {
     for (let index = 1; index < levelConfig.routeCells.length; index += 1) {
       const previous = levelConfig.routeCells[index - 1]!;
       const current = levelConfig.routeCells[index]!;
-      const distance =
-        Math.abs(current.x - previous.x) + Math.abs(current.y - previous.y);
+      const distance = Math.abs(current.x - previous.x) + Math.abs(current.y - previous.y);
 
       expect(distance).toBe(1);
     }
@@ -139,12 +132,8 @@ describe('grid helpers', () => {
   it('rejects diagonal route segments', () => {
     const diagonalRoute = [createGridCell(0, 0), createGridCell(1, 1)];
 
-    expect(() => getRouteLength(diagonalRoute)).toThrow(
-      'Route segments must be axis-aligned',
-    );
-    expect(() => createRouteCells(diagonalRoute)).toThrow(
-      'Route segments must be axis-aligned',
-    );
+    expect(() => getRouteLength(diagonalRoute)).toThrow('Route segments must be axis-aligned');
+    expect(() => createRouteCells(diagonalRoute)).toThrow('Route segments must be axis-aligned');
   });
 
   it('accepts only integer coordinates within grid bounds', () => {
@@ -157,10 +146,7 @@ describe('grid helpers', () => {
   });
 
   it('returns frozen route collections and cells', () => {
-    const cells = createRouteCells([
-      createGridCell(0, 0),
-      createGridCell(1, 0),
-    ]);
+    const cells = createRouteCells([createGridCell(0, 0), createGridCell(1, 0)]);
 
     expect(Object.isFrozen(cells)).toBe(true);
     expect(cells.every(Object.isFrozen)).toBe(true);

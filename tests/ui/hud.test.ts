@@ -15,12 +15,8 @@ describe('HUD (FR-005, FR-012; AC-001, AC-004, AC-014)', () => {
     expect(hudValue(hud, 'remaining')).toBe(String(WAVE_SIZE));
     expect(hudValue(hud, 'tower-cost')).toBe(String(TOWER_COST));
     expect(hudValue(hud, 'status')).toBe('Ready');
-    expect(
-      hud.root.querySelector<HTMLElement>('[data-hud="countdown"]')!.hidden,
-    ).toBe(true);
-    expect(hud.root.querySelector<HTMLButtonElement>('button')!.disabled).toBe(
-      false,
-    );
+    expect(hud.root.querySelector<HTMLElement>('[data-hud="countdown"]')!.hidden).toBe(true);
+    expect(hud.root.querySelector<HTMLButtonElement>('button')!.disabled).toBe(false);
   });
 
   it('dispatches Start once and updates countdown across status transitions', () => {
@@ -42,9 +38,7 @@ describe('HUD (FR-005, FR-012; AC-001, AC-004, AC-014)', () => {
     runtime.advance(19.9);
     hud.render(runtime.getSnapshot());
     expect(hudValue(hud, 'status')).toBe('WaveActive');
-    expect(
-      hud.root.querySelector<HTMLElement>('[data-hud="countdown"]')!.hidden,
-    ).toBe(true);
+    expect(hud.root.querySelector<HTMLElement>('[data-hud="countdown"]')!.hidden).toBe(true);
 
     start.click();
     expect(dispatch).toHaveBeenCalledTimes(1);
@@ -68,26 +62,23 @@ describe('HUD (FR-005, FR-012; AC-001, AC-004, AC-014)', () => {
 });
 
 describe('final overlay (FR-014, FR-015; AC-010, AC-011, AC-012)', () => {
-  it.each(['Victory', 'Defeat'] as const)(
-    'shows %s statistics and intercepts pointer input',
-    (status) => {
-      const state = createInitialState();
-      state.status = status;
-      state.killedCount = 7;
-      state.escapedCount = 3;
-      state.coins = 70;
-      const runtime = new GameRuntime(state);
-      const container = document.createElement('div');
-      const overlay = new FinalOverlay(container, runtime);
+  it.each(['Victory', 'Defeat'] as const)('shows %s statistics and intercepts pointer input', (status) => {
+    const state = createInitialState();
+    state.status = status;
+    state.killedCount = 7;
+    state.escapedCount = 3;
+    state.coins = 70;
+    const runtime = new GameRuntime(state);
+    const container = document.createElement('div');
+    const overlay = new FinalOverlay(container, runtime);
 
-      expect(overlay.root.hidden).toBe(false);
-      expect(finalValue(overlay, 'outcome')).toBe(status);
-      expect(finalValue(overlay, 'killed')).toBe('7');
-      expect(finalValue(overlay, 'escaped')).toBe('3');
-      expect(finalValue(overlay, 'coins')).toBe('70');
-      expect(overlay.root.classList).toContain('final-overlay');
-    },
-  );
+    expect(overlay.root.hidden).toBe(false);
+    expect(finalValue(overlay, 'outcome')).toBe(status);
+    expect(finalValue(overlay, 'killed')).toBe('7');
+    expect(finalValue(overlay, 'escaped')).toBe('3');
+    expect(finalValue(overlay, 'coins')).toBe('70');
+    expect(overlay.root.classList).toContain('final-overlay');
+  });
 
   it('dispatches Restart and hides after the session resets', () => {
     const state = createInitialState();
@@ -104,10 +95,7 @@ describe('final overlay (FR-014, FR-015; AC-010, AC-011, AC-012)', () => {
   });
 
   it('stays hidden outside terminal states', () => {
-    const overlay = new FinalOverlay(
-      document.createElement('div'),
-      new GameRuntime(),
-    );
+    const overlay = new FinalOverlay(document.createElement('div'), new GameRuntime());
     expect(overlay.root.hidden).toBe(true);
   });
 });
@@ -117,7 +105,5 @@ function hudValue(hud: HudView, field: string): string | null {
 }
 
 function finalValue(overlay: FinalOverlay, field: string): string | null {
-  return (
-    overlay.root.querySelector(`[data-final="${field}"]`)?.textContent ?? null
-  );
+  return overlay.root.querySelector(`[data-final="${field}"]`)?.textContent ?? null;
 }

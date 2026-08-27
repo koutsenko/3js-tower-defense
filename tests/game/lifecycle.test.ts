@@ -53,11 +53,7 @@ describe('game start and preparation lifecycle (FR-001, FR-005, FR-006, FR-012)'
     const snapshot = runtime.getSnapshot();
     expect(snapshot.status).toBe('Preparation');
     expect(snapshot.monsters).toEqual([]);
-    expect(
-      countdowns.every(
-        (value, index) => index === 0 || value <= countdowns[index - 1]!,
-      ),
-    ).toBe(true);
+    expect(countdowns.every((value, index) => index === 0 || value <= countdowns[index - 1]!)).toBe(true);
   });
 
   it('starts the wave exactly at 20 seconds with deterministic fixed steps', () => {
@@ -73,13 +69,8 @@ describe('game start and preparation lifecycle (FR-001, FR-005, FR-006, FR-012)'
     expect(snapshot.status).toBe('WaveActive');
     expect(snapshot.simulationTime).toBeCloseTo(PREPARATION_DURATION, 10);
     expect(snapshot.phaseStartedAt).toBe(PREPARATION_DURATION);
-    expect(snapshot.monsters).toEqual([
-      { id: 1, spawnIndex: 0, hp: 100, routeProgress: 0 },
-    ]);
-    expect(events).toEqual([
-      { type: 'wave-start' },
-      { type: 'monster-spawned', monsterId: 1, spawnIndex: 0 },
-    ]);
+    expect(snapshot.monsters).toEqual([{ id: 1, spawnIndex: 0, hp: 100, routeProgress: 0 }]);
+    expect(events).toEqual([{ type: 'wave-start' }, { type: 'monster-spawned', monsterId: 1, spawnIndex: 0 }]);
     expect(getPreparationCountdown(snapshot)).toBeNull();
     expect(runtime.advance(FIXED_STEP)).not.toContainEqual({
       type: 'wave-start',
@@ -144,10 +135,7 @@ describe('game start and preparation lifecycle (FR-001, FR-005, FR-006, FR-012)'
       status: coarseRuntime.getSnapshot().status,
       phaseStartedAt: coarseRuntime.getSnapshot().phaseStartedAt,
     });
-    expect(fixedRuntime.getSnapshot().simulationTime).toBeCloseTo(
-      coarseRuntime.getSnapshot().simulationTime,
-      10,
-    );
+    expect(fixedRuntime.getSnapshot().simulationTime).toBeCloseTo(coarseRuntime.getSnapshot().simulationTime, 10);
   });
 
   it('uses advance(0) only to drain command events', () => {

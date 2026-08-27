@@ -1,10 +1,4 @@
-import {
-  createGridCell,
-  createRouteCells,
-  getCellKey,
-  getRouteLength,
-  type GridCell,
-} from '../game/grid';
+import { createGridCell, createRouteCells, getCellKey, getRouteLength, type GridCell } from '../game/grid';
 
 export interface LevelConfig {
   readonly width: number;

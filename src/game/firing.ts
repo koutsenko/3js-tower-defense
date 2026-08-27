@@ -7,15 +7,10 @@ import type { GameState } from './types';
 
 const TIME_TOLERANCE = 1e-9;
 
-export function fireReadyTowers(
-  state: GameState,
-  entityIds: EntityIdSequence,
-): readonly GameEvent[] {
+export function fireReadyTowers(state: GameState, entityIds: EntityIdSequence): readonly GameEvent[] {
   const events: GameEvent[] = [];
 
-  for (const tower of [...state.towers].sort(
-    (left, right) => left.id - right.id,
-  )) {
+  for (const tower of [...state.towers].sort((left, right) => left.id - right.id)) {
     const event = fireTower(state, tower.id, entityIds);
     if (event !== null) {
       events.push(event);
@@ -25,16 +20,9 @@ export function fireReadyTowers(
   return events;
 }
 
-export function fireTower(
-  state: GameState,
-  towerId: number,
-  entityIds: EntityIdSequence,
-): GameEvent | null {
+export function fireTower(state: GameState, towerId: number, entityIds: EntityIdSequence): GameEvent | null {
   const tower = state.towers.find(({ id }) => id === towerId);
-  if (
-    tower === undefined ||
-    tower.nextShotAt > state.simulationTime + TIME_TOLERANCE
-  ) {
+  if (tower === undefined || tower.nextShotAt > state.simulationTime + TIME_TOLERANCE) {
     return null;
   }
 

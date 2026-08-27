@@ -37,13 +37,9 @@ export function createSnapshot(state: GameState): GameSnapshot {
   return Object.freeze({
     ...state,
     towers: Object.freeze(
-      state.towers.map((tower) =>
-        Object.freeze({ ...tower, cell: Object.freeze({ ...tower.cell }) }),
-      ),
+      state.towers.map((tower) => Object.freeze({ ...tower, cell: Object.freeze({ ...tower.cell }) })),
     ),
-    monsters: Object.freeze(
-      state.monsters.map((monster) => Object.freeze({ ...monster })),
-    ),
+    monsters: Object.freeze(state.monsters.map((monster) => Object.freeze({ ...monster }))),
     projectiles: Object.freeze(
       state.projectiles.map((projectile) =>
         Object.freeze({

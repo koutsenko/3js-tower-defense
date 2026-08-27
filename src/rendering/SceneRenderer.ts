@@ -15,10 +15,7 @@ export class SceneRenderer {
   private readonly entityReconciler: EntityReconciler;
   private readonly transientEffects: TransientEffects;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    level: Readonly<LevelConfig> = levelConfig,
-  ) {
+  constructor(canvas: HTMLCanvasElement, level: Readonly<LevelConfig> = levelConfig) {
     this.level = level;
     this.camera = createLevelCamera(level);
     this.renderer = new WebGLRenderer({ canvas, antialias: true });
@@ -52,9 +49,7 @@ export class SceneRenderer {
     this.scene.traverse((object) => {
       if (object instanceof Mesh || object instanceof LineSegments) {
         object.geometry.dispose();
-        const materials = Array.isArray(object.material)
-          ? object.material
-          : [object.material];
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
         for (const material of materials) {
           material.dispose();
         }

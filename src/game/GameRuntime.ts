@@ -5,19 +5,8 @@ import { validateBuild as validateBuildState } from './building';
 import { fireTower } from './firing';
 import { advanceLifecycle, startGame } from './lifecycle';
 import { advanceWave } from './wave';
-import {
-  createEntityIdSequence,
-  createInitialState,
-  createSnapshot,
-  type EntityIdSequence,
-} from './state';
-import type {
-  BuildValidation,
-  CommandResult,
-  GameCommand,
-  GameSnapshot,
-  GameState,
-} from './types';
+import { createEntityIdSequence, createInitialState, createSnapshot, type EntityIdSequence } from './state';
+import type { BuildValidation, CommandResult, GameCommand, GameSnapshot, GameState } from './types';
 
 export class GameRuntime {
   private state: GameState;
@@ -101,11 +90,7 @@ export class GameRuntime {
     const events = [
       ...this.pendingEvents,
       ...lifecycleResult.events,
-      ...advanceWave(
-        this.state,
-        lifecycleResult.waveActiveDuration,
-        this.entityIds,
-      ),
+      ...advanceWave(this.state, lifecycleResult.waveActiveDuration, this.entityIds),
     ];
     this.pendingEvents = [];
     return events;

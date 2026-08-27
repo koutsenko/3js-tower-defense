@@ -18,9 +18,7 @@ describe('MathExtra (FR-007, AC-005)', () => {
     });
 
     it('treats a slightly negative discriminant within tolerance as zero', () => {
-      expect(MathExtra.findSmallerQuadraticRoot(1, 2, 1.0000000001, 1e-9)).toBe(
-        -1,
-      );
+      expect(MathExtra.findSmallerQuadraticRoot(1, 2, 1.0000000001, 1e-9)).toBe(-1);
     });
   });
 });

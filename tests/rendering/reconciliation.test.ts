@@ -98,16 +98,11 @@ describe('snapshot entity reconciliation (FR-006, FR-008, AC-006, AC-014, AC-015
 
     const towerGeometry = tower?.getObjectByName('tower:1');
     const monsterBody = monster?.getObjectByName('monster-body');
-    const healthBarBackground = monster?.getObjectByName(
-      'health-bar-background',
-    );
+    const healthBarBackground = monster?.getObjectByName('health-bar-background');
     expect(towerGeometry).toHaveProperty('geometry.parameters.width', 1.1);
     expect(towerGeometry).toHaveProperty('geometry.parameters.height', 1.8);
     expect(monsterBody).toHaveProperty('geometry.parameters.width', 1);
-    expect(healthBarBackground).toHaveProperty(
-      'geometry.parameters.width',
-      1.4,
-    );
+    expect(healthBarBackground).toHaveProperty('geometry.parameters.width', 1.4);
     expect(projectile).toHaveProperty('geometry.parameters.radius', 0.22);
   });
 });

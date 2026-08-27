@@ -1,21 +1,7 @@
-import {
-  BoxGeometry,
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
-  OrthographicCamera,
-  SphereGeometry,
-} from 'three';
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Object3D, OrthographicCamera, SphereGeometry } from 'three';
 import { levelConfig, type LevelConfig } from '../config/levelConfig';
 import { getRoutePosition } from '../game/movement';
-import type {
-  EntityId,
-  GameSnapshot,
-  MonsterState,
-  ProjectileState,
-  TowerState,
-} from '../game/types';
+import type { EntityId, GameSnapshot, MonsterState, ProjectileState, TowerState } from '../game/types';
 import { createHealthBar, updateHealthBar } from './healthBars';
 
 type EntityKind = 'tower' | 'monster' | 'projectile';
@@ -79,11 +65,7 @@ export class EntityReconciler {
   private reconcileTower(tower: Readonly<TowerState>): void {
     const object = this.getOrCreate(tower.id, 'tower', () => {
       const mesh = new Mesh(
-        new BoxGeometry(
-          0.55 * this.level.cellSize,
-          0.9 * this.level.cellSize,
-          0.55 * this.level.cellSize,
-        ),
+        new BoxGeometry(0.55 * this.level.cellSize, 0.9 * this.level.cellSize, 0.55 * this.level.cellSize),
         new MeshBasicMaterial({ color: COLORS.tower }),
       );
       mesh.name = `tower:${tower.id}`;
@@ -101,11 +83,7 @@ export class EntityReconciler {
       const root = new Group();
       root.name = `monster:${monster.id}`;
       const body = new Mesh(
-        new BoxGeometry(
-          0.5 * this.level.cellSize,
-          0.5 * this.level.cellSize,
-          0.5 * this.level.cellSize,
-        ),
+        new BoxGeometry(0.5 * this.level.cellSize, 0.5 * this.level.cellSize, 0.5 * this.level.cellSize),
         new MeshBasicMaterial({ color: COLORS.monster }),
       );
       body.name = 'monster-body';
@@ -115,11 +93,7 @@ export class EntityReconciler {
       return root;
     });
     const position = getRoutePosition(monster.routeProgress, this.level);
-    object.position.set(
-      position.x * this.level.cellSize,
-      0.3 * this.level.cellSize,
-      position.y * this.level.cellSize,
-    );
+    object.position.set(position.x * this.level.cellSize, 0.3 * this.level.cellSize, position.y * this.level.cellSize);
 
     const healthBar = object.getObjectByName('health-bar');
     if (!(healthBar instanceof Group)) {
@@ -144,11 +118,7 @@ export class EntityReconciler {
     );
   }
 
-  private getOrCreate(
-    id: EntityId,
-    kind: EntityKind,
-    create: () => Object3D,
-  ): Object3D {
+  private getOrCreate(id: EntityId, kind: EntityKind, create: () => Object3D): Object3D {
     const existing = this.entities.get(id);
     if (existing) {
       if (existing.kind !== kind) {
@@ -169,9 +139,7 @@ export class EntityReconciler {
     object.traverse((child) => {
       if (child instanceof Mesh) {
         child.geometry.dispose();
-        const materials = Array.isArray(child.material)
-          ? child.material
-          : [child.material];
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
         for (const material of materials) {
           material.dispose();
         }

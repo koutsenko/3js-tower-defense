@@ -1,10 +1,4 @@
-import {
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  PlaneGeometry,
-} from 'three';
+import { Group, Mesh, MeshBasicMaterial, OrthographicCamera, PlaneGeometry } from 'three';
 import { MONSTER_HP } from '../config/gameConfig';
 
 const BAR_WIDTH_IN_CELLS = 0.7;
@@ -17,16 +11,10 @@ export function createHealthBar(cellSize = 1): Group {
   const barHeight = BAR_HEIGHT_IN_CELLS * cellSize;
   healthBar.userData.width = barWidth;
 
-  const background = new Mesh(
-    new PlaneGeometry(barWidth, barHeight),
-    new MeshBasicMaterial({ color: 0x2b2b2b }),
-  );
+  const background = new Mesh(new PlaneGeometry(barWidth, barHeight), new MeshBasicMaterial({ color: 0x2b2b2b }));
   background.name = 'health-bar-background';
 
-  const fill = new Mesh(
-    new PlaneGeometry(barWidth, barHeight * 0.65),
-    new MeshBasicMaterial({ color: 0x4bd16f }),
-  );
+  const fill = new Mesh(new PlaneGeometry(barWidth, barHeight * 0.65), new MeshBasicMaterial({ color: 0x4bd16f }));
   fill.name = 'health-bar-fill';
   fill.position.z = 0.001 * cellSize;
 
@@ -35,11 +23,7 @@ export function createHealthBar(cellSize = 1): Group {
   return healthBar;
 }
 
-export function updateHealthBar(
-  healthBar: Group,
-  hp: number,
-  camera?: OrthographicCamera,
-): void {
+export function updateHealthBar(healthBar: Group, hp: number, camera?: OrthographicCamera): void {
   const ratio = Math.min(1, Math.max(0, hp / MONSTER_HP));
   const barWidth: unknown = healthBar.userData.width;
   const fill = healthBar.getObjectByName('health-bar-fill');

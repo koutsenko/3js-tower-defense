@@ -11,10 +11,7 @@ export function getNextSpawnTime(state: Readonly<GameState>): number | null {
   return state.phaseStartedAt + state.spawnedCount * SPAWN_INTERVAL;
 }
 
-export function spawnDueMonsters(
-  state: GameState,
-  entityIds: EntityIdSequence,
-): readonly GameEvent[] {
+export function spawnDueMonsters(state: GameState, entityIds: EntityIdSequence): readonly GameEvent[] {
   const events: GameEvent[] = [];
   let nextSpawnTime = getNextSpawnTime(state);
 

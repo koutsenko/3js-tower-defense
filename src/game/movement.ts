@@ -5,20 +5,14 @@ import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
-export function getNextEscapeTime(
-  state: Readonly<GameState>,
-  currentTime: number,
-): number | null {
+export function getNextEscapeTime(state: Readonly<GameState>, currentTime: number): number | null {
   if (state.monsters.length === 0) {
     return null;
   }
 
   return Math.min(
     ...state.monsters.map(
-      (monster) =>
-        currentTime +
-        Math.max(0, levelConfig.routeLength - monster.routeProgress) /
-          MONSTER_SPEED,
+      (monster) => currentTime + Math.max(0, levelConfig.routeLength - monster.routeProgress) / MONSTER_SPEED,
     ),
   );
 }
@@ -31,9 +25,7 @@ export function moveMonsters(state: GameState, duration: number): void {
   for (const monster of state.monsters) {
     const nextProgress = monster.routeProgress + MONSTER_SPEED * duration;
     monster.routeProgress =
-      Math.abs(nextProgress - levelConfig.routeLength) <= DISTANCE_TOLERANCE
-        ? levelConfig.routeLength
-        : nextProgress;
+      Math.abs(nextProgress - levelConfig.routeLength) <= DISTANCE_TOLERANCE ? levelConfig.routeLength : nextProgress;
   }
 }
 
@@ -60,15 +52,9 @@ export function resolveEscapedMonsters(state: GameState): readonly GameEvent[] {
 
 export function getRoutePosition(
   routeProgress: number,
-  level: Pick<
-    LevelConfig,
-    'routeLength' | 'routeWaypoints' | 'exit'
-  > = levelConfig,
+  level: Pick<LevelConfig, 'routeLength' | 'routeWaypoints' | 'exit'> = levelConfig,
 ): Position {
-  let remainingProgress = Math.min(
-    Math.max(routeProgress, 0),
-    level.routeLength,
-  );
+  let remainingProgress = Math.min(Math.max(routeProgress, 0), level.routeLength);
 
   for (let index = 1; index < level.routeWaypoints.length; index += 1) {
     const start = level.routeWaypoints[index - 1]!;

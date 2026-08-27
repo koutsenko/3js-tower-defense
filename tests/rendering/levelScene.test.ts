@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { levelConfig } from '../../src/config/levelConfig';
-import {
-  createLevelCamera,
-  isLevelInsideFrustum,
-  resizeLevelCamera,
-} from '../../src/rendering/camera';
+import { createLevelCamera, isLevelInsideFrustum, resizeLevelCamera } from '../../src/rendering/camera';
 import { createLevelPlaceholders } from '../../src/rendering/placeholders';
 
 describe('functional placeholder level scene (FR-002, FR-003, AC-015)', () => {

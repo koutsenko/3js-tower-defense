@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  PREPARATION_DURATION,
-  SHOT_COOLDOWN,
-} from '../../src/config/gameConfig';
+import { PREPARATION_DURATION, SHOT_COOLDOWN } from '../../src/config/gameConfig';
 import { GameRuntime } from '../../src/game/GameRuntime';
 import { createInitialState } from '../../src/game/state';
 import { selectTarget } from '../../src/game/targeting';
@@ -43,9 +40,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
       { type: 'projectile-shot', projectileId: 4, towerId: 1, targetId: 2 },
       { type: 'projectile-shot', projectileId: 6, towerId: 1, targetId: 2 },
     ]);
-    expect(runtime.getSnapshot().towers[0]?.nextShotAt).toBe(
-      PREPARATION_DURATION + 2 + SHOT_COOLDOWN,
-    );
+    expect(runtime.getSnapshot().towers[0]?.nextShotAt).toBe(PREPARATION_DURATION + 2 + SHOT_COOLDOWN);
   });
 
   it('does not delay a ready tower when a target enters range later', () => {
@@ -72,13 +67,10 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
       fixedEvents.push(...fixedRuntime.advance(FIXED_STEP));
     }
 
-    expect(
-      fixedEvents.filter(({ type }) => type === 'projectile-shot'),
-    ).toEqual(coarseEvents.filter(({ type }) => type === 'projectile-shot'));
-    expectSnapshotsEquivalent(
-      fixedRuntime.getSnapshot(),
-      coarseRuntime.getSnapshot(),
+    expect(fixedEvents.filter(({ type }) => type === 'projectile-shot')).toEqual(
+      coarseEvents.filter(({ type }) => type === 'projectile-shot'),
     );
+    expectSnapshotsEquivalent(fixedRuntime.getSnapshot(), coarseRuntime.getSnapshot());
   });
 
   it('fires a tower built during a wave immediately at the build boundary (AC-009)', () => {
@@ -86,9 +78,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
     runtime.dispatch({ type: 'StartGame' });
     runtime.advance(PREPARATION_DURATION);
 
-    expect(
-      runtime.dispatch({ type: 'BuildTower', cell: { x: 1, y: 3 } }),
-    ).toEqual({ ok: true });
+    expect(runtime.dispatch({ type: 'BuildTower', cell: { x: 1, y: 3 } })).toEqual({ ok: true });
     expect(runtime.advance(0)).toEqual([
       {
         type: 'tower-built',
@@ -102,9 +92,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
         targetId: 1,
       },
     ]);
-    expect(runtime.getSnapshot().projectiles).toEqual([
-      { id: 3, targetId: 1, position: { x: 1, y: 3 } },
-    ]);
+    expect(runtime.getSnapshot().projectiles).toEqual([{ id: 3, targetId: 1, position: { x: 1, y: 3 } }]);
     expect(runtime.advance(FIXED_STEP)).not.toContainEqual(
       expect.objectContaining({ type: 'projectile-shot', towerId: 2 }),
     );
@@ -114,9 +102,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
 function createTargetingState(monsters: GameState['monsters']): GameState {
   const state = createInitialState();
   state.status = 'WaveActive';
-  state.towers = [
-    { id: 1, cell: { x: 2, y: 3 }, nextShotAt: state.simulationTime },
-  ];
+  state.towers = [{ id: 1, cell: { x: 2, y: 3 }, nextShotAt: state.simulationTime }];
   state.monsters = monsters;
   state.spawnedCount = monsters.length;
   return state;
@@ -129,10 +115,7 @@ function createRuntimeWithTower(cell: { x: number; y: number }): GameRuntime {
   return runtime;
 }
 
-function expectSnapshotsEquivalent(
-  actual: GameSnapshot,
-  expected: GameSnapshot,
-): void {
+function expectSnapshotsEquivalent(actual: GameSnapshot, expected: GameSnapshot): void {
   expect(actual).toMatchObject({
     status: expected.status,
     phaseStartedAt: expected.phaseStartedAt,

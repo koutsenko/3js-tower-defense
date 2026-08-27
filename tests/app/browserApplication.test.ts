@@ -1,9 +1,6 @@
 import { Camera, Object3D, Scene } from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  createBrowserApplication,
-  type BrowserApplicationOptions,
-} from '../../src/app/createApplication';
+import { createBrowserApplication, type BrowserApplicationOptions } from '../../src/app/createApplication';
 import type { GameEvent } from '../../src/game/events';
 import type { GameSnapshot } from '../../src/game/types';
 
@@ -20,13 +17,8 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
     expect(root.querySelector('canvas')).toBe(application.canvas);
     expect(fixture.scene.resize).toHaveBeenCalledWith(1280, 720, 2);
     expect(fixture.scene.scene.children).toContain(fixture.placement.root);
-    expect(fixture.scene.reconcile).toHaveBeenCalledWith(
-      application.runtime.getSnapshot(),
-    );
-    expect(fixture.scene.presentEvents).toHaveBeenCalledWith(
-      [],
-      application.runtime.getSnapshot(),
-    );
+    expect(fixture.scene.reconcile).toHaveBeenCalledWith(application.runtime.getSnapshot());
+    expect(fixture.scene.presentEvents).toHaveBeenCalledWith([], application.runtime.getSnapshot());
     expect(fixture.hud.render).toHaveBeenCalled();
     expect(fixture.overlay.render).toHaveBeenCalled();
     expect(fixture.scene.render).toHaveBeenCalled();
@@ -50,10 +42,7 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
 
   it('smoke tests Ready → Preparation → WaveActive → terminal → Ready', () => {
     const fixture = createFixture();
-    const application = createBrowserApplication(
-      createRoot(1280, 720),
-      fixture.options,
-    );
+    const application = createBrowserApplication(createRoot(1280, 720), fixture.options);
     application.start();
     fixture.runFrame(0);
     expect(lastSnapshot(fixture.hud).status).toBe('Ready');
@@ -158,8 +147,7 @@ function createSceneSpy() {
     scene: new Scene(),
     camera: new Camera(),
     resize: vi.fn(),
-    presentEvents:
-      vi.fn<(events: readonly GameEvent[], snapshot: GameSnapshot) => void>(),
+    presentEvents: vi.fn<(events: readonly GameEvent[], snapshot: GameSnapshot) => void>(),
     reconcile: vi.fn<(snapshot: GameSnapshot) => void>(),
     render: vi.fn(),
     dispose: vi.fn(),

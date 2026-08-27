@@ -5,10 +5,7 @@ import type { BuildValidation, GameState } from './types';
 
 const routeCellKeys = new Set(levelConfig.routeCells.map(getCellKey));
 
-export function validateBuild(
-  state: Readonly<GameState>,
-  cell: GridCell,
-): BuildValidation {
+export function validateBuild(state: Readonly<GameState>, cell: GridCell): BuildValidation {
   if (state.status === 'Victory' || state.status === 'Defeat') {
     return { ok: false, code: 'SESSION_ENDED' };
   }
