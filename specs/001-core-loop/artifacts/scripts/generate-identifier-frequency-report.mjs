@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import ts from 'typescript';
 
@@ -19,19 +19,19 @@ const SOURCE_EXTENSIONS = [
 
 const sourceFiles = await collectSourceFiles(SOURCE_DIR);
 const frequencies = new Map();
+const compilerOptions = readCompilerOptions();
+const program = ts.createProgram({ rootNames: sourceFiles, options: compilerOptions });
+const checker = program.getTypeChecker();
 
 for (const filePath of sourceFiles) {
-  const sourceText = await readFile(filePath, 'utf8');
-  const sourceFile = ts.createSourceFile(
-    filePath,
-    sourceText,
-    ts.ScriptTarget.Latest,
-    true,
-    scriptKindFor(filePath),
-  );
+  const sourceFile = program.getSourceFile(filePath);
+  if (sourceFile === undefined) {
+    throw new Error(`TypeScript did not load ${filePath}`);
+  }
 
-  if (sourceFile.parseDiagnostics.length > 0) {
-    throw new Error(formatParseError(sourceFile, sourceFile.parseDiagnostics[0]));
+  const diagnostics = program.getSyntacticDiagnostics(sourceFile);
+  if (diagnostics.length > 0) {
+    throw new Error(formatDiagnostic(diagnostics[0]));
   }
 
   visit(sourceFile);
@@ -62,13 +62,49 @@ globalThis.console.log(
     `${sourceFiles.length} files)`,
 );
 
+/**
+ * Рекурсивно обходит AST исходного файла и считает идентификаторы проекта.
+ * Для каждого Identifier TypeChecker определяет связанный символ. Имена,
+ * объявленные только в стандартных lib.*.d.ts TypeScript, пропускаются, поэтому
+ * глобальные API вроде Object и Math не смешиваются с локальной лексикой.
+ * Локальные имена, TypeScript-типы и явно импортированные имена сохраняются.
+ *
+ * @param {import('typescript').Node} node Текущий узел синтаксического дерева.
+ */
 function visit(node) {
-  if (ts.isIdentifier(node)) {
+  if (ts.isIdentifier(node) && !isStandardLibraryIdentifier(node)) {
     const name = node.text;
     frequencies.set(name, (frequencies.get(name) ?? 0) + 1);
   }
 
   ts.forEachChild(node, visit);
+}
+
+function isStandardLibraryIdentifier(node) {
+  const symbol = checker.getSymbolAtLocation(node);
+  const declarations = symbol?.getDeclarations();
+
+  return (
+    declarations !== undefined &&
+    declarations.length > 0 &&
+    declarations.every((declaration) =>
+      program.isSourceFileDefaultLibrary(declaration.getSourceFile()),
+    )
+  );
+}
+
+function readCompilerOptions() {
+  const configPath = path.resolve('tsconfig.json');
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  if (configFile.error !== undefined) {
+    throw new Error(formatDiagnostic(configFile.error));
+  }
+
+  return ts.parseJsonConfigFileContent(
+    configFile.config,
+    ts.sys,
+    path.dirname(configPath),
+  ).options;
 }
 
 async function collectSourceFiles(directory) {
@@ -91,27 +127,16 @@ function isSourceFile(fileName) {
   return SOURCE_EXTENSIONS.some((extension) => fileName.endsWith(extension));
 }
 
-function scriptKindFor(filePath) {
-  if (filePath.endsWith('.tsx')) return ts.ScriptKind.TSX;
-  if (filePath.endsWith('.jsx')) return ts.ScriptKind.JSX;
-  if (
-    filePath.endsWith('.ts') ||
-    filePath.endsWith('.mts') ||
-    filePath.endsWith('.cts')
-  ) {
-    return ts.ScriptKind.TS;
-  }
-  return ts.ScriptKind.JS;
-}
-
-function formatParseError(sourceFile, diagnostic) {
+function formatDiagnostic(diagnostic) {
   const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-  if (diagnostic.start === undefined) {
-    return `${sourceFile.fileName}: ${message}`;
+  if (diagnostic.file === undefined || diagnostic.start === undefined) {
+    return message;
   }
 
-  const position = sourceFile.getLineAndCharacterOfPosition(diagnostic.start);
-  return `${sourceFile.fileName}:${position.line + 1}:${position.character + 1}: ${message}`;
+  const position = diagnostic.file.getLineAndCharacterOfPosition(
+    diagnostic.start,
+  );
+  return `${diagnostic.file.fileName}:${position.line + 1}:${position.character + 1}: ${message}`;
 }
 
 function escapeHtml(value) {
