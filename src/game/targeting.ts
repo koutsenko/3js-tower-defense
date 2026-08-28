@@ -45,6 +45,13 @@ function isInRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>)
   return Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE;
 }
 
+/**
+ * Ищет на оставшейся части маршрута место, где монстр впервые войдёт в радиус указанной башни.
+ *
+ * @param tower Башня, для которой проверяется радиус атаки.
+ * @param monster Монстр, движущийся по маршруту.
+ * @returns Расстояние в клетках от начала маршрута до входа в радиус башни или null, если пересечения нет.
+ */
 function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): number | null {
   let segmentStartProgress = 0;
 
