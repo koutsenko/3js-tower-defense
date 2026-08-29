@@ -19,14 +19,12 @@ Vite.
 
 ```bash
 npm install                         # Установить зависимости
-npm run dev                         # Запустить Vite development server с hot reload
+npm run dev                         # Запустить dev server; URL появится в терминале
 npm run build                       # Создать production-сборку в каталоге dist/
 npm test                            # Запустить полный набор автоматических тестов
 npx playwright install chromium     # Опционально установить Chromium для Playwright
 npm run capture:acceptance          # Опционально создать acceptance-скриншоты
 ```
-
-Локальный адрес приложения Vite выведет в терминал.
 
 ## Playwright
 
