@@ -62,6 +62,12 @@ export function getRouteLength(waypoints: readonly GridCell[]): number {
   }, 0);
 }
 
+/**
+ * Создаёт клетки заранее проверенного горизонтального и вертикального маршрута.
+ *
+ * @param waypoints Последовательность точек, предварительно проверенная через `assertAxisAlignedRoute`.
+ * @returns Клетки маршрута, включая начальную и конечную точки каждого участка.
+ */
 export function createRouteCells(waypoints: readonly GridCell[]): readonly GridCell[] {
   if (waypoints.length === 0) {
     return Object.freeze([]);
