@@ -6,7 +6,7 @@ import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
-export function getNextEscapeTime(state: Readonly<GameState>, currentTime: number): number | null {
+export function predictNextMonsterEscapeTime(state: Readonly<GameState>, currentTime: number): number | null {
   if (state.monsters.length === 0) {
     return null;
   }

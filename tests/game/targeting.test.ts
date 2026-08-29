@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { PREPARATION_DURATION, SHOT_COOLDOWN } from '../../src/config/gameConfig';
 import { GameRuntime } from '../../src/game/GameRuntime';
 import { createInitialState } from '../../src/game/state';
-import { selectTarget } from '../../src/game/targeting';
+import { selectTowerTarget } from '../../src/game/targeting';
 import type { GameSnapshot, GameState } from '../../src/game/types';
 
 const FIXED_STEP = 1 / 60;
@@ -16,7 +16,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
     ]);
     state.towers[0]!.cell = { x: 0, y: 4 };
 
-    expect(selectTarget(state, state.towers[0]!)).toMatchObject({ id: 2 });
+    expect(selectTowerTarget(state, state.towers[0]!)).toMatchObject({ id: 2 });
   });
 
   it('selects furthest progress, then the lower spawn index on a tie', () => {
@@ -26,7 +26,7 @@ describe('tower targeting and firing (FR-007, FR-011)', () => {
       { id: 4, spawnIndex: 0, hp: 100, routeProgress: 2 },
     ]);
 
-    expect(selectTarget(state, state.towers[0]!)).toMatchObject({ id: 3 });
+    expect(selectTowerTarget(state, state.towers[0]!)).toMatchObject({ id: 3 });
   });
 
   it('fires immediately and again on each exact one-second cooldown', () => {

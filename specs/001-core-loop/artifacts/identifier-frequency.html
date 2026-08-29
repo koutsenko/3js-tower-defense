@@ -21,12 +21,12 @@
   <body>
     <main>
       <h1>Частотная карта идентификаторов</h1>
-      <p class="meta">src · 32 файлов · 498 названий · 3740 вхождений · 2026-08-29T06:32:41.207Z</p>
+      <p class="meta">src · 32 файлов · 499 названий · 3745 вхождений · 2026-08-29T17:36:47.517Z</p>
       <label>
         Фильтр по названию
         <input id="filter" type="search" autocomplete="off" placeholder="gameState, monster, tower…">
       </label>
-      <p id="result-count" aria-live="polite">Показано: 498</p>
+      <p id="result-count" aria-live="polite">Показано: 499</p>
       <table>
         <thead><tr><th scope="col">Название</th><th scope="col" class="count">Вхождения</th></tr></thead>
         <tbody>
@@ -166,6 +166,10 @@
           <td><code>LevelConfig</code></td>
           <td class="count">22</td>
         </tr>
+        <tr data-name="routeprogress">
+          <td><code>routeProgress</code></td>
+          <td class="count">22</td>
+        </tr>
         <tr data-name="projectiles">
           <td><code>projectiles</code></td>
           <td class="count">21</td>
@@ -193,10 +197,6 @@
         <tr data-name="width">
           <td><code>width</code></td>
           <td class="count">20</td>
-        </tr>
-        <tr data-name="routeprogress">
-          <td><code>routeProgress</code></td>
-          <td class="count">19</td>
         </tr>
         <tr data-name="code">
           <td><code>code</code></td>
@@ -694,6 +694,10 @@
           <td><code>activeIds</code></td>
           <td class="count">5</td>
         </tr>
+        <tr data-name="calculatenextspawntime">
+          <td><code>calculateNextSpawnTime</code></td>
+          <td class="count">5</td>
+        </tr>
         <tr data-name="cells">
           <td><code>cells</code></td>
           <td class="count">5</td>
@@ -720,10 +724,6 @@
         </tr>
         <tr data-name="fixed_step_seconds">
           <td><code>FIXED_STEP_SECONDS</code></td>
-          <td class="count">5</td>
-        </tr>
-        <tr data-name="getnextspawntime">
-          <td><code>getNextSpawnTime</code></td>
           <td class="count">5</td>
         </tr>
         <tr data-name="halfcell">
@@ -982,8 +982,8 @@
           <td><code>scheduleProjectileImpact</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="selecttarget">
-          <td><code>selectTarget</code></td>
+        <tr data-name="selecttowertarget">
+          <td><code>selectTowerTarget</code></td>
           <td class="count">4</td>
         </tr>
         <tr data-name="spheregeometry">
@@ -1060,6 +1060,10 @@
         </tr>
         <tr data-name="buildfeedbackview">
           <td><code>BuildFeedbackView</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="calculatenextprojectilesteptime">
+          <td><code>calculateNextProjectileStepTime</code></td>
           <td class="count">3</td>
         </tr>
         <tr data-name="cellkey">
@@ -1158,10 +1162,6 @@
           <td><code>EntityKind</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="entryprogress">
-          <td><code>entryProgress</code></td>
-          <td class="count">3</td>
-        </tr>
         <tr data-name="entryratio">
           <td><code>entryRatio</code></td>
           <td class="count">3</td>
@@ -1200,22 +1200,6 @@
         </tr>
         <tr data-name="getlevelbounds">
           <td><code>getLevelBounds</code></td>
-          <td class="count">3</td>
-        </tr>
-        <tr data-name="getnextescapetime">
-          <td><code>getNextEscapeTime</code></td>
-          <td class="count">3</td>
-        </tr>
-        <tr data-name="getnextprojectileimpacttime">
-          <td><code>getNextProjectileImpactTime</code></td>
-          <td class="count">3</td>
-        </tr>
-        <tr data-name="getnextprojectilesteptime">
-          <td><code>getNextProjectileStepTime</code></td>
-          <td class="count">3</td>
-        </tr>
-        <tr data-name="getnexttargetingtime">
-          <td><code>getNextTargetingTime</code></td>
           <td class="count">3</td>
         </tr>
         <tr data-name="getpreparationcountdown">
@@ -1346,6 +1330,18 @@
           <td><code>PlacementController</code></td>
           <td class="count">3</td>
         </tr>
+        <tr data-name="predictnextmonsterescapetime">
+          <td><code>predictNextMonsterEscapeTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="predictnextprojectileimpacttime">
+          <td><code>predictNextProjectileImpactTime</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="predictnexttargetingboundarytime">
+          <td><code>predictNextTargetingBoundaryTime</code></td>
+          <td class="count">3</td>
+        </tr>
         <tr data-name="presentevents">
           <td><code>presentEvents</code></td>
           <td class="count">3</td>
@@ -1364,6 +1360,10 @@
         </tr>
         <tr data-name="projectile_step">
           <td><code>PROJECTILE_STEP</code></td>
+          <td class="count">3</td>
+        </tr>
+        <tr data-name="rangeentryprediction">
+          <td><code>rangeEntryPrediction</code></td>
           <td class="count">3</td>
         </tr>
         <tr data-name="raycaster">
@@ -1670,10 +1670,6 @@
           <td><code>getNextEntityId</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getnextrangeentryprogress">
-          <td><code>getNextRangeEntryProgress</code></td>
-          <td class="count">2</td>
-        </tr>
         <tr data-name="getobject">
           <td><code>getObject</code></td>
           <td class="count">2</td>
@@ -1710,8 +1706,8 @@
           <td><code>isBuildRejectionCode</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="isinrange">
-          <td><code>isInRange</code></td>
+        <tr data-name="ismonsterintowerrange">
+          <td><code>isMonsterInTowerRange</code></td>
           <td class="count">2</td>
         </tr>
         <tr data-name="item">
@@ -1772,6 +1768,10 @@
         </tr>
         <tr data-name="pointer">
           <td><code>pointer</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="predictnexttowerrangeentry">
+          <td><code>predictNextTowerRangeEntry</code></td>
           <td class="count">2</td>
         </tr>
         <tr data-name="present">
@@ -1844,6 +1844,10 @@
         </tr>
         <tr data-name="toast_duration_ms">
           <td><code>TOAST_DURATION_MS</code></td>
+          <td class="count">2</td>
+        </tr>
+        <tr data-name="towerrangeentryprediction">
+          <td><code>TowerRangeEntryPrediction</code></td>
           <td class="count">2</td>
         </tr>
         <tr data-name="traverse">

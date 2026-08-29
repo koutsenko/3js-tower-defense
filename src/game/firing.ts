@@ -1,7 +1,7 @@
 import { SHOT_COOLDOWN } from '../config/gameConfig';
 import type { GameEvent } from './events';
 import { scheduleProjectileImpact } from './projectiles';
-import { selectTarget } from './targeting';
+import { selectTowerTarget } from './targeting';
 import type { EntityIdSequence } from './state';
 import type { GameState } from './types';
 
@@ -26,7 +26,7 @@ export function fireTower(state: GameState, towerId: number, entityIds: EntityId
     return null;
   }
 
-  const target = selectTarget(state, tower);
+  const target = selectTowerTarget(state, tower);
   if (target === null) {
     return null;
   }

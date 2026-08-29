@@ -629,7 +629,7 @@ assets.
 
 ### T-018 — Уточнить temporal naming gameplay-систем
 
-**Статус:** Pending.
+**Статус:** Complete.
 
 **Связи:** поддерживает читаемость реализации `FR-006`–`FR-013`; gameplay
 behavior не изменяется.
@@ -661,3 +661,13 @@ behavior не изменяется.
 - `npm test`, `npm run lint` и `npm run build` завершаются успешно;
 - manual browser verification не требуется, поскольку visual и interactive
   behavior не меняются.
+
+**Verification evidence (2026-08-29):**
+
+- переименования из `CR-002` применены, старые identifiers отсутствуют в `src`
+  и tests;
+- range-entry prediction возвращает предметный `TowerRangeEntryPrediction`;
+- `npm test` — 19 test files, 101 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- identifier-frequency report перегенерирован.

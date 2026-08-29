@@ -7,15 +7,22 @@ import type { GameState, MonsterState, TowerState } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
-export function selectTarget(state: Readonly<GameState>, tower: Readonly<TowerState>): Readonly<MonsterState> | null {
+interface TowerRangeEntryPrediction {
+  readonly routeProgress: number;
+}
+
+export function selectTowerTarget(
+  state: Readonly<GameState>,
+  tower: Readonly<TowerState>,
+): Readonly<MonsterState> | null {
   const targets = state.monsters
-    .filter((monster) => isInRange(tower, monster))
+    .filter((monster) => isMonsterInTowerRange(tower, monster))
     .sort((left, right) => right.routeProgress - left.routeProgress || left.spawnIndex - right.spawnIndex);
 
   return targets[0] ?? null;
 }
 
-export function getNextTargetingTime(state: Readonly<GameState>, currentTime: number): number | null {
+export function predictNextTargetingBoundaryTime(state: Readonly<GameState>, currentTime: number): number | null {
   let nextTime: number | null = null;
 
   for (const tower of state.towers) {
@@ -26,14 +33,17 @@ export function getNextTargetingTime(state: Readonly<GameState>, currentTime: nu
       continue;
     }
 
-    if (selectTarget(state, tower) !== null) {
+    if (selectTowerTarget(state, tower) !== null) {
       return currentTime;
     }
 
     for (const monster of state.monsters) {
-      const entryProgress = getNextRangeEntryProgress(tower, monster);
-      if (entryProgress !== null) {
-        nextTime = minDefined(nextTime, currentTime + (entryProgress - monster.routeProgress) / MONSTER_SPEED);
+      const rangeEntryPrediction = predictNextTowerRangeEntry(tower, monster);
+      if (rangeEntryPrediction !== null) {
+        nextTime = minDefined(
+          nextTime,
+          currentTime + (rangeEntryPrediction.routeProgress - monster.routeProgress) / MONSTER_SPEED,
+        );
       }
     }
   }
@@ -41,19 +51,34 @@ export function getNextTargetingTime(state: Readonly<GameState>, currentTime: nu
   return nextTime;
 }
 
-function isInRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): boolean {
+/**
+ * Проверяет, находится ли монстр в радиусе башни в текущем состоянии симуляции.
+ *
+ * Используется для фактического выбора цели на достигнутой временной границе и не прогнозирует дальнейшее движение.
+ *
+ * @param tower Башня, для которой проверяется радиус атаки.
+ * @param monster Монстр, текущее положение которого проверяется.
+ * @returns true, если монстр сейчас находится в радиусе башни; иначе false.
+ */
+function isMonsterInTowerRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): boolean {
   const position = getRoutePosition(monster.routeProgress);
   return Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE;
 }
 
 /**
- * Ищет на оставшейся части маршрута место, где монстр впервые войдёт в радиус указанной башни.
+ * Прогнозирует ближайшее место на оставшемся маршруте, где монстр войдёт в радиус указанной башни.
  *
- * @param tower Башня, для которой проверяется радиус атаки.
- * @param monster Монстр, движущийся по маршруту.
- * @returns Расстояние в клетках от начала маршрута до входа в радиус башни или null, если пересечения нет.
+ * Результат используется для планирования следующей временной границы и не означает, что монстр станет целью.
+ * После перехода к этой границе доступные цели заново проверяются через isMonsterInTowerRange.
+ *
+ * @param tower Башня, вход в радиус которой прогнозируется.
+ * @param monster Монстр, для которого анализируется оставшийся маршрут.
+ * @returns Прогноз входа с расстоянием в клетках от начала маршрута или null, если пересечения нет.
  */
-function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): number | null {
+function predictNextTowerRangeEntry(
+  tower: Readonly<TowerState>,
+  monster: Readonly<MonsterState>,
+): TowerRangeEntryPrediction | null {
   let segmentStartProgress = 0;
 
   // TODO: Предвычислить участки маршрута, чтобы не обходить заново пройденные участки при поиске входа в радиус башни.
@@ -81,7 +106,7 @@ function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonl
           const x = start.x + dx * ratio;
           const y = start.y + dy * ratio;
           if (Math.hypot(x - tower.cell.x, y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE) {
-            return segmentStartProgress + ratio * segmentLength;
+            return { routeProgress: segmentStartProgress + ratio * segmentLength };
           }
         }
       }

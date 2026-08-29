@@ -3,7 +3,7 @@ import type { GameEvent } from './events';
 import type { EntityIdSequence } from './state';
 import type { GameState } from './types';
 
-export function getNextSpawnTime(state: Readonly<GameState>): number | null {
+export function calculateNextSpawnTime(state: Readonly<GameState>): number | null {
   if (state.spawnedCount >= WAVE_SIZE) {
     return null;
   }
@@ -13,7 +13,7 @@ export function getNextSpawnTime(state: Readonly<GameState>): number | null {
 
 export function spawnDueMonsters(state: GameState, entityIds: EntityIdSequence): readonly GameEvent[] {
   const events: GameEvent[] = [];
-  let nextSpawnTime = getNextSpawnTime(state);
+  let nextSpawnTime = calculateNextSpawnTime(state);
 
   while (nextSpawnTime !== null && nextSpawnTime <= state.simulationTime) {
     const monster = {
@@ -30,7 +30,7 @@ export function spawnDueMonsters(state: GameState, entityIds: EntityIdSequence):
       monsterId: monster.id,
       spawnIndex: monster.spawnIndex,
     });
-    nextSpawnTime = getNextSpawnTime(state);
+    nextSpawnTime = calculateNextSpawnTime(state);
   }
 
   return events;

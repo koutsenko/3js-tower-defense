@@ -24,7 +24,7 @@ export function scheduleProjectileImpact(
   projectileImpactTimes.set(projectile, currentTime + distance / (PROJECTILE_SPEED - MONSTER_SPEED));
 }
 
-export function getNextProjectileImpactTime(state: Readonly<GameState>, currentTime: number): number | null {
+export function predictNextProjectileImpactTime(state: Readonly<GameState>, currentTime: number): number | null {
   const impactTimes = state.projectiles.flatMap((projectile) => {
     scheduleProjectileImpact(state, projectile, currentTime);
     const impactTime = projectileImpactTimes.get(projectile);
@@ -39,7 +39,7 @@ export function isProjectileImpactDue(projectile: GameState['projectiles'][numbe
   return impactTime !== undefined && impactTime <= currentTime + DISTANCE_TOLERANCE;
 }
 
-export function getNextProjectileStepTime(state: Readonly<GameState>, currentTime: number): number | null {
+export function calculateNextProjectileStepTime(state: Readonly<GameState>, currentTime: number): number | null {
   if (state.projectiles.length === 0) {
     return null;
   }
