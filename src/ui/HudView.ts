@@ -63,8 +63,7 @@ export class HudView {
 
     const countdown = getPreparationCountdown(snapshot);
     this.countdown.hidden = countdown === null;
-    this.countdownValue.textContent =
-      countdown === null ? '' : String(Math.ceil(countdown));
+    this.countdownValue.textContent = countdown === null ? '' : String(Math.ceil(countdown));
   }
 
   dispose(): void {
@@ -73,10 +72,7 @@ export class HudView {
   }
 }
 
-function getElement<ElementType extends HTMLElement = HTMLElement>(
-  root: HTMLElement,
-  selector: string,
-): ElementType {
+function getElement<ElementType extends HTMLElement = HTMLElement>(root: HTMLElement, selector: string): ElementType {
   const element = root.querySelector<ElementType>(selector);
   if (element === null) {
     throw new Error(`Missing HUD element: ${selector}`);

@@ -12,11 +12,7 @@ import {
 } from 'three';
 import { levelConfig } from '../config/levelConfig';
 import { createGridCell, type GridCell } from '../game/grid';
-import type {
-  BuildRejectionCode,
-  BuildValidation,
-  CommandResult,
-} from '../game/types';
+import type { BuildRejectionCode, BuildValidation, CommandResult } from '../game/types';
 import { getBuildRejectionMessage, type BuildFeedback } from './buildFeedback';
 
 const VALID_COLOR = 0x32d26f;
@@ -24,10 +20,7 @@ const INVALID_COLOR = 0xe5484d;
 
 export interface PlacementRuntime {
   validateBuild(cell: GridCell): BuildValidation;
-  dispatch(command: {
-    readonly type: 'BuildTower';
-    readonly cell: GridCell;
-  }): CommandResult;
+  dispatch(command: { readonly type: 'BuildTower'; readonly cell: GridCell }): CommandResult;
 }
 
 export class PlacementController {
@@ -53,10 +46,7 @@ export class PlacementController {
   ) {
     this.root.name = 'placement-feedback';
     this.highlight = new Mesh(
-      new PlaneGeometry(
-        levelConfig.cellSize * 0.92,
-        levelConfig.cellSize * 0.92,
-      ),
+      new PlaneGeometry(levelConfig.cellSize * 0.92, levelConfig.cellSize * 0.92),
       this.highlightMaterial,
     );
     this.highlight.name = 'placement-highlight';
@@ -90,18 +80,9 @@ export class PlacementController {
 
     const validation = this.runtime.validateBuild(cell);
     this.highlight.visible = true;
-    this.highlight.position.set(
-      cell.x * levelConfig.cellSize,
-      0.04,
-      cell.y * levelConfig.cellSize,
-    );
-    this.highlightMaterial.color.setHex(
-      validation.ok ? VALID_COLOR : INVALID_COLOR,
-    );
-    this.feedback.showHint(
-      validation.ok ? null : getBuildRejectionMessage(validation.code),
-      this.lastCursorPosition,
-    );
+    this.highlight.position.set(cell.x * levelConfig.cellSize, 0.04, cell.y * levelConfig.cellSize);
+    this.highlightMaterial.color.setHex(validation.ok ? VALID_COLOR : INVALID_COLOR);
+    this.feedback.showHint(validation.ok ? null : getBuildRejectionMessage(validation.code), this.lastCursorPosition);
   };
 
   private readonly handlePointerLeave = (): void => {
@@ -134,10 +115,7 @@ export class PlacementController {
     );
     this.camera.updateMatrixWorld(true);
     this.raycaster.setFromCamera(pointer, this.camera);
-    const hit = this.raycaster.ray.intersectPlane(
-      this.groundPlane,
-      this.hitPoint,
-    );
+    const hit = this.raycaster.ray.intersectPlane(this.groundPlane, this.hitPoint);
     if (hit === null) {
       return null;
     }

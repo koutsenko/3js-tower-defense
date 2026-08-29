@@ -2,20 +2,16 @@ import type { GameEvent } from './events';
 import { resolveProjectileHits } from './combat';
 import { resolveDefeat, resolveVictory } from './completion';
 import { fireReadyTowers } from './firing';
+import { moveMonsters, predictNextMonsterEscapeTime, resolveEscapedMonsters } from './movement';
+import { calculateNextSpawnTime, spawnDueMonsters } from './spawning';
 import {
-  getNextEscapeTime,
-  moveMonsters,
-  resolveEscapedMonsters,
-} from './movement';
-import { getNextSpawnTime, spawnDueMonsters } from './spawning';
-import {
-  getNextProjectileImpactTime,
-  getNextProjectileStepTime,
+  calculateNextProjectileStepTime,
   moveProjectiles,
+  predictNextProjectileImpactTime,
   removeInvalidProjectiles,
 } from './projectiles';
 import type { EntityIdSequence } from './state';
-import { getNextTargetingTime } from './targeting';
+import { predictNextTargetingBoundaryTime } from './targeting';
 import type { GameState } from './types';
 
 const TIME_TOLERANCE = 1e-9;
@@ -51,32 +47,17 @@ export function advanceWave(
       return events;
     }
 
-    const nextSpawnTime = getNextSpawnTime(state);
-    const nextEscapeTime = getNextEscapeTime(state, currentTime);
-    const nextTargetingTime = getNextTargetingTime(state, currentTime);
-    const nextProjectileStepTime = getNextProjectileStepTime(
-      state,
-      currentTime,
-    );
-    const nextProjectileImpactTime = getNextProjectileImpactTime(
-      state,
-      currentTime,
-    );
+    const nextSpawnTime = calculateNextSpawnTime(state);
+    const nextEscapeTime = predictNextMonsterEscapeTime(state, currentTime);
+    const nextTargetingTime = predictNextTargetingBoundaryTime(state, currentTime);
+    const nextProjectileStepTime = calculateNextProjectileStepTime(state, currentTime);
+    const nextProjectileImpactTime = predictNextProjectileImpactTime(state, currentTime);
     const nextBoundary = minDefined(
-      minDefined(
-        minDefined(
-          minDefined(nextSpawnTime, nextEscapeTime),
-          nextTargetingTime,
-        ),
-        nextProjectileStepTime,
-      ),
+      minDefined(minDefined(minDefined(nextSpawnTime, nextEscapeTime), nextTargetingTime), nextProjectileStepTime),
       nextProjectileImpactTime,
     );
 
-    if (
-      nextBoundary !== null &&
-      Math.abs(endTime - nextBoundary) <= TIME_TOLERANCE
-    ) {
+    if (nextBoundary !== null && Math.abs(endTime - nextBoundary) <= TIME_TOLERANCE) {
       endTime = nextBoundary;
     }
 

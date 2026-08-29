@@ -12,12 +12,7 @@ export default tseslint.config(
     extends: [...tseslint.configs.recommended],
   },
   {
-    files: [
-      'src/main.ts',
-      'src/app/**/*.ts',
-      'src/rendering/**/*.ts',
-      'src/ui/**/*.ts',
-    ],
+    files: ['src/main.ts', 'src/app/**/*.ts', 'src/rendering/**/*.ts', 'src/ui/**/*.ts'],
     languageOptions: {
       globals: globals.browser,
     },
@@ -49,8 +44,7 @@ export default tseslint.config(
           'clearInterval',
         ].map((name) => ({
           name,
-          message:
-            'Gameplay and config modules must remain independent of browser APIs and clocks.',
+          message: 'Gameplay and config modules must remain independent of browser APIs and clocks.',
         })),
       ],
       'no-restricted-imports': [
@@ -59,15 +53,13 @@ export default tseslint.config(
           paths: [
             {
               name: 'three',
-              message:
-                'Gameplay and config modules must remain renderer-independent.',
+              message: 'Gameplay and config modules must remain renderer-independent.',
             },
           ],
           patterns: [
             {
               group: ['three/*'],
-              message:
-                'Gameplay and config modules must remain renderer-independent.',
+              message: 'Gameplay and config modules must remain renderer-independent.',
             },
           ],
         },

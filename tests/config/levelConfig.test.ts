@@ -18,8 +18,10 @@ import {
 } from '../../src/config/gameConfig';
 import { levelConfig } from '../../src/config/levelConfig';
 import {
+  assertAxisAlignedRoute,
   createGridCell,
   createRouteCells,
+  getAxisAlignedSegmentLength,
   getCellKey,
   getRouteLength,
   isCellWithinGrid,
@@ -59,8 +61,7 @@ describe('level configuration (FR-002, FR-003, AC-015)', () => {
     for (let index = 1; index < levelConfig.routeCells.length; index += 1) {
       const previous = levelConfig.routeCells[index - 1]!;
       const current = levelConfig.routeCells[index]!;
-      const distance =
-        Math.abs(current.x - previous.x) + Math.abs(current.y - previous.y);
+      const distance = Math.abs(current.x - previous.x) + Math.abs(current.y - previous.y);
 
       expect(distance).toBe(1);
     }
@@ -122,6 +123,12 @@ describe('balance configuration (FR-004–FR-010, FR-016)', () => {
 });
 
 describe('grid helpers', () => {
+  it('calculates horizontal and vertical segment lengths in either direction (FR-002, AC-015)', () => {
+    expect(getAxisAlignedSegmentLength(createGridCell(2, 3), createGridCell(7, 3))).toBe(5);
+    expect(getAxisAlignedSegmentLength(createGridCell(2, 3), createGridCell(2, 7))).toBe(4);
+    expect(getAxisAlignedSegmentLength(createGridCell(7, 3), createGridCell(2, 3))).toBe(5);
+  });
+
   it('handles empty, single-cell, and reverse-direction routes', () => {
     expect(createRouteCells([])).toEqual([]);
     expect(createRouteCells([createGridCell(2, 3)])).toEqual([{ x: 2, y: 3 }]);
@@ -139,12 +146,7 @@ describe('grid helpers', () => {
   it('rejects diagonal route segments', () => {
     const diagonalRoute = [createGridCell(0, 0), createGridCell(1, 1)];
 
-    expect(() => getRouteLength(diagonalRoute)).toThrow(
-      'Route segments must be axis-aligned',
-    );
-    expect(() => createRouteCells(diagonalRoute)).toThrow(
-      'Route segments must be axis-aligned',
-    );
+    expect(() => assertAxisAlignedRoute(diagonalRoute)).toThrow('Route segments must be axis-aligned');
   });
 
   it('accepts only integer coordinates within grid bounds', () => {
@@ -157,10 +159,7 @@ describe('grid helpers', () => {
   });
 
   it('returns frozen route collections and cells', () => {
-    const cells = createRouteCells([
-      createGridCell(0, 0),
-      createGridCell(1, 0),
-    ]);
+    const cells = createRouteCells([createGridCell(0, 0), createGridCell(1, 0)]);
 
     expect(Object.isFrozen(cells)).toBe(true);
     expect(cells.every(Object.isFrozen)).toBe(true);

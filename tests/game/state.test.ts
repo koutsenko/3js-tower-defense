@@ -1,15 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { WAVE_SIZE } from '../../src/config/gameConfig';
-import {
-  createEntityIdSequence,
-  createInitialState,
-  createSnapshot,
-} from '../../src/game/state';
-import {
-  getPreparationCountdown,
-  getRemainingCount,
-} from '../../src/game/selectors';
+import { createEntityIdSequence, createInitialState, createSnapshot } from '../../src/game/state';
+import { getPreparationCountdown, getRemainingCount } from '../../src/game/selectors';
 
 describe('game state (FR-001, FR-004-FR-006, FR-010, FR-012, FR-015)', () => {
   it('creates the initial session required by AC-001 and AC-014', () => {
@@ -60,11 +53,7 @@ describe('game state (FR-001, FR-004-FR-006, FR-010, FR-012, FR-015)', () => {
     const firstSession = createEntityIdSequence();
     const restartedSession = createEntityIdSequence();
 
-    expect([
-      firstSession.next(),
-      firstSession.next(),
-      firstSession.next(),
-    ]).toEqual([1, 2, 3]);
+    expect([firstSession.next(), firstSession.next(), firstSession.next()]).toEqual([1, 2, 3]);
     expect(restartedSession.next()).toBe(1);
   });
 

@@ -46,8 +46,7 @@ export class FinalOverlay {
   }
 
   render(snapshot: GameSnapshot): void {
-    const isTerminal =
-      snapshot.status === 'Victory' || snapshot.status === 'Defeat';
+    const isTerminal = snapshot.status === 'Victory' || snapshot.status === 'Defeat';
     this.root.hidden = !isTerminal;
 
     if (!isTerminal) {
@@ -66,10 +65,7 @@ export class FinalOverlay {
   }
 }
 
-function getElement<ElementType extends HTMLElement = HTMLElement>(
-  root: HTMLElement,
-  selector: string,
-): ElementType {
+function getElement<ElementType extends HTMLElement = HTMLElement>(root: HTMLElement, selector: string): ElementType {
   const element = root.querySelector<ElementType>(selector);
   if (element === null) {
     throw new Error(`Missing final overlay element: ${selector}`);

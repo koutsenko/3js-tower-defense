@@ -29,37 +29,21 @@ export class TransientEffects {
     this.root.name = 'transient-effects';
   }
 
-  present(
-    events: readonly GameEvent[],
-    snapshot: GameSnapshot,
-    entities: EntityReconciler,
-  ): void {
+  present(events: readonly GameEvent[], snapshot: GameSnapshot, entities: EntityReconciler): void {
     this.expireEffects();
     const spawnedMonsterIds = new Set(
-      events
-        .filter((event) => event.type === 'monster-spawned')
-        .map((event) => event.monsterId),
+      events.filter((event) => event.type === 'monster-spawned').map((event) => event.monsterId),
     );
 
     for (const event of events) {
       if (event.type === 'projectile-shot') {
         const origin = this.resolvePosition(event.towerId, snapshot, entities);
-        const target = this.resolvePosition(
-          event.targetId,
-          snapshot,
-          entities,
-          spawnedMonsterIds.has(event.targetId),
-        );
+        const target = this.resolvePosition(event.targetId, snapshot, entities, spawnedMonsterIds.has(event.targetId));
         if (origin !== null && target !== null) {
           this.addShotTrail(origin, target);
         }
       } else if (event.type === 'projectile-hit') {
-        const target = this.resolvePosition(
-          event.targetId,
-          snapshot,
-          entities,
-          spawnedMonsterIds.has(event.targetId),
-        );
+        const target = this.resolvePosition(event.targetId, snapshot, entities, spawnedMonsterIds.has(event.targetId));
         if (target !== null) {
           this.addHitFlash(target);
         }
@@ -68,10 +52,14 @@ export class TransientEffects {
   }
 
   dispose(): void {
+    this.clear();
+    this.root.removeFromParent();
+  }
+
+  clear(): void {
     for (const effect of this.effects.splice(0)) {
       disposeEffect(effect.object);
     }
-    this.root.removeFromParent();
   }
 
   private expireEffects(): void {
@@ -132,11 +120,7 @@ export class TransientEffects {
     const monster = snapshot.monsters.find(({ id }) => id === entityId);
     if (monster !== undefined) {
       const position = getRoutePosition(monster.routeProgress, this.level);
-      return new Vector3(
-        position.x * this.level.cellSize,
-        0.3 * this.level.cellSize,
-        position.y * this.level.cellSize,
-      );
+      return new Vector3(position.x * this.level.cellSize, 0.3 * this.level.cellSize, position.y * this.level.cellSize);
     }
 
     if (spawnedThisFrame) {
@@ -154,9 +138,7 @@ export class TransientEffects {
 function disposeEffect(effect: Line | Mesh): void {
   effect.removeFromParent();
   effect.geometry.dispose();
-  const materials = Array.isArray(effect.material)
-    ? effect.material
-    : [effect.material];
+  const materials = Array.isArray(effect.material) ? effect.material : [effect.material];
   for (const material of materials) {
     material.dispose();
   }

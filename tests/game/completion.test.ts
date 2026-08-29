@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  PREPARATION_DURATION,
-  STARTING_BASE_HP,
-  STARTING_COINS,
-  WAVE_SIZE,
-} from '../../src/config/gameConfig';
+import { PREPARATION_DURATION, STARTING_BASE_HP, STARTING_COINS, WAVE_SIZE } from '../../src/config/gameConfig';
 import { GameRuntime } from '../../src/game/GameRuntime';
 import { createInitialState } from '../../src/game/state';
 import type { GameSnapshot } from '../../src/game/types';
@@ -52,9 +47,7 @@ describe('terminal outcomes and restart (FR-013, FR-015)', () => {
     state.status = 'WaveActive';
     state.spawnedCount = WAVE_SIZE;
     state.killedCount = WAVE_SIZE - 1;
-    state.monsters = [
-      { id: 1, spawnIndex: WAVE_SIZE - 1, hp: 100, routeProgress: 25 },
-    ];
+    state.monsters = [{ id: 1, spawnIndex: WAVE_SIZE - 1, hp: 100, routeProgress: 25 }];
     const runtime = new GameRuntime(state);
 
     expect(runtime.advance(5)).toEqual([
@@ -82,10 +75,7 @@ describe('terminal outcomes and restart (FR-013, FR-015)', () => {
     }
 
     expect(fixedEvents).toEqual(coarseEvents);
-    expectSnapshotsEquivalent(
-      fixedRuntime.getSnapshot(),
-      coarseRuntime.getSnapshot(),
-    );
+    expectSnapshotsEquivalent(fixedRuntime.getSnapshot(), coarseRuntime.getSnapshot());
     expect(coarseRuntime.getSnapshot().status).toBe('Defeat');
   });
 
@@ -116,16 +106,12 @@ describe('terminal outcomes and restart (FR-013, FR-015)', () => {
     expect(runtime.dispatch({ type: 'Restart' })).toEqual({ ok: true });
     expect(runtime.getSnapshot()).toEqual(createInitialState());
     expect(runtime.advance(0)).toEqual([]);
-    expect(
-      runtime.dispatch({ type: 'BuildTower', cell: { x: 0, y: 0 } }),
-    ).toEqual({
+    expect(runtime.dispatch({ type: 'BuildTower', cell: { x: 0, y: 0 } })).toEqual({
       ok: false,
       code: 'GAME_NOT_STARTED',
     });
     expect(runtime.dispatch({ type: 'StartGame' })).toEqual({ ok: true });
-    expect(
-      runtime.dispatch({ type: 'BuildTower', cell: { x: 0, y: 0 } }),
-    ).toEqual({
+    expect(runtime.dispatch({ type: 'BuildTower', cell: { x: 0, y: 0 } })).toEqual({
       ok: true,
     });
     expect(runtime.getSnapshot()).toMatchObject({
@@ -142,10 +128,7 @@ function createUndefendedRuntime(): GameRuntime {
   return runtime;
 }
 
-function expectSnapshotsEquivalent(
-  actual: GameSnapshot,
-  expected: GameSnapshot,
-): void {
+function expectSnapshotsEquivalent(actual: GameSnapshot, expected: GameSnapshot): void {
   expect(actual).toMatchObject({
     status: expected.status,
     phaseStartedAt: expected.phaseStartedAt,

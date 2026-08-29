@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  KILL_REWARD,
-  PREPARATION_DURATION,
-  PROJECTILE_DAMAGE,
-} from '../../src/config/gameConfig';
+import { KILL_REWARD, PREPARATION_DURATION, PROJECTILE_DAMAGE } from '../../src/config/gameConfig';
 import { GameRuntime } from '../../src/game/GameRuntime';
 import { createInitialState } from '../../src/game/state';
 import type { GameSnapshot, GameState } from '../../src/game/types';
@@ -29,6 +25,45 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     expect(runtime.getSnapshot().monsters[0]?.hp).toBe(75);
   });
 
+  it('hits at the factual intercept boundary when the target moves toward the projectile (AC-006)', () => {
+    const state = createCombatState();
+    state.monsters[0]!.routeProgress = 8;
+    state.projectiles = [{ id: 3, targetId: 2, position: { x: 8, y: 3 } }];
+    const runtime = new GameRuntime(state);
+    const interceptDelay = 2 / 9;
+
+    expect(runtime.advance(interceptDelay - 0.001)).toEqual([]);
+    expect(runtime.getSnapshot().monsters[0]?.hp).toBe(100);
+    expect(runtime.advance(0.001)).toEqual([
+      { type: 'projectile-hit', projectileId: 3, targetId: 2, damage: PROJECTILE_DAMAGE },
+    ]);
+    expect(runtime.getSnapshot().monsters[0]?.hp).toBe(75);
+  });
+
+  it('recalculates a factual intercept after the target turns', () => {
+    const state = createCombatState();
+    state.monsters[0]!.routeProgress = 7.8;
+    state.projectiles = [{ id: 3, targetId: 2, position: { x: 6, y: 4 } }];
+    const coarseRuntime = new GameRuntime(state);
+    const partitionedRuntime = new GameRuntime(structuredClone(state));
+
+    const coarseEvents = coarseRuntime.advance(1);
+    const partitionedEvents = [
+      ...partitionedRuntime.advance(0.2),
+      ...partitionedRuntime.advance(0.17),
+      ...partitionedRuntime.advance(0.63),
+    ];
+
+    expect(coarseEvents).toContainEqual({
+      type: 'projectile-hit',
+      projectileId: 3,
+      targetId: 2,
+      damage: PROJECTILE_DAMAGE,
+    });
+    expect(partitionedEvents).toEqual(coarseEvents);
+    expectSnapshotsEquivalent(partitionedRuntime.getSnapshot(), coarseRuntime.getSnapshot());
+  });
+
   it('removes a projectile without effects when its target escapes', () => {
     const state = createCombatState();
     state.coins = 40;
@@ -36,9 +71,7 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     state.projectiles = [{ id: 3, targetId: 2, position: { x: 7, y: 6 } }];
     const runtime = new GameRuntime(state);
 
-    expect(runtime.advance(0.5)).toEqual([
-      { type: 'monster-escaped', monsterId: 2 },
-    ]);
+    expect(runtime.advance(0.5)).toEqual([{ type: 'monster-escaped', monsterId: 2 }]);
     expect(runtime.getSnapshot()).toMatchObject({
       coins: 40,
       killedCount: 0,
@@ -80,33 +113,23 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     state.projectiles = [{ id: 3, targetId: 2, position: { x: 3, y: 6 } }];
     const runtime = new GameRuntime(state);
 
-    expect(runtime.advance(1)).toEqual([
-      { type: 'monster-escaped', monsterId: 2 },
-    ]);
+    expect(runtime.advance(1)).toEqual([{ type: 'monster-escaped', monsterId: 2 }]);
     expect(runtime.getSnapshot().projectiles).toEqual([]);
   });
 
   it('does not resolve a hit at an arbitrary advance endpoint', () => {
     const coarseState = createCombatState();
     coarseState.monsters[0]!.routeProgress = 25;
-    coarseState.projectiles = [
-      { id: 3, targetId: 2, position: { x: 10.5, y: 6 } },
-    ];
+    coarseState.projectiles = [{ id: 3, targetId: 2, position: { x: 10.5, y: 6 } }];
     const splitState = structuredClone(coarseState);
     const coarseRuntime = new GameRuntime(coarseState);
     const splitRuntime = new GameRuntime(splitState);
 
     const coarseEvents = coarseRuntime.advance(1);
-    const splitEvents = [
-      ...splitRuntime.advance(0.06),
-      ...splitRuntime.advance(0.94),
-    ];
+    const splitEvents = [...splitRuntime.advance(0.06), ...splitRuntime.advance(0.94)];
 
     expect(splitEvents).toEqual(coarseEvents);
-    expectSnapshotsEquivalent(
-      splitRuntime.getSnapshot(),
-      coarseRuntime.getSnapshot(),
-    );
+    expectSnapshotsEquivalent(splitRuntime.getSnapshot(), coarseRuntime.getSnapshot());
   });
 
   it('produces equivalent hit and kill events for coarse and fixed intervals', () => {
@@ -121,10 +144,7 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     }
 
     expect(fixedEvents).toEqual(coarseEvents);
-    expectSnapshotsEquivalent(
-      fixedRuntime.getSnapshot(),
-      coarseRuntime.getSnapshot(),
-    );
+    expectSnapshotsEquivalent(fixedRuntime.getSnapshot(), coarseRuntime.getSnapshot());
   });
 });
 
@@ -143,10 +163,7 @@ function createRuntimeWithTower(): GameRuntime {
   return runtime;
 }
 
-function expectSnapshotsEquivalent(
-  actual: GameSnapshot,
-  expected: GameSnapshot,
-): void {
+function expectSnapshotsEquivalent(actual: GameSnapshot, expected: GameSnapshot): void {
   expect(actual).toMatchObject({
     status: expected.status,
     phaseStartedAt: expected.phaseStartedAt,

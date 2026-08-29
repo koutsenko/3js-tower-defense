@@ -40,16 +40,10 @@ function createBalanceRuntime(): GameRuntime {
   return runtime;
 }
 
-function advanceUntilTerminal(
-  runtime: GameRuntime,
-  nextStep: () => number,
-): void {
+function advanceUntilTerminal(runtime: GameRuntime, nextStep: () => number): void {
   let elapsed = 0;
 
-  while (
-    !isTerminal(runtime.getSnapshot()) &&
-    elapsed < SESSION_BUDGET_SECONDS
-  ) {
+  while (!isTerminal(runtime.getSnapshot()) && elapsed < SESSION_BUDGET_SECONDS) {
     const step = Math.min(nextStep(), SESSION_BUDGET_SECONDS - elapsed);
     runtime.advance(step);
     elapsed += step;
@@ -73,10 +67,7 @@ function isTerminal(snapshot: GameSnapshot): boolean {
   return snapshot.status === 'Victory' || snapshot.status === 'Defeat';
 }
 
-function expectBalanceResultsEquivalent(
-  actual: GameSnapshot,
-  expected: GameSnapshot,
-): void {
+function expectBalanceResultsEquivalent(actual: GameSnapshot, expected: GameSnapshot): void {
   expect(actual).toMatchObject({
     status: expected.status,
     coins: expected.coins,

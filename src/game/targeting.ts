@@ -1,29 +1,38 @@
 import { MONSTER_SPEED, TOWER_RANGE } from '../config/gameConfig';
 import { levelConfig } from '../config/levelConfig';
+import { getAxisAlignedSegmentLength } from './grid';
+import { MathExtra } from './math/MathExtra';
 import { getRoutePosition } from './movement';
 import type { GameState, MonsterState, TowerState } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
-export function selectTarget(
+interface TowerRangeEntryPrediction {
+  readonly routeProgress: number;
+}
+
+export function selectTowerTarget(
   state: Readonly<GameState>,
   tower: Readonly<TowerState>,
 ): Readonly<MonsterState> | null {
   const targets = state.monsters
-    .filter((monster) => isInRange(tower, monster))
-    .sort(
-      (left, right) =>
-        right.routeProgress - left.routeProgress ||
-        left.spawnIndex - right.spawnIndex,
-    );
+    .filter((monster) => isMonsterInTowerRange(tower, monster))
+    .sort((left, right) => right.routeProgress - left.routeProgress || left.spawnIndex - right.spawnIndex);
 
   return targets[0] ?? null;
 }
 
-export function getNextTargetingTime(
-  state: Readonly<GameState>,
-  currentTime: number,
-): number | null {
+/**
+ * Прогнозирует ближайший момент, когда готовая башня сможет выбрать цель или потребуется проверить её готовность.
+ *
+ * `advanceWave` использует результат как кандидата на следующую временную границу. На достигнутой границе
+ * `fireReadyTowers` заново проверяет готовность башен и фактически доступные цели через `selectTowerTarget`.
+ *
+ * @param state Текущее состояние игровой сессии.
+ * @param currentTime Текущее время симуляции.
+ * @returns Время следующей targeting boundary или null, если такая граница не прогнозируется.
+ */
+export function predictNextTargetingBoundaryTime(state: Readonly<GameState>, currentTime: number): number | null {
   let nextTime: number | null = null;
 
   for (const tower of state.towers) {
@@ -34,16 +43,16 @@ export function getNextTargetingTime(
       continue;
     }
 
-    if (selectTarget(state, tower) !== null) {
+    if (selectTowerTarget(state, tower) !== null) {
       return currentTime;
     }
 
     for (const monster of state.monsters) {
-      const entryProgress = getNextRangeEntryProgress(tower, monster);
-      if (entryProgress !== null) {
+      const rangeEntryPrediction = predictNextTowerRangeEntry(tower, monster);
+      if (rangeEntryPrediction !== null) {
         nextTime = minDefined(
           nextTime,
-          currentTime + (entryProgress - monster.routeProgress) / MONSTER_SPEED,
+          currentTime + (rangeEntryPrediction.routeProgress - monster.routeProgress) / MONSTER_SPEED,
         );
       }
     }
@@ -52,27 +61,43 @@ export function getNextTargetingTime(
   return nextTime;
 }
 
-function isInRange(
-  tower: Readonly<TowerState>,
-  monster: Readonly<MonsterState>,
-): boolean {
+/**
+ * Проверяет, находится ли монстр в радиусе башни в текущем состоянии симуляции.
+ *
+ * Используется для фактического выбора цели на достигнутой временной границе и не прогнозирует дальнейшее движение.
+ *
+ * @param tower Башня, для которой проверяется радиус атаки.
+ * @param monster Монстр, текущее положение которого проверяется.
+ * @returns true, если монстр сейчас находится в радиусе башни; иначе false.
+ */
+function isMonsterInTowerRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): boolean {
   const position = getRoutePosition(monster.routeProgress);
-  return (
-    Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <=
-    TOWER_RANGE + DISTANCE_TOLERANCE
-  );
+  return Math.hypot(position.x - tower.cell.x, position.y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE;
 }
 
-function getNextRangeEntryProgress(
+/**
+ * Прогнозирует ближайшее место на оставшемся маршруте, где монстр войдёт в радиус указанной башни.
+ *
+ * `predictNextTargetingBoundaryTime` преобразует найденное место во время и передаёт его в boundary loop.
+ * После перехода к этой границе доступность монстра заново проверяется через `isMonsterInTowerRange`.
+ *
+ * Прогноз не означает, что монстр обязательно станет целью: до рассчитанной границы состояние может измениться.
+ *
+ * @param tower Башня, вход в радиус которой прогнозируется.
+ * @param monster Монстр, для которого анализируется оставшийся маршрут.
+ * @returns Прогноз входа с расстоянием в клетках от начала маршрута или null, если пересечения нет.
+ */
+function predictNextTowerRangeEntry(
   tower: Readonly<TowerState>,
   monster: Readonly<MonsterState>,
-): number | null {
+): TowerRangeEntryPrediction | null {
   let segmentStartProgress = 0;
 
+  // TODO: Предвычислить участки маршрута, чтобы не обходить заново пройденные участки при поиске входа в радиус башни.
   for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
     const start = levelConfig.routeWaypoints[index - 1]!;
     const end = levelConfig.routeWaypoints[index]!;
-    const segmentLength = Math.hypot(end.x - start.x, end.y - start.y);
+    const segmentLength = getAxisAlignedSegmentLength(start, end);
     const segmentEndProgress = segmentStartProgress + segmentLength;
 
     if (segmentEndProgress > monster.routeProgress + DISTANCE_TOLERANCE) {
@@ -82,27 +107,18 @@ function getNextRangeEntryProgress(
       const offsetY = start.y - tower.cell.y;
       const a = dx * dx + dy * dy;
       const b = 2 * (offsetX * dx + offsetY * dy);
-      const c =
-        offsetX * offsetX + offsetY * offsetY - TOWER_RANGE * TOWER_RANGE;
-      const discriminant = b * b - 4 * a * c;
+      const c = offsetX * offsetX + offsetY * offsetY - TOWER_RANGE * TOWER_RANGE;
+      const entryRatio = MathExtra.findSmallerQuadraticRoot(a, b, c, DISTANCE_TOLERANCE);
 
-      if (discriminant >= -DISTANCE_TOLERANCE) {
-        const entryRatio =
-          (-b - Math.sqrt(Math.max(0, discriminant))) / (2 * a);
-        const earliestRatio = Math.max(
-          0,
-          (monster.routeProgress - segmentStartProgress) / segmentLength,
-        );
+      if (entryRatio !== null) {
+        const earliestRatio = Math.max(0, (monster.routeProgress - segmentStartProgress) / segmentLength);
         const ratio = Math.max(entryRatio, earliestRatio);
 
         if (ratio <= 1 + DISTANCE_TOLERANCE) {
           const x = start.x + dx * ratio;
           const y = start.y + dy * ratio;
-          if (
-            Math.hypot(x - tower.cell.x, y - tower.cell.y) <=
-            TOWER_RANGE + DISTANCE_TOLERANCE
-          ) {
-            return segmentStartProgress + ratio * segmentLength;
+          if (Math.hypot(x - tower.cell.x, y - tower.cell.y) <= TOWER_RANGE + DISTANCE_TOLERANCE) {
+            return { routeProgress: segmentStartProgress + ratio * segmentLength };
           }
         }
       }

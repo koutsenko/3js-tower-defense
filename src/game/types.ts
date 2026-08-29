@@ -2,8 +2,7 @@ import type { GridCell } from './grid';
 
 export type EntityId = number;
 
-export type SessionStatus =
-  'Ready' | 'Preparation' | 'WaveActive' | 'Victory' | 'Defeat';
+export type SessionStatus = 'Ready' | 'Preparation' | 'WaveActive' | 'Victory' | 'Defeat';
 
 export interface Position {
   readonly x: number;
@@ -59,19 +58,10 @@ export type GameCommand =
   | { readonly type: 'Restart' };
 
 export type BuildRejectionCode =
-  | 'SESSION_ENDED'
-  | 'GAME_NOT_STARTED'
-  | 'OUT_OF_BOUNDS'
-  | 'PATH_CELL'
-  | 'OCCUPIED'
-  | 'INSUFFICIENT_FUNDS';
+  'SESSION_ENDED' | 'GAME_NOT_STARTED' | 'OUT_OF_BOUNDS' | 'PATH_CELL' | 'OCCUPIED' | 'INSUFFICIENT_FUNDS';
 
-export type BuildValidation =
-  | { readonly ok: true }
-  | { readonly ok: false; readonly code: BuildRejectionCode };
+export type BuildValidation = { readonly ok: true } | { readonly ok: false; readonly code: BuildRejectionCode };
 
 export type CommandRejectionCode = BuildRejectionCode | 'INVALID_SESSION_STATE';
 
-export type CommandResult =
-  | { readonly ok: true }
-  | { readonly ok: false; readonly code: CommandRejectionCode };
+export type CommandResult = { readonly ok: true } | { readonly ok: false; readonly code: CommandRejectionCode };

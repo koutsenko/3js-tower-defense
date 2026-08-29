@@ -114,6 +114,48 @@ src/
 `game`, но game runtime не вызывает presentation code. Application composition
 root создаёт runtime, renderer и UI, затем связывает их в animation loop.
 
+### 3.3 Naming of temporal operations
+
+Имена gameplay-функций отражают роль операции в обработке simulation
+boundaries:
+
+- `get` читает уже существующее значение state без прогнозирования,
+  существенного вычисления или мутации;
+- `calculate` детерминированно вычисляет значение из расписания, config или
+  переданных аргументов;
+- `predict` условно вычисляет будущий gameplay event или boundary из current
+  state; результат может потерять актуальность после другого события;
+- `is`, `has`, `can` проверяют фактическое состояние на текущей boundary;
+- `select` выбирает entity из фактически доступных кандидатов;
+- `schedule` сохраняет будущее событие или время для последующего
+  использования;
+- `resolve` применяет уже наступившее событие и связанные изменения
+  authoritative state;
+- `advance` и `move` продвигают state на переданный интервал времени.
+
+`predict` не обозначает вероятностный результат. Prediction является точным
+для current state и config, но условным относительно последующих gameplay
+events. После обработки ближайшей boundary старые predictions отбрасываются, а
+новые вычисляются из обновлённого state.
+
+Application fixed step `1/60 s` является внешней порцией gameplay time, а не
+единственным событием мира. Один вызов `advance` может пересечь несколько
+внутренних boundaries. Runtime на каждой итерации определяет ближайшую
+boundary, продвигает state только до неё, применяет due events и заново
+вычисляет predictions для остатка interval.
+
+Примеры утверждённой терминологии:
+
+- `calculateNextSpawnTime` — вычисление следующей отметки spawn schedule;
+- `predictNextTargetingBoundaryTime` — условный прогноз следующего targeting
+  boundary;
+- `isMonsterInTowerRange` — проверка фактического состояния на достигнутой
+  boundary;
+- `resolveProjectileHits` — применение уже наступивших попаданий.
+
+Методика не требует объединять predictors в общий `predictions.ts` и не
+фиксирует размещение приватных helpers по файлам (`CR-002`).
+
 ## 4. Level and balance configuration
 
 ### 4.1 Coordinates and route
@@ -382,6 +424,15 @@ target из tower range не влияет на projectile. Если рассто
 превышает travel distance этого sub-interval, projectile достигает target и
 наносит ровно 25 damage.
 
+Collision prediction является эфемерным и вычисляется только из current
+projectile position, current target state, route geometry и config. Prediction
+отбрасывается и вычисляется заново после любой более ранней boundary. Persisted
+или module-level impact schedule для homing projectile не используется:
+authoritative collision определяется фактической проверкой достигнутой
+позиции на predicted boundary. Внутренний projectile step допустим как
+дополнительная boundary, но внешний размер `advance(deltaSeconds)` не должен
+влиять на hit timing, events или итоговое state.
+
 При death target либо его достижении exit все назначенные ему unresolved
 projectiles удаляются без retargeting, damage, reward или иных gameplay
 effects. Kill transition с HP выше нуля до 0 выполняется ровно один раз и
@@ -400,6 +451,13 @@ accumulator, events и presentation-only notifications. Renderer удаляет 
 entity objects, которых нет в новом snapshot. Новый state имеет status `Ready`,
 доступную `StartGame`, незапущенный preparation timer и запрещённое до старта
 строительство (`FR-015`, `AC-012`).
+
+Поскольку fixed-step accumulator и transient effects принадлежат application и
+presentation layers, composition root координирует их reset только после
+успешного `Restart`. Отклонённая команда ничего не сбрасывает. До первого render
+новой session active transient effects предыдущей session должны быть удалены,
+а первый gameplay step требует полный новый `FIXED_STEP_SECONDS` browser-time
+contribution.
 
 ## 7. Rendering, input and UI
 

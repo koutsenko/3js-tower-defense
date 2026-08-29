@@ -13,16 +13,19 @@ export interface Application {
   readonly runtime: GameRuntime;
   start(): void;
   stop(): void;
+  resetTiming(): void;
 }
 
 export interface ApplicationOptions {
   readonly renderFrame: RenderFrame;
   readonly runtime?: GameRuntime;
+  readonly shouldResetTimingBeforeFrame?: (snapshot: GameSnapshot) => boolean;
 }
 
 export function createApplication({
   renderFrame,
   runtime = new GameRuntime(),
+  shouldResetTimingBeforeFrame = () => false,
 }: ApplicationOptions): Application {
   const loop = new FixedStepLoop(runtime, renderFrame);
   let animationFrameId: number | null = null;
@@ -33,8 +36,12 @@ export function createApplication({
       return;
     }
 
-    const deltaSeconds =
-      previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
+    if (shouldResetTimingBeforeFrame(runtime.getSnapshot())) {
+      loop.reset();
+      previousTimestamp = null;
+    }
+
+    const deltaSeconds = previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
     previousTimestamp = timestamp;
     loop.advanceFrame(deltaSeconds);
 
@@ -62,6 +69,10 @@ export function createApplication({
       animationFrameId = null;
       previousTimestamp = null;
     },
+    resetTiming() {
+      loop.reset();
+      previousTimestamp = null;
+    },
   };
 }
 
@@ -70,6 +81,7 @@ interface SceneView {
   readonly camera: Camera;
   resize(width: number, height: number, pixelRatio?: number): void;
   presentEvents(events: readonly GameEvent[], snapshot: GameSnapshot): void;
+  resetSessionPresentation(): void;
   reconcile(snapshot: GameSnapshot): void;
   render(): void;
   dispose(): void;
@@ -93,14 +105,8 @@ export interface BrowserApplication extends Application {
 export interface BrowserApplicationOptions {
   readonly runtime?: GameRuntime;
   readonly createScene?: (canvas: HTMLCanvasElement) => SceneView;
-  readonly createHud?: (
-    container: HTMLElement,
-    runtime: GameRuntime,
-  ) => SnapshotView;
-  readonly createFinalOverlay?: (
-    container: HTMLElement,
-    runtime: GameRuntime,
-  ) => SnapshotView;
+  readonly createHud?: (container: HTMLElement, runtime: GameRuntime) => SnapshotView;
+  readonly createFinalOverlay?: (container: HTMLElement, runtime: GameRuntime) => SnapshotView;
   readonly createPlacement?: (
     canvas: HTMLCanvasElement,
     camera: Camera,
@@ -116,15 +122,9 @@ export function createBrowserApplication(
     runtime = new GameRuntime(),
     createScene = (canvas) => new SceneRenderer(canvas),
     createHud = (container, gameRuntime) => new HudView(container, gameRuntime),
-    createFinalOverlay = (container, gameRuntime) =>
-      new FinalOverlay(container, gameRuntime),
+    createFinalOverlay = (container, gameRuntime) => new FinalOverlay(container, gameRuntime),
     createPlacement = (canvas, camera, gameRuntime, container) =>
-      new PlacementController(
-        canvas,
-        camera,
-        gameRuntime,
-        new BuildFeedbackView(container),
-      ),
+      new PlacementController(canvas, camera, gameRuntime, new BuildFeedbackView(container)),
     onEvents = () => undefined,
   }: BrowserApplicationOptions = {},
 ): BrowserApplication {
@@ -142,6 +142,7 @@ export function createBrowserApplication(
   const placement = createPlacement(canvas, scene.camera, runtime, root);
   scene.scene.add(placement.root);
 
+  let previousStatus = runtime.getSnapshot().status;
   const renderFrame: RenderFrame = ({ snapshot, events }) => {
     scene.presentEvents(events, snapshot);
     scene.reconcile(snapshot);
@@ -149,8 +150,22 @@ export function createBrowserApplication(
     finalOverlay.render(snapshot);
     onEvents(events);
     scene.render();
+    previousStatus = snapshot.status;
   };
-  const animation = createApplication({ runtime, renderFrame });
+  const animation = createApplication({
+    runtime,
+    renderFrame,
+    shouldResetTimingBeforeFrame(snapshot) {
+      const previousWasTerminal = previousStatus === 'Victory' || previousStatus === 'Defeat';
+      const currentIsTerminal = snapshot.status === 'Victory' || snapshot.status === 'Defeat';
+      if (!previousWasTerminal || currentIsTerminal) {
+        return false;
+      }
+
+      scene.resetSessionPresentation();
+      return true;
+    },
+  });
 
   const resize = (): void => {
     const bounds = root.getBoundingClientRect();
@@ -172,6 +187,7 @@ export function createBrowserApplication(
     canvas,
     start: animation.start,
     stop: animation.stop,
+    resetTiming: animation.resetTiming,
     dispose() {
       if (disposed) {
         return;

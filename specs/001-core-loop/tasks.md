@@ -270,6 +270,9 @@ acceptance criteria и поддерживает `NFR-001`.
 - при death или escape цели удалять все назначенные unresolved projectiles без
   gameplay effects;
 - выполнять kill transition и reward атомарно и только один раз.
+- удалить persisted или module-level impact schedule;
+- прогнозировать collision из current projectile/target state и фактически
+  проверять достижение target на boundary.
 
 **Проверки:**
 
@@ -279,6 +282,16 @@ acceptance criteria и поддерживает `NFR-001`.
 - escape на одной boundary имеет приоритет перед projectile hit;
 - coarse interval и эквивалентные fixed steps дают одинаковые projectile, hit и
   kill events.
+- collision tests покрывают движение target к projectile, от него и через
+  поворот маршрута; damage не применяется до фактического достижения target.
+
+**Verification evidence после `CR-003` (2026-08-29):**
+
+- module-level impact schedule удалён;
+- collision prediction вычисляется из current projectile/target state и route;
+- фактический position predicate подтверждает hit на boundary;
+- regression tests движения навстречу и через поворот, а также coarse/fixed и
+  irregular partition checks проходят.
 
 ### T-009 — Реализовать terminal outcomes и Restart
 
@@ -302,6 +315,8 @@ acceptance criteria и поддерживает `NFR-001`.
 - разрешать `Restart` только из `Victory` и `Defeat` и полностью создавать новый
   `Ready` state;
 - отклонять ранний `Restart` с `INVALID_SESSION_STATE` без мутаций и events.
+- после успешного `Restart` координировать reset application accumulator и
+  presentation-only transient effects.
 
 **Проверки:**
 
@@ -310,7 +325,22 @@ acceptance criteria и поддерживает `NFR-001`.
 - coarse interval и эквивалентные fixed steps дают одинаковые terminal outcome,
   `simulationTime`, counters и последовательность events;
 - reset очищает entities, counters, timers, accumulator, events и ID sequence;
+- reset удаляет active transient effects до первого render новой session и не
+  наследует fractional frame time;
 - после reset `StartGame` снова доступна, а строительство заблокировано до неё.
+
+**Verification evidence после `CR-003` (2026-08-29):**
+
+- composition root распознаёт успешный terminal-to-`Ready` reset;
+- reset timing и transient presentation выполняется до первого render новой
+  session;
+- runtime и browser application Restart regression tests проходят.
+
+**Implementation follow-up verification (2026-08-29):**
+
+- reset распознаётся при переходе terminal status в любой non-terminal status;
+- последовательность `Restart → StartGame` между animation frames не наследует
+  timing или transient presentation state.
 
 ### T-010 — Подтвердить two-tower balance fixture
 
@@ -359,13 +389,27 @@ acceptance criteria и поддерживает `NFR-001`.
 - выполнять simulation steps по `1/60 s`;
 - агрегировать events всех steps, render один раз и передавать interpolation
   alpha только presentation layer.
+- предоставить application-owned reset accumulator после успешного `Restart`.
 
 **Проверки:**
 
 - разные frame deltas дают тот же gameplay result, что эквивалентное число
   fixed steps;
 - interpolation не влияет на gameplay calculations;
+- новая session требует полный новый fixed step и не наследует accumulator;
 - terminal state не продвигает simulation behavior.
+
+**Verification evidence после `CR-003` (2026-08-29):**
+
+- `FixedStepLoop.reset()` очищает fractional accumulator;
+- unit test подтверждает отсутствие simulation step после reset до накопления
+  полного нового fixed interval.
+
+**Implementation follow-up verification (2026-08-29):**
+
+- reset выполняется до вычисления и обработки frame delta;
+- regression test подтверждает `simulationTime = 0` после межкадрового
+  `Restart → StartGame` и последующего неполного fixed interval.
 
 ### T-012 — Создать functional placeholder level scene и fixed camera
 
@@ -412,13 +456,27 @@ acceptance criteria и поддерживает `NFR-001`.
   readonly snapshot;
 - показывать camera-facing HP bar над каждым живым monster;
 - использовать events только для transient feedback.
+- предоставлять явную очистку transient effects при полном session reset.
 
 **Проверки:**
 
 - reconciliation корректно обрабатывает build, spawn, hit, kill, escape и
   restart;
 - HP bar соответствует текущему HP от 100 до значения выше 0;
+- transient effects предыдущей session отсутствуют на первом render после
+  `Restart`;
 - scene objects не используются как authoritative gameplay data.
+
+**Verification evidence после `CR-003` (2026-08-29):**
+
+- `TransientEffects.clear()` синхронно удаляет и освобождает active effects;
+- rendering unit test и browser composition test подтверждают очистку при
+  полном session reset.
+
+**Implementation follow-up verification (2026-08-29):**
+
+- browser composition regression test подтверждает очистку transient effects,
+  даже если первый snapshot новой session уже имеет status `Preparation`.
 
 ### T-014 — Реализовать mouse placement и rejection feedback
 
@@ -543,6 +601,25 @@ assets.
   `1280×720` успешно выполнен пользователем 2026-08-26, включая visual и
   interactive behavior.
 
+**Повторная verification после `CR-003` (2026-08-29):**
+
+- `npm test` — 19 test files, 105 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- `npm run capture:acceptance` — полный browser flow при `1280×720` прошёл,
+  включая `Victory`, `Defeat`, `Restart` и возврат в чистое состояние `Ready`;
+- визуально проверены обновлённые `wave-active.png` и
+  `wave-earned-build.png`: level, HUD, towers, monsters и HP bars остаются
+  видимыми, residual effects новой session не обнаружены.
+
+**Implementation follow-up gate (2026-08-29):**
+
+- `npm test` — 19 test files, 106 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- `npm run capture:acceptance` — полный browser acceptance flow прошёл после
+  исправления межкадрового Restart detection.
+
 ### 5.1 Итоговая acceptance matrix
 
 Новые tests и screenshots для итоговой проверки не создавались. Матрица
@@ -624,3 +701,50 @@ assets.
 | `AC-013` | `T-002`, `T-010`, `T-017` |
 | `AC-014` | `T-003`, `T-005`, `T-006`, `T-013`, `T-015`–`T-017` |
 | `AC-015` | `T-002`, `T-012`–`T-014`, `T-016`, `T-017` |
+
+## 7. Review follow-up
+
+### T-018 — Уточнить temporal naming gameplay-систем
+
+**Статус:** Complete.
+
+**Связи:** поддерживает читаемость реализации `FR-006`–`FR-013`; gameplay
+behavior не изменяется.
+
+**Dependencies:** `T-017`, утверждённый [`CR-002`](changes/CR-002.md).
+
+**Предполагаемые файлы:** `src/game/spawning.ts`, `src/game/movement.ts`,
+`src/game/targeting.ts`, `src/game/projectiles.ts`, `src/game/wave.ts`,
+соответствующие tests и identifier-frequency report.
+
+**Реализация:**
+
+- переименовать schedule calculations, conditional predictions, current-state
+  predicates и selectors согласно `CR-002` и `plan.md`;
+- представить range-entry prediction предметным результатом вместо
+  неименованного scalar;
+- добавить JSDoc для текущей range-проверки и range-entry prediction;
+- обновить imports и tests;
+- не менять boundary loop, system order, timing formulas или authoritative
+  state;
+- перегенерировать identifier-frequency report.
+
+**Проверки:**
+
+- существующие targeting, movement, projectile и lifecycle tests проходят без
+  изменения ожидаемого поведения;
+- coarse и partitioned advance остаются эквивалентными;
+- последовательность events, timestamps и authoritative snapshots не меняется;
+- `npm test`, `npm run lint` и `npm run build` завершаются успешно;
+- manual browser verification не требуется, поскольку visual и interactive
+  behavior не меняются.
+
+**Verification evidence (2026-08-29):**
+
+- переименования из `CR-002` применены, старые identifiers отсутствуют в `src`
+  и tests;
+- range-entry prediction возвращает предметный `TowerRangeEntryPrediction`;
+- `npm test` — 19 test files, 101 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- identifier-frequency report перегенерирован.

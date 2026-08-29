@@ -12,11 +12,7 @@ export function resolveDefeat(state: GameState): GameEvent | null {
 }
 
 export function resolveVictory(state: GameState): GameEvent | null {
-  if (
-    state.status !== 'WaveActive' ||
-    state.baseHp <= 0 ||
-    state.killedCount + state.escapedCount < WAVE_SIZE
-  ) {
+  if (state.status !== 'WaveActive' || state.baseHp <= 0 || state.killedCount + state.escapedCount < WAVE_SIZE) {
     return null;
   }
 

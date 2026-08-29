@@ -1,8 +1,6 @@
 import type { BuildRejectionCode } from '../game/types';
 
-export const BUILD_REJECTION_MESSAGES: Readonly<
-  Record<BuildRejectionCode, string>
-> = Object.freeze({
+export const BUILD_REJECTION_MESSAGES: Readonly<Record<BuildRejectionCode, string>> = Object.freeze({
   SESSION_ENDED: 'The session has ended',
   GAME_NOT_STARTED: 'Start the game first',
   OUT_OF_BOUNDS: 'Choose a cell inside the grid',

@@ -5,17 +5,11 @@ const CAMERA_DISTANCE = 20;
 const LEVEL_PADDING = 1.5;
 const MIN_VIEWPORT_SIZE = 1;
 
-export function createLevelCamera(
-  level: Readonly<LevelConfig>,
-): OrthographicCamera {
+export function createLevelCamera(level: Readonly<LevelConfig>): OrthographicCamera {
   const center = getLevelCenter(level);
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
 
-  camera.position.set(
-    center.x + CAMERA_DISTANCE,
-    CAMERA_DISTANCE,
-    center.z + CAMERA_DISTANCE,
-  );
+  camera.position.set(center.x + CAMERA_DISTANCE, CAMERA_DISTANCE, center.z + CAMERA_DISTANCE);
   camera.up.set(0, 1, 0);
   camera.lookAt(center);
   camera.updateMatrixWorld(true);
@@ -56,10 +50,7 @@ export function resizeLevelCamera(
   camera.updateProjectionMatrix();
 }
 
-export function isLevelInsideFrustum(
-  camera: Camera,
-  level: Readonly<LevelConfig>,
-): boolean {
+export function isLevelInsideFrustum(camera: Camera, level: Readonly<LevelConfig>): boolean {
   camera.updateMatrixWorld(true);
 
   return getLevelBounds(level)
@@ -77,10 +68,7 @@ export function isLevelInsideFrustum(
     });
 }
 
-function getProjectedLevelBounds(
-  camera: OrthographicCamera,
-  level: Readonly<LevelConfig>,
-): Box3 {
+function getProjectedLevelBounds(camera: OrthographicCamera, level: Readonly<LevelConfig>): Box3 {
   camera.updateMatrixWorld(true);
   const bounds = new Box3();
 
@@ -105,11 +93,7 @@ function getLevelBounds(level: Readonly<LevelConfig>): Box3WithCorners {
 }
 
 function getLevelCenter(level: Readonly<LevelConfig>): Vector3 {
-  return new Vector3(
-    ((level.width - 1) * level.cellSize) / 2,
-    0,
-    ((level.height - 1) * level.cellSize) / 2,
-  );
+  return new Vector3(((level.width - 1) * level.cellSize) / 2, 0, ((level.height - 1) * level.cellSize) / 2);
 }
 
 class Box3WithCorners extends Box3 {

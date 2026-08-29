@@ -49,22 +49,13 @@ describe('placement feedback (FR-003, FR-004, FR-011; AC-002, AC-003, AC-009, AC
     const runtime = new GameRuntime();
     const feedback = createFeedbackSpy();
     const { canvas, camera } = createPickingFixture();
-    const controller = new PlacementController(
-      canvas,
-      camera,
-      runtime,
-      feedback,
-    );
-    const highlight = controller.root.getObjectByName(
-      'placement-highlight',
-    ) as Mesh;
+    const controller = new PlacementController(canvas, camera, runtime, feedback);
+    const highlight = controller.root.getObjectByName('placement-highlight') as Mesh;
 
     moveToCell(canvas, camera, 2, 3);
 
     expect(highlight.visible).toBe(true);
-    expect((highlight.material as MeshBasicMaterial).color.getHex()).toBe(
-      0xe5484d,
-    );
+    expect((highlight.material as MeshBasicMaterial).color.getHex()).toBe(0xe5484d);
     expect(feedback.showHint).toHaveBeenLastCalledWith(
       getBuildRejectionMessage('GAME_NOT_STARTED'),
       expect.objectContaining({ x: expect.any(Number), y: expect.any(Number) }),
@@ -72,9 +63,7 @@ describe('placement feedback (FR-003, FR-004, FR-011; AC-002, AC-003, AC-009, AC
 
     runtime.dispatch({ type: 'StartGame' });
     moveToCell(canvas, camera, 2, 3);
-    expect((highlight.material as MeshBasicMaterial).color.getHex()).toBe(
-      0x32d26f,
-    );
+    expect((highlight.material as MeshBasicMaterial).color.getHex()).toBe(0x32d26f);
     expect(feedback.showHint).toHaveBeenLastCalledWith(
       null,
       expect.objectContaining({ x: expect.any(Number), y: expect.any(Number) }),
@@ -86,20 +75,11 @@ describe('placement feedback (FR-003, FR-004, FR-011; AC-002, AC-003, AC-009, AC
   it('clears feedback outside the grid and when the pointer leaves', () => {
     const feedback = createFeedbackSpy();
     const { canvas, camera } = createPickingFixture();
-    const controller = new PlacementController(
-      canvas,
-      camera,
-      new GameRuntime(),
-      feedback,
-    );
-    const highlight = controller.root.getObjectByName(
-      'placement-highlight',
-    ) as Mesh;
+    const controller = new PlacementController(canvas, camera, new GameRuntime(), feedback);
+    const highlight = controller.root.getObjectByName('placement-highlight') as Mesh;
 
     moveToCell(canvas, camera, 2, 3);
-    canvas.dispatchEvent(
-      new MouseEvent('pointermove', { clientX: 1201, clientY: 400 }),
-    );
+    canvas.dispatchEvent(new MouseEvent('pointermove', { clientX: 1201, clientY: 400 }));
     expect(highlight.visible).toBe(false);
     expect(feedback.clear).toHaveBeenCalled();
 
@@ -115,12 +95,7 @@ describe('placement feedback (FR-003, FR-004, FR-011; AC-002, AC-003, AC-009, AC
     const dispatch = vi.spyOn(runtime, 'dispatch');
     const feedback = createFeedbackSpy();
     const { canvas, camera } = createPickingFixture();
-    const controller = new PlacementController(
-      canvas,
-      camera,
-      runtime,
-      feedback,
-    );
+    const controller = new PlacementController(canvas, camera, runtime, feedback);
     const initialSnapshot = runtime.getSnapshot();
 
     clickCell(canvas, camera, 2, 3);
@@ -145,12 +120,7 @@ describe('placement feedback (FR-003, FR-004, FR-011; AC-002, AC-003, AC-009, AC
     const runtime = new GameRuntime(state);
     const feedback = createFeedbackSpy();
     const { canvas, camera } = createPickingFixture();
-    const controller = new PlacementController(
-      canvas,
-      camera,
-      runtime,
-      feedback,
-    );
+    const controller = new PlacementController(canvas, camera, runtime, feedback);
     const snapshot = runtime.getSnapshot();
 
     clickCell(canvas, camera, 2, 3);
@@ -195,12 +165,7 @@ function createPickingFixture(): {
   return { canvas, camera };
 }
 
-function moveToCell(
-  canvas: HTMLCanvasElement,
-  camera: OrthographicCamera,
-  x: number,
-  y: number,
-): void {
+function moveToCell(canvas: HTMLCanvasElement, camera: OrthographicCamera, x: number, y: number): void {
   const pointer = projectCell(camera, x, y);
   canvas.dispatchEvent(
     new MouseEvent('pointermove', {
@@ -210,12 +175,7 @@ function moveToCell(
   );
 }
 
-function clickCell(
-  canvas: HTMLCanvasElement,
-  camera: OrthographicCamera,
-  x: number,
-  y: number,
-): void {
+function clickCell(canvas: HTMLCanvasElement, camera: OrthographicCamera, x: number, y: number): void {
   const pointer = projectCell(camera, x, y);
   canvas.dispatchEvent(
     new MouseEvent('click', {
@@ -225,11 +185,7 @@ function clickCell(
   );
 }
 
-function projectCell(
-  camera: OrthographicCamera,
-  x: number,
-  y: number,
-): { x: number; y: number } {
+function projectCell(camera: OrthographicCamera, x: number, y: number): { x: number; y: number } {
   const projected = new Mesh().position.set(x, 0, y).project(camera);
   return {
     x: ((projected.x + 1) / 2) * 1200,

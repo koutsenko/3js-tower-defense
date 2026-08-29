@@ -23,18 +23,17 @@ export class FixedStepLoop {
     private readonly renderFrame: RenderFrame,
   ) {}
 
+  reset(): void {
+    this.accumulatorSeconds = 0;
+  }
+
   advanceFrame(frameDeltaSeconds: number): void {
     assertValidFrameDelta(frameDeltaSeconds);
 
-    this.accumulatorSeconds += Math.min(
-      frameDeltaSeconds,
-      MAX_FRAME_DELTA_SECONDS,
-    );
+    this.accumulatorSeconds += Math.min(frameDeltaSeconds, MAX_FRAME_DELTA_SECONDS);
 
     const events: GameEvent[] = [];
-    let stepCount = Math.floor(
-      (this.accumulatorSeconds + Number.EPSILON) / FIXED_STEP_SECONDS,
-    );
+    let stepCount = Math.floor((this.accumulatorSeconds + Number.EPSILON) / FIXED_STEP_SECONDS);
 
     while (stepCount > 0) {
       events.push(...this.runtime.advance(FIXED_STEP_SECONDS));
@@ -56,8 +55,6 @@ export class FixedStepLoop {
 
 function assertValidFrameDelta(frameDeltaSeconds: number): void {
   if (!Number.isFinite(frameDeltaSeconds) || frameDeltaSeconds < 0) {
-    throw new RangeError(
-      'frameDeltaSeconds must be a finite non-negative number',
-    );
+    throw new RangeError('frameDeltaSeconds must be a finite non-negative number');
   }
 }

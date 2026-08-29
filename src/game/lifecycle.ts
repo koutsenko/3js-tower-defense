@@ -16,15 +16,8 @@ export function startGame(state: GameState): GameEvent {
   return { type: 'game-start' };
 }
 
-export function advanceLifecycle(
-  state: GameState,
-  deltaSeconds: number,
-): LifecycleAdvanceResult {
-  if (
-    state.status === 'Ready' ||
-    state.status === 'Victory' ||
-    state.status === 'Defeat'
-  ) {
+export function advanceLifecycle(state: GameState, deltaSeconds: number): LifecycleAdvanceResult {
+  if (state.status === 'Ready' || state.status === 'Victory' || state.status === 'Defeat') {
     return { events: [], waveActiveDuration: 0 };
   }
 
@@ -41,10 +34,7 @@ export function advanceLifecycle(
     return { events: [], waveActiveDuration: 0 };
   }
 
-  const normalizedTargetTime =
-    Math.abs(targetTime - waveStartsAt) <= TIME_TOLERANCE
-      ? waveStartsAt
-      : targetTime;
+  const normalizedTargetTime = Math.abs(targetTime - waveStartsAt) <= TIME_TOLERANCE ? waveStartsAt : targetTime;
 
   state.status = 'WaveActive';
   state.simulationTime = normalizedTargetTime;

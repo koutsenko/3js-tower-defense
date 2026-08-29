@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "capture:acceptance": "node specs/001-core-loop/artifacts/scripts/capture-core-loop-acceptance.mjs",
+    "report:identifiers": "node specs/001-core-loop/artifacts/scripts/generate-identifier-frequency-report.mjs",
     "test": "vitest run",
     "lint": "eslint . && prettier --check ."
   },
