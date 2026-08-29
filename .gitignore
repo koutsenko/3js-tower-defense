@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.nvmrc
 .env
 .env.*
 !.env.example
