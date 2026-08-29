@@ -55,6 +55,7 @@ function isInRange(tower: Readonly<TowerState>, monster: Readonly<MonsterState>)
 function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonly<MonsterState>): number | null {
   let segmentStartProgress = 0;
 
+  // TODO: Предвычислить участки маршрута, чтобы не обходить заново пройденные участки при поиске входа в радиус башни.
   for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
     const start = levelConfig.routeWaypoints[index - 1]!;
     const end = levelConfig.routeWaypoints[index]!;
