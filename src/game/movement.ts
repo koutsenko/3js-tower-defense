@@ -1,6 +1,7 @@
 import { MONSTER_SPEED } from '../config/gameConfig';
 import { levelConfig, type LevelConfig } from '../config/levelConfig';
 import type { GameEvent } from './events';
+import { getAxisAlignedSegmentLength } from './grid';
 import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
@@ -59,7 +60,7 @@ export function getRoutePosition(
   for (let index = 1; index < level.routeWaypoints.length; index += 1) {
     const start = level.routeWaypoints[index - 1]!;
     const end = level.routeWaypoints[index]!;
-    const segmentLength = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
+    const segmentLength = getAxisAlignedSegmentLength(start, end);
 
     if (remainingProgress <= segmentLength) {
       const ratio = segmentLength === 0 ? 0 : remainingProgress / segmentLength;

@@ -1,5 +1,6 @@
 import { MONSTER_SPEED, TOWER_RANGE } from '../config/gameConfig';
 import { levelConfig } from '../config/levelConfig';
+import { getAxisAlignedSegmentLength } from './grid';
 import { MathExtra } from './math/MathExtra';
 import { getRoutePosition } from './movement';
 import type { GameState, MonsterState, TowerState } from './types';
@@ -59,7 +60,7 @@ function getNextRangeEntryProgress(tower: Readonly<TowerState>, monster: Readonl
   for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
     const start = levelConfig.routeWaypoints[index - 1]!;
     const end = levelConfig.routeWaypoints[index]!;
-    const segmentLength = Math.hypot(end.x - start.x, end.y - start.y);
+    const segmentLength = getAxisAlignedSegmentLength(start, end);
     const segmentEndProgress = segmentStartProgress + segmentLength;
 
     if (segmentEndProgress > monster.routeProgress + DISTANCE_TOLERANCE) {

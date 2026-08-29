@@ -1,4 +1,11 @@
-import { createGridCell, createRouteCells, getCellKey, getRouteLength, type GridCell } from '../game/grid';
+import {
+  assertAxisAlignedRoute,
+  createGridCell,
+  createRouteCells,
+  getCellKey,
+  getRouteLength,
+  type GridCell,
+} from '../game/grid';
 
 export interface LevelConfig {
   readonly width: number;
@@ -23,6 +30,8 @@ const routeWaypoints = Object.freeze([
   createGridCell(3, 6),
   createGridCell(11, 6),
 ]);
+
+assertAxisAlignedRoute(routeWaypoints);
 
 const routeCells = createRouteCells(routeWaypoints);
 const routeCellKeys = new Set(routeCells.map(getCellKey));
