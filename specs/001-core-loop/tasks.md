@@ -624,3 +624,40 @@ assets.
 | `AC-013` | `T-002`, `T-010`, `T-017` |
 | `AC-014` | `T-003`, `T-005`, `T-006`, `T-013`, `T-015`–`T-017` |
 | `AC-015` | `T-002`, `T-012`–`T-014`, `T-016`, `T-017` |
+
+## 7. Review follow-up
+
+### T-018 — Уточнить temporal naming gameplay-систем
+
+**Статус:** Pending.
+
+**Связи:** поддерживает читаемость реализации `FR-006`–`FR-013`; gameplay
+behavior не изменяется.
+
+**Dependencies:** `T-017`, утверждённый [`CR-002`](changes/CR-002.md).
+
+**Предполагаемые файлы:** `src/game/spawning.ts`, `src/game/movement.ts`,
+`src/game/targeting.ts`, `src/game/projectiles.ts`, `src/game/wave.ts`,
+соответствующие tests и identifier-frequency report.
+
+**Реализация:**
+
+- переименовать schedule calculations, conditional predictions, current-state
+  predicates и selectors согласно `CR-002` и `plan.md`;
+- представить range-entry prediction предметным результатом вместо
+  неименованного scalar;
+- добавить JSDoc для текущей range-проверки и range-entry prediction;
+- обновить imports и tests;
+- не менять boundary loop, system order, timing formulas или authoritative
+  state;
+- перегенерировать identifier-frequency report.
+
+**Проверки:**
+
+- существующие targeting, movement, projectile и lifecycle tests проходят без
+  изменения ожидаемого поведения;
+- coarse и partitioned advance остаются эквивалентными;
+- последовательность events, timestamps и authoritative snapshots не меняется;
+- `npm test`, `npm run lint` и `npm run build` завершаются успешно;
+- manual browser verification не требуется, поскольку visual и interactive
+  behavior не меняются.

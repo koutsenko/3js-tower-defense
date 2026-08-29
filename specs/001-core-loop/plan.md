@@ -114,6 +114,48 @@ src/
 `game`, но game runtime не вызывает presentation code. Application composition
 root создаёт runtime, renderer и UI, затем связывает их в animation loop.
 
+### 3.3 Naming of temporal operations
+
+Имена gameplay-функций отражают роль операции в обработке simulation
+boundaries:
+
+- `get` читает уже существующее значение state без прогнозирования,
+  существенного вычисления или мутации;
+- `calculate` детерминированно вычисляет значение из расписания, config или
+  переданных аргументов;
+- `predict` условно вычисляет будущий gameplay event или boundary из current
+  state; результат может потерять актуальность после другого события;
+- `is`, `has`, `can` проверяют фактическое состояние на текущей boundary;
+- `select` выбирает entity из фактически доступных кандидатов;
+- `schedule` сохраняет будущее событие или время для последующего
+  использования;
+- `resolve` применяет уже наступившее событие и связанные изменения
+  authoritative state;
+- `advance` и `move` продвигают state на переданный интервал времени.
+
+`predict` не обозначает вероятностный результат. Prediction является точным
+для current state и config, но условным относительно последующих gameplay
+events. После обработки ближайшей boundary старые predictions отбрасываются, а
+новые вычисляются из обновлённого state.
+
+Application fixed step `1/60 s` является внешней порцией gameplay time, а не
+единственным событием мира. Один вызов `advance` может пересечь несколько
+внутренних boundaries. Runtime на каждой итерации определяет ближайшую
+boundary, продвигает state только до неё, применяет due events и заново
+вычисляет predictions для остатка interval.
+
+Примеры утверждённой терминологии:
+
+- `calculateNextSpawnTime` — вычисление следующей отметки spawn schedule;
+- `predictNextTargetingBoundaryTime` — условный прогноз следующего targeting
+  boundary;
+- `isMonsterInTowerRange` — проверка фактического состояния на достигнутой
+  boundary;
+- `resolveProjectileHits` — применение уже наступивших попаданий.
+
+Методика не требует объединять predictors в общий `predictions.ts` и не
+фиксирует размещение приватных helpers по файлам (`CR-002`).
+
 ## 4. Level and balance configuration
 
 ### 4.1 Coordinates and route
