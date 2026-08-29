@@ -14,7 +14,7 @@ Vite.
 - Node.js `^22.22.2`, `^24.15.0` или `>=26.0.0`;
 - npm;
 - desktop browser;
-- мышь;
+- мышь или тачпад;
 - viewport не менее `1280×720`.
 
 Рекомендуемая версия Node.js указана в [`.nvmrc`](.nvmrc) — `24.15.0`.
@@ -46,3 +46,26 @@ npm run build
 ```bash
 npm test
 ```
+
+## Playwright
+
+Playwright используется для опциональной проверки основного игрового цикла и
+создания acceptance-скриншотов. Для обычного запуска, сборки и автоматических
+тестов этот шаг не требуется.
+
+Перед первым запуском установите Chromium для Playwright:
+
+```bash
+npx playwright install chromium
+```
+
+Запустите acceptance-сценарий:
+
+```bash
+npm run capture:acceptance
+```
+
+Команда запускает приложение в Chromium, воспроизводит сценарии `Victory`,
+`Defeat` и `Restart` и сохраняет скриншоты в
+[`specs/001-core-loop/artifacts/acceptance/`](specs/001-core-loop/artifacts/acceptance/).
+Существующие файлы с теми же именами перезаписываются.
