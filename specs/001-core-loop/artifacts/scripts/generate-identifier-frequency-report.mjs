@@ -163,7 +163,7 @@ function renderHtml({
   const rows = identifiers
     .map(
       ([name, count]) => `
-        <tr data-name="${escapeHtml(name.toLocaleLowerCase('en'))}">
+        <tr data-name="${escapeHtml(name.toLocaleLowerCase('en'))}" data-count="${count}">
           <td><code>${escapeHtml(name)}</code></td>
           <td class="count">${count}</td>
         </tr>`,
@@ -186,6 +186,9 @@ function renderHtml({
       table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
       th, td { border-bottom: 1px solid #8886; padding: 0.55rem 0.7rem; text-align: left; }
       th { position: sticky; top: 0; background: Canvas; }
+      th button { border: 0; padding: 0; color: inherit; background: none; font: inherit; font-weight: 700; cursor: pointer; }
+      th[aria-sort="ascending"] button::after { content: " ▲"; }
+      th[aria-sort="descending"] button::after { content: " ▼"; }
       .count { text-align: right; font-variant-numeric: tabular-nums; }
       [hidden] { display: none; }
     </style>
@@ -200,7 +203,12 @@ function renderHtml({
       </label>
       <p id="result-count" aria-live="polite">Показано: ${identifiers.length}</p>
       <table>
-        <thead><tr><th scope="col">Название</th><th scope="col" class="count">Вхождения</th></tr></thead>
+        <thead>
+          <tr>
+            <th scope="col" data-column="name" aria-sort="none"><button type="button" data-sort="name">Название</button></th>
+            <th scope="col" class="count" data-column="count" aria-sort="descending"><button type="button" data-sort="count">Вхождения</button></th>
+          </tr>
+        </thead>
         <tbody>${rows}
         </tbody>
       </table>
@@ -208,7 +216,46 @@ function renderHtml({
     <script>
       const filter = document.querySelector('#filter');
       const rows = [...document.querySelectorAll('tbody tr')];
+      const tableBody = document.querySelector('tbody');
+      const sortButtons = [...document.querySelectorAll('[data-sort]')];
+      const sortHeaders = [...document.querySelectorAll('[data-column]')];
       const resultCount = document.querySelector('#result-count');
+      const nameCollator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
+      let sortKey = 'count';
+      let sortDirection = 'descending';
+
+      for (const button of sortButtons) {
+        button.addEventListener('click', () => {
+          const nextSortKey = button.dataset.sort;
+          sortDirection =
+            nextSortKey === sortKey
+              ? sortDirection === 'ascending'
+                ? 'descending'
+                : 'ascending'
+              : nextSortKey === 'name'
+                ? 'ascending'
+                : 'descending';
+          sortKey = nextSortKey;
+
+          rows.sort((left, right) => {
+            const comparison =
+              sortKey === 'name'
+                ? nameCollator.compare(left.dataset.name, right.dataset.name)
+                : Number(left.dataset.count) - Number(right.dataset.count);
+
+            if (comparison !== 0) {
+              return sortDirection === 'ascending' ? comparison : -comparison;
+            }
+
+            return nameCollator.compare(left.dataset.name, right.dataset.name);
+          });
+          tableBody.append(...rows);
+
+          for (const header of sortHeaders) {
+            header.setAttribute('aria-sort', header.dataset.column === sortKey ? sortDirection : 'none');
+          }
+        });
+      }
 
       filter.addEventListener('input', () => {
         const query = filter.value.trim().toLocaleLowerCase('en');

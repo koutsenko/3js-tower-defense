@@ -14,6 +14,9 @@
       table { border-collapse: collapse; margin-top: 1rem; width: 100%; }
       th, td { border-bottom: 1px solid #8886; padding: 0.55rem 0.7rem; text-align: left; }
       th { position: sticky; top: 0; background: Canvas; }
+      th button { border: 0; padding: 0; color: inherit; background: none; font: inherit; font-weight: 700; cursor: pointer; }
+      th[aria-sort="ascending"] button::after { content: " ▲"; }
+      th[aria-sort="descending"] button::after { content: " ▼"; }
       .count { text-align: right; font-variant-numeric: tabular-nums; }
       [hidden] { display: none; }
     </style>
@@ -21,2008 +24,2013 @@
   <body>
     <main>
       <h1>Частотная карта идентификаторов</h1>
-      <p class="meta">src · 32 файлов · 499 названий · 3745 вхождений · 2026-08-29T17:36:47.517Z</p>
+      <p class="meta">src · 32 файлов · 499 названий · 3745 вхождений · 2026-08-29T17:40:32.410Z</p>
       <label>
         Фильтр по названию
         <input id="filter" type="search" autocomplete="off" placeholder="gameState, monster, tower…">
       </label>
       <p id="result-count" aria-live="polite">Показано: 499</p>
       <table>
-        <thead><tr><th scope="col">Название</th><th scope="col" class="count">Вхождения</th></tr></thead>
+        <thead>
+          <tr>
+            <th scope="col" data-column="name" aria-sort="none"><button type="button" data-sort="name">Название</button></th>
+            <th scope="col" class="count" data-column="count" aria-sort="descending"><button type="button" data-sort="count">Вхождения</button></th>
+          </tr>
+        </thead>
         <tbody>
-        <tr data-name="state">
+        <tr data-name="state" data-count="162">
           <td><code>state</code></td>
           <td class="count">162</td>
         </tr>
-        <tr data-name="level">
+        <tr data-name="level" data-count="94">
           <td><code>level</code></td>
           <td class="count">94</td>
         </tr>
-        <tr data-name="id">
+        <tr data-name="id" data-count="84">
           <td><code>id</code></td>
           <td class="count">84</td>
         </tr>
-        <tr data-name="x">
+        <tr data-name="x" data-count="78">
           <td><code>x</code></td>
           <td class="count">78</td>
         </tr>
-        <tr data-name="y">
+        <tr data-name="y" data-count="76">
           <td><code>y</code></td>
           <td class="count">76</td>
         </tr>
-        <tr data-name="root">
+        <tr data-name="root" data-count="70">
           <td><code>root</code></td>
           <td class="count">70</td>
         </tr>
-        <tr data-name="cell">
+        <tr data-name="cell" data-count="66">
           <td><code>cell</code></td>
           <td class="count">66</td>
         </tr>
-        <tr data-name="cellsize">
+        <tr data-name="cellsize" data-count="62">
           <td><code>cellSize</code></td>
           <td class="count">62</td>
         </tr>
-        <tr data-name="tower">
+        <tr data-name="tower" data-count="51">
           <td><code>tower</code></td>
           <td class="count">51</td>
         </tr>
-        <tr data-name="projectile">
+        <tr data-name="projectile" data-count="50">
           <td><code>projectile</code></td>
           <td class="count">50</td>
         </tr>
-        <tr data-name="events">
+        <tr data-name="events" data-count="47">
           <td><code>events</code></td>
           <td class="count">47</td>
         </tr>
-        <tr data-name="gamestate">
+        <tr data-name="gamestate" data-count="47">
           <td><code>GameState</code></td>
           <td class="count">47</td>
         </tr>
-        <tr data-name="position">
+        <tr data-name="position" data-count="44">
           <td><code>position</code></td>
           <td class="count">44</td>
         </tr>
-        <tr data-name="snapshot">
+        <tr data-name="snapshot" data-count="40">
           <td><code>snapshot</code></td>
           <td class="count">40</td>
         </tr>
-        <tr data-name="monster">
+        <tr data-name="monster" data-count="38">
           <td><code>monster</code></td>
           <td class="count">38</td>
         </tr>
-        <tr data-name="camera">
+        <tr data-name="camera" data-count="37">
           <td><code>camera</code></td>
           <td class="count">37</td>
         </tr>
-        <tr data-name="gameevent">
+        <tr data-name="gameevent" data-count="36">
           <td><code>GameEvent</code></td>
           <td class="count">36</td>
         </tr>
-        <tr data-name="gridcell">
+        <tr data-name="gridcell" data-count="35">
           <td><code>GridCell</code></td>
           <td class="count">35</td>
         </tr>
-        <tr data-name="dispose">
+        <tr data-name="dispose" data-count="31">
           <td><code>dispose</code></td>
           <td class="count">31</td>
         </tr>
-        <tr data-name="runtime">
+        <tr data-name="runtime" data-count="31">
           <td><code>runtime</code></td>
           <td class="count">31</td>
         </tr>
-        <tr data-name="start">
+        <tr data-name="start" data-count="31">
           <td><code>start</code></td>
           <td class="count">31</td>
         </tr>
-        <tr data-name="levelconfig">
+        <tr data-name="levelconfig" data-count="30">
           <td><code>levelConfig</code></td>
           <td class="count">30</td>
         </tr>
-        <tr data-name="target">
+        <tr data-name="target" data-count="29">
           <td><code>target</code></td>
           <td class="count">29</td>
         </tr>
-        <tr data-name="index">
+        <tr data-name="index" data-count="27">
           <td><code>index</code></td>
           <td class="count">27</td>
         </tr>
-        <tr data-name="currenttime">
+        <tr data-name="currenttime" data-count="26">
           <td><code>currentTime</code></td>
           <td class="count">26</td>
         </tr>
-        <tr data-name="status">
+        <tr data-name="status" data-count="26">
           <td><code>status</code></td>
           <td class="count">26</td>
         </tr>
-        <tr data-name="canvas">
+        <tr data-name="canvas" data-count="25">
           <td><code>canvas</code></td>
           <td class="count">25</td>
         </tr>
-        <tr data-name="gamesnapshot">
+        <tr data-name="gamesnapshot" data-count="25">
           <td><code>GameSnapshot</code></td>
           <td class="count">25</td>
         </tr>
-        <tr data-name="monsters">
+        <tr data-name="monsters" data-count="25">
           <td><code>monsters</code></td>
           <td class="count">25</td>
         </tr>
-        <tr data-name="event">
+        <tr data-name="event" data-count="24">
           <td><code>event</code></td>
           <td class="count">24</td>
         </tr>
-        <tr data-name="entityid">
+        <tr data-name="entityid" data-count="23">
           <td><code>EntityId</code></td>
           <td class="count">23</td>
         </tr>
-        <tr data-name="mesh">
+        <tr data-name="mesh" data-count="23">
           <td><code>Mesh</code></td>
           <td class="count">23</td>
         </tr>
-        <tr data-name="name">
+        <tr data-name="name" data-count="23">
           <td><code>name</code></td>
           <td class="count">23</td>
         </tr>
-        <tr data-name="levelconfig">
+        <tr data-name="levelconfig" data-count="22">
           <td><code>LevelConfig</code></td>
           <td class="count">22</td>
         </tr>
-        <tr data-name="routeprogress">
+        <tr data-name="routeprogress" data-count="22">
           <td><code>routeProgress</code></td>
           <td class="count">22</td>
         </tr>
-        <tr data-name="projectiles">
+        <tr data-name="projectiles" data-count="21">
           <td><code>projectiles</code></td>
           <td class="count">21</td>
         </tr>
-        <tr data-name="end">
+        <tr data-name="end" data-count="20">
           <td><code>end</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="left">
+        <tr data-name="left" data-count="20">
           <td><code>left</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="ok">
+        <tr data-name="ok" data-count="20">
           <td><code>ok</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="right">
+        <tr data-name="right" data-count="20">
           <td><code>right</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="vector3">
+        <tr data-name="vector3" data-count="20">
           <td><code>Vector3</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="width">
+        <tr data-name="width" data-count="20">
           <td><code>width</code></td>
           <td class="count">20</td>
         </tr>
-        <tr data-name="code">
+        <tr data-name="code" data-count="18">
           <td><code>code</code></td>
           <td class="count">18</td>
         </tr>
-        <tr data-name="height">
+        <tr data-name="height" data-count="18">
           <td><code>height</code></td>
           <td class="count">18</td>
         </tr>
-        <tr data-name="simulationtime">
+        <tr data-name="simulationtime" data-count="18">
           <td><code>simulationTime</code></td>
           <td class="count">18</td>
         </tr>
-        <tr data-name="targetid">
+        <tr data-name="targetid" data-count="18">
           <td><code>targetId</code></td>
           <td class="count">18</td>
         </tr>
-        <tr data-name="entityids">
+        <tr data-name="entityids" data-count="17">
           <td><code>entityIds</code></td>
           <td class="count">17</td>
         </tr>
-        <tr data-name="group">
+        <tr data-name="group" data-count="17">
           <td><code>Group</code></td>
           <td class="count">17</td>
         </tr>
-        <tr data-name="healthbar">
+        <tr data-name="healthbar" data-count="17">
           <td><code>healthBar</code></td>
           <td class="count">17</td>
         </tr>
-        <tr data-name="material">
+        <tr data-name="material" data-count="17">
           <td><code>material</code></td>
           <td class="count">17</td>
         </tr>
-        <tr data-name="gameruntime">
+        <tr data-name="gameruntime" data-count="16">
           <td><code>GameRuntime</code></td>
           <td class="count">16</td>
         </tr>
-        <tr data-name="ratio">
+        <tr data-name="ratio" data-count="16">
           <td><code>ratio</code></td>
           <td class="count">16</td>
         </tr>
-        <tr data-name="container">
+        <tr data-name="container" data-count="15">
           <td><code>container</code></td>
           <td class="count">15</td>
         </tr>
-        <tr data-name="getelement">
+        <tr data-name="getelement" data-count="15">
           <td><code>getElement</code></td>
           <td class="count">15</td>
         </tr>
-        <tr data-name="scene">
+        <tr data-name="scene" data-count="15">
           <td><code>scene</code></td>
           <td class="count">15</td>
         </tr>
-        <tr data-name="color">
+        <tr data-name="color" data-count="14">
           <td><code>color</code></td>
           <td class="count">14</td>
         </tr>
-        <tr data-name="meshbasicmaterial">
+        <tr data-name="meshbasicmaterial" data-count="14">
           <td><code>MeshBasicMaterial</code></td>
           <td class="count">14</td>
         </tr>
-        <tr data-name="routewaypoints">
+        <tr data-name="routewaypoints" data-count="14">
           <td><code>routeWaypoints</code></td>
           <td class="count">14</td>
         </tr>
-        <tr data-name="towers">
+        <tr data-name="towers" data-count="14">
           <td><code>towers</code></td>
           <td class="count">14</td>
         </tr>
-        <tr data-name="add">
+        <tr data-name="add" data-count="13">
           <td><code>add</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="bounds">
+        <tr data-name="bounds" data-count="13">
           <td><code>bounds</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="creategridcell">
+        <tr data-name="creategridcell" data-count="13">
           <td><code>createGridCell</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="deltaseconds">
+        <tr data-name="deltaseconds" data-count="13">
           <td><code>deltaSeconds</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="distance_tolerance">
+        <tr data-name="distance_tolerance" data-count="13">
           <td><code>DISTANCE_TOLERANCE</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="entities">
+        <tr data-name="entities" data-count="13">
           <td><code>entities</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="render">
+        <tr data-name="render" data-count="13">
           <td><code>render</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="waypoints">
+        <tr data-name="waypoints" data-count="13">
           <td><code>waypoints</code></td>
           <td class="count">13</td>
         </tr>
-        <tr data-name="effect">
+        <tr data-name="effect" data-count="12">
           <td><code>effect</code></td>
           <td class="count">12</td>
         </tr>
-        <tr data-name="entityidsequence">
+        <tr data-name="entityidsequence" data-count="11">
           <td><code>EntityIdSequence</code></td>
           <td class="count">11</td>
         </tr>
-        <tr data-name="getrouteposition">
+        <tr data-name="getrouteposition" data-count="11">
           <td><code>getRoutePosition</code></td>
           <td class="count">11</td>
         </tr>
-        <tr data-name="hint">
+        <tr data-name="hint" data-count="11">
           <td><code>hint</code></td>
           <td class="count">11</td>
         </tr>
-        <tr data-name="mesh">
+        <tr data-name="mesh" data-count="11">
           <td><code>mesh</code></td>
           <td class="count">11</td>
         </tr>
-        <tr data-name="colors">
+        <tr data-name="colors" data-count="10">
           <td><code>COLORS</code></td>
           <td class="count">10</td>
         </tr>
-        <tr data-name="element">
+        <tr data-name="element" data-count="10">
           <td><code>element</code></td>
           <td class="count">10</td>
         </tr>
-        <tr data-name="highlight">
+        <tr data-name="highlight" data-count="10">
           <td><code>highlight</code></td>
           <td class="count">10</td>
         </tr>
-        <tr data-name="monster_speed">
+        <tr data-name="monster_speed" data-count="10">
           <td><code>MONSTER_SPEED</code></td>
           <td class="count">10</td>
         </tr>
-        <tr data-name="animationframeid">
+        <tr data-name="animationframeid" data-count="9">
           <td><code>animationFrameId</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="geometry">
+        <tr data-name="geometry" data-count="9">
           <td><code>geometry</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="orthographiccamera">
+        <tr data-name="orthographiccamera" data-count="9">
           <td><code>OrthographicCamera</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="pendingevents">
+        <tr data-name="pendingevents" data-count="9">
           <td><code>pendingEvents</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="phasestartedat">
+        <tr data-name="phasestartedat" data-count="9">
           <td><code>phaseStartedAt</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="projectedbounds">
+        <tr data-name="projectedbounds" data-count="9">
           <td><code>projectedBounds</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="segmentlength">
+        <tr data-name="segmentlength" data-count="9">
           <td><code>segmentLength</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="spawnindex">
+        <tr data-name="spawnindex" data-count="9">
           <td><code>spawnIndex</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="toast">
+        <tr data-name="toast" data-count="9">
           <td><code>toast</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="tower_cost">
+        <tr data-name="tower_cost" data-count="9">
           <td><code>TOWER_COST</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="wave_size">
+        <tr data-name="wave_size" data-count="9">
           <td><code>WAVE_SIZE</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="z">
+        <tr data-name="z" data-count="9">
           <td><code>z</code></td>
           <td class="count">9</td>
         </tr>
-        <tr data-name="b">
+        <tr data-name="b" data-count="8">
           <td><code>b</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="buildablecells">
+        <tr data-name="buildablecells" data-count="8">
           <td><code>buildableCells</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="buildrejectioncode">
+        <tr data-name="buildrejectioncode" data-count="8">
           <td><code>BuildRejectionCode</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="commandresult">
+        <tr data-name="commandresult" data-count="8">
           <td><code>CommandResult</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="endtime">
+        <tr data-name="endtime" data-count="8">
           <td><code>endTime</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="fill">
+        <tr data-name="fill" data-count="8">
           <td><code>fill</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="getcellkey">
+        <tr data-name="getcellkey" data-count="8">
           <td><code>getCellKey</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="mindefined">
+        <tr data-name="mindefined" data-count="8">
           <td><code>minDefined</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="monster_hp">
+        <tr data-name="monster_hp" data-count="8">
           <td><code>MONSTER_HP</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="monsterstate">
+        <tr data-name="monsterstate" data-count="8">
           <td><code>MonsterState</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="object3d">
+        <tr data-name="object3d" data-count="8">
           <td><code>Object3D</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="renderframe">
+        <tr data-name="renderframe" data-count="8">
           <td><code>renderFrame</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="routecells">
+        <tr data-name="routecells" data-count="8">
           <td><code>routeCells</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="t">
+        <tr data-name="t" data-count="8">
           <td><code>T</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="tower_range">
+        <tr data-name="tower_range" data-count="8">
           <td><code>TOWER_RANGE</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="towerstate">
+        <tr data-name="towerstate" data-count="8">
           <td><code>TowerState</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="waveactiveduration">
+        <tr data-name="waveactiveduration" data-count="8">
           <td><code>waveActiveDuration</code></td>
           <td class="count">8</td>
         </tr>
-        <tr data-name="a">
+        <tr data-name="a" data-count="7">
           <td><code>a</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="barwidth">
+        <tr data-name="barwidth" data-count="7">
           <td><code>barWidth</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="basehp">
+        <tr data-name="basehp" data-count="7">
           <td><code>baseHp</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="buildvalidation">
+        <tr data-name="buildvalidation" data-count="7">
           <td><code>BuildValidation</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="camera">
+        <tr data-name="camera" data-count="7">
           <td><code>Camera</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="coins">
+        <tr data-name="coins" data-count="7">
           <td><code>coins</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="countdown">
+        <tr data-name="countdown" data-count="7">
           <td><code>countdown</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="entityid">
+        <tr data-name="entityid" data-count="7">
           <td><code>entityId</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="entityreconciler">
+        <tr data-name="entityreconciler" data-count="7">
           <td><code>EntityReconciler</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="entrance">
+        <tr data-name="entrance" data-count="7">
           <td><code>entrance</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="getsnapshot">
+        <tr data-name="getsnapshot" data-count="7">
           <td><code>getSnapshot</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="hp">
+        <tr data-name="hp" data-count="7">
           <td><code>hp</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="max">
+        <tr data-name="max" data-count="7">
           <td><code>max</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="message">
+        <tr data-name="message" data-count="7">
           <td><code>message</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="min">
+        <tr data-name="min" data-count="7">
           <td><code>min</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="monsterid">
+        <tr data-name="monsterid" data-count="7">
           <td><code>monsterId</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="planegeometry">
+        <tr data-name="planegeometry" data-count="7">
           <td><code>PlaneGeometry</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="position">
+        <tr data-name="position" data-count="7">
           <td><code>Position</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="preparation_duration">
+        <tr data-name="preparation_duration" data-count="7">
           <td><code>PREPARATION_DURATION</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="projected">
+        <tr data-name="projected" data-count="7">
           <td><code>projected</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="resize">
+        <tr data-name="resize" data-count="7">
           <td><code>resize</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="routelength">
+        <tr data-name="routelength" data-count="7">
           <td><code>routeLength</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="towerid">
+        <tr data-name="towerid" data-count="7">
           <td><code>towerId</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="validation">
+        <tr data-name="validation" data-count="7">
           <td><code>validation</code></td>
           <td class="count">7</td>
         </tr>
-        <tr data-name="boundary">
+        <tr data-name="boundary" data-count="6">
           <td><code>boundary</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="boxgeometry">
+        <tr data-name="boxgeometry" data-count="6">
           <td><code>BoxGeometry</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="c">
+        <tr data-name="c" data-count="6">
           <td><code>c</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="child">
+        <tr data-name="child" data-count="6">
           <td><code>child</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="coinsvalue">
+        <tr data-name="coinsvalue" data-count="6">
           <td><code>coinsValue</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="duration">
+        <tr data-name="duration" data-count="6">
           <td><code>duration</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="effects">
+        <tr data-name="effects" data-count="6">
           <td><code>effects</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="elementtype">
+        <tr data-name="elementtype" data-count="6">
           <td><code>ElementType</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="entityreconciler">
+        <tr data-name="entityreconciler" data-count="6">
           <td><code>entityReconciler</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="escapedcount">
+        <tr data-name="escapedcount" data-count="6">
           <td><code>escapedCount</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="exit">
+        <tr data-name="exit" data-count="6">
           <td><code>exit</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="framedeltaseconds">
+        <tr data-name="framedeltaseconds" data-count="6">
           <td><code>frameDeltaSeconds</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="gameruntime">
+        <tr data-name="gameruntime" data-count="6">
           <td><code>gameRuntime</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="getaxisalignedsegmentlength">
+        <tr data-name="getaxisalignedsegmentlength" data-count="6">
           <td><code>getAxisAlignedSegmentLength</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="halfheight">
+        <tr data-name="halfheight" data-count="6">
           <td><code>halfHeight</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="halfwidth">
+        <tr data-name="halfwidth" data-count="6">
           <td><code>halfWidth</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="impacttime">
+        <tr data-name="impacttime" data-count="6">
           <td><code>impactTime</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="killedcount">
+        <tr data-name="killedcount" data-count="6">
           <td><code>killedCount</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="kind">
+        <tr data-name="kind" data-count="6">
           <td><code>kind</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="level_padding">
+        <tr data-name="level_padding" data-count="6">
           <td><code>LEVEL_PADDING</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="materials">
+        <tr data-name="materials" data-count="6">
           <td><code>materials</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="nextspawntime">
+        <tr data-name="nextspawntime" data-count="6">
           <td><code>nextSpawnTime</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="nexttime">
+        <tr data-name="nexttime" data-count="6">
           <td><code>nextTime</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="outcome">
+        <tr data-name="outcome" data-count="6">
           <td><code>outcome</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="previoustimestamp">
+        <tr data-name="previoustimestamp" data-count="6">
           <td><code>previousTimestamp</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="projectile_damage">
+        <tr data-name="projectile_damage" data-count="6">
           <td><code>PROJECTILE_DAMAGE</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="projectile_speed">
+        <tr data-name="projectile_speed" data-count="6">
           <td><code>PROJECTILE_SPEED</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="projectileid">
+        <tr data-name="projectileid" data-count="6">
           <td><code>projectileId</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="renderer">
+        <tr data-name="renderer" data-count="6">
           <td><code>renderer</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="selector">
+        <tr data-name="selector" data-count="6">
           <td><code>selector</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="spawnedcount">
+        <tr data-name="spawnedcount" data-count="6">
           <td><code>spawnedCount</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="time_tolerance">
+        <tr data-name="time_tolerance" data-count="6">
           <td><code>TIME_TOLERANCE</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="userdata">
+        <tr data-name="userdata" data-count="6">
           <td><code>userData</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="validatebuild">
+        <tr data-name="validatebuild" data-count="6">
           <td><code>validateBuild</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="wavestartsat">
+        <tr data-name="wavestartsat" data-count="6">
           <td><code>waveStartsAt</code></td>
           <td class="count">6</td>
         </tr>
-        <tr data-name="accumulatorseconds">
+        <tr data-name="accumulatorseconds" data-count="5">
           <td><code>accumulatorSeconds</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="activeids">
+        <tr data-name="activeids" data-count="5">
           <td><code>activeIds</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="calculatenextspawntime">
+        <tr data-name="calculatenextspawntime" data-count="5">
           <td><code>calculateNextSpawnTime</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="cells">
+        <tr data-name="cells" data-count="5">
           <td><code>cells</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="dispatch">
+        <tr data-name="dispatch" data-count="5">
           <td><code>dispatch</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="distance">
+        <tr data-name="distance" data-count="5">
           <td><code>distance</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="dx">
+        <tr data-name="dx" data-count="5">
           <td><code>dx</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="dy">
+        <tr data-name="dy" data-count="5">
           <td><code>dy</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="feedback">
+        <tr data-name="feedback" data-count="5">
           <td><code>feedback</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="fixed_step_seconds">
+        <tr data-name="fixed_step_seconds" data-count="5">
           <td><code>FIXED_STEP_SECONDS</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="halfcell">
+        <tr data-name="halfcell" data-count="5">
           <td><code>halfCell</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="kill_reward">
+        <tr data-name="kill_reward" data-count="5">
           <td><code>KILL_REWARD</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="line">
+        <tr data-name="line" data-count="5">
           <td><code>Line</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="linesegments">
+        <tr data-name="linesegments" data-count="5">
           <td><code>LineSegments</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="next">
+        <tr data-name="next" data-count="5">
           <td><code>next</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="nextboundary">
+        <tr data-name="nextboundary" data-count="5">
           <td><code>nextBoundary</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="nextshotat">
+        <tr data-name="nextshotat" data-count="5">
           <td><code>nextShotAt</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="origin">
+        <tr data-name="origin" data-count="5">
           <td><code>origin</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="projectileimpacttimes">
+        <tr data-name="projectileimpacttimes" data-count="5">
           <td><code>projectileImpactTimes</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="reconcile">
+        <tr data-name="reconcile" data-count="5">
           <td><code>reconcile</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="removefromparent">
+        <tr data-name="removefromparent" data-count="5">
           <td><code>removeFromParent</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="renderframe">
+        <tr data-name="renderframe" data-count="5">
           <td><code>RenderFrame</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="resolvedescapes">
+        <tr data-name="resolvedescapes" data-count="5">
           <td><code>resolvedEscapes</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="segmentstartprogress">
+        <tr data-name="segmentstartprogress" data-count="5">
           <td><code>segmentStartProgress</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="shot_cooldown">
+        <tr data-name="shot_cooldown" data-count="5">
           <td><code>SHOT_COOLDOWN</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="spawn_interval">
+        <tr data-name="spawn_interval" data-count="5">
           <td><code>SPAWN_INTERVAL</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="startbutton">
+        <tr data-name="startbutton" data-count="5">
           <td><code>startButton</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="startgame">
+        <tr data-name="startgame" data-count="5">
           <td><code>startGame</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="starting_base_hp">
+        <tr data-name="starting_base_hp" data-count="5">
           <td><code>STARTING_BASE_HP</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="starting_coins">
+        <tr data-name="starting_coins" data-count="5">
           <td><code>STARTING_COINS</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="stop">
+        <tr data-name="stop" data-count="5">
           <td><code>stop</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="targetposition">
+        <tr data-name="targetposition" data-count="5">
           <td><code>targetPosition</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="targettime">
+        <tr data-name="targettime" data-count="5">
           <td><code>targetTime</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="toasttimer">
+        <tr data-name="toasttimer" data-count="5">
           <td><code>toastTimer</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="transienteffects">
+        <tr data-name="transienteffects" data-count="5">
           <td><code>transientEffects</code></td>
           <td class="count">5</td>
         </tr>
-        <tr data-name="animation">
+        <tr data-name="animation" data-count="4">
           <td><code>animation</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="boundarytime">
+        <tr data-name="boundarytime" data-count="4">
           <td><code>boundaryTime</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="box3">
+        <tr data-name="box3" data-count="4">
           <td><code>Box3</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="buildfeedback">
+        <tr data-name="buildfeedback" data-count="4">
           <td><code>BuildFeedback</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="camera_distance">
+        <tr data-name="camera_distance" data-count="4">
           <td><code>CAMERA_DISTANCE</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="center">
+        <tr data-name="center" data-count="4">
           <td><code>center</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="command">
+        <tr data-name="command" data-count="4">
           <td><code>command</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="corner">
+        <tr data-name="corner" data-count="4">
           <td><code>corner</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="createentityidsequence">
+        <tr data-name="createentityidsequence" data-count="4">
           <td><code>createEntityIdSequence</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="createinitialstate">
+        <tr data-name="createinitialstate" data-count="4">
           <td><code>createInitialState</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="currentx">
+        <tr data-name="currentx" data-count="4">
           <td><code>currentX</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="currenty">
+        <tr data-name="currenty" data-count="4">
           <td><code>currentY</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="deepreadonly">
+        <tr data-name="deepreadonly" data-count="4">
           <td><code>DeepReadonly</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="entry">
+        <tr data-name="entry" data-count="4">
           <td><code>entry</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="existing">
+        <tr data-name="existing" data-count="4">
           <td><code>existing</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="firetower">
+        <tr data-name="firetower" data-count="4">
           <td><code>fireTower</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="first">
+        <tr data-name="first" data-count="4">
           <td><code>first</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="flash">
+        <tr data-name="flash" data-count="4">
           <td><code>flash</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="framesremaining">
+        <tr data-name="framesremaining" data-count="4">
           <td><code>framesRemaining</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="getbuildrejectionmessage">
+        <tr data-name="getbuildrejectionmessage" data-count="4">
           <td><code>getBuildRejectionMessage</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="getdistance">
+        <tr data-name="getdistance" data-count="4">
           <td><code>getDistance</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="getorcreate">
+        <tr data-name="getorcreate" data-count="4">
           <td><code>getOrCreate</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="group">
+        <tr data-name="group" data-count="4">
           <td><code>group</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="handlepointermove">
+        <tr data-name="handlepointermove" data-count="4">
           <td><code>handlePointerMove</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="highlightmaterial">
+        <tr data-name="highlightmaterial" data-count="4">
           <td><code>highlightMaterial</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="hit">
+        <tr data-name="hit" data-count="4">
           <td><code>hit</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="linebasicmaterial">
+        <tr data-name="linebasicmaterial" data-count="4">
           <td><code>LineBasicMaterial</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="marker">
+        <tr data-name="marker" data-count="4">
           <td><code>marker</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="mathextra">
+        <tr data-name="mathextra" data-count="4">
           <td><code>MathExtra</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="offsetx">
+        <tr data-name="offsetx" data-count="4">
           <td><code>offsetX</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="offsety">
+        <tr data-name="offsety" data-count="4">
           <td><code>offsetY</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="projectilestate">
+        <tr data-name="projectilestate" data-count="4">
           <td><code>ProjectileState</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="remainingprogress">
+        <tr data-name="remainingprogress" data-count="4">
           <td><code>remainingProgress</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="resolveposition">
+        <tr data-name="resolveposition" data-count="4">
           <td><code>resolvePosition</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="restartbutton">
+        <tr data-name="restartbutton" data-count="4">
           <td><code>restartButton</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="result">
+        <tr data-name="result" data-count="4">
           <td><code>result</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="routecellkeys">
+        <tr data-name="routecellkeys" data-count="4">
           <td><code>routeCellKeys</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="scene">
+        <tr data-name="scene" data-count="4">
           <td><code>Scene</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="scheduleprojectileimpact">
+        <tr data-name="scheduleprojectileimpact" data-count="4">
           <td><code>scheduleProjectileImpact</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="selecttowertarget">
+        <tr data-name="selecttowertarget" data-count="4">
           <td><code>selectTowerTarget</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="spheregeometry">
+        <tr data-name="spheregeometry" data-count="4">
           <td><code>SphereGeometry</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="transienteffects">
+        <tr data-name="transienteffects" data-count="4">
           <td><code>TransientEffects</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="updatehealthbar">
+        <tr data-name="updatehealthbar" data-count="4">
           <td><code>updateHealthBar</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="updatematrixworld">
+        <tr data-name="updatematrixworld" data-count="4">
           <td><code>updateMatrixWorld</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="viewportaspect">
+        <tr data-name="viewportaspect" data-count="4">
           <td><code>viewportAspect</code></td>
           <td class="count">4</td>
         </tr>
-        <tr data-name="addeffect">
+        <tr data-name="addeffect" data-count="3">
           <td><code>addEffect</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="advance">
+        <tr data-name="advance" data-count="3">
           <td><code>advance</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="advancelifecycle">
+        <tr data-name="advancelifecycle" data-count="3">
           <td><code>advanceLifecycle</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="advancewave">
+        <tr data-name="advancewave" data-count="3">
           <td><code>advanceWave</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="app">
+        <tr data-name="app" data-count="3">
           <td><code>app</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="application">
+        <tr data-name="application" data-count="3">
           <td><code>application</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="application">
+        <tr data-name="application" data-count="3">
           <td><code>Application</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="assertaxisalignedroute">
+        <tr data-name="assertaxisalignedroute" data-count="3">
           <td><code>assertAxisAlignedRoute</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="background">
+        <tr data-name="background" data-count="3">
           <td><code>background</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="barheight">
+        <tr data-name="barheight" data-count="3">
           <td><code>barHeight</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="basehpvalue">
+        <tr data-name="basehpvalue" data-count="3">
           <td><code>baseHpValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="body">
+        <tr data-name="body" data-count="3">
           <td><code>body</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="box3withcorners">
+        <tr data-name="box3withcorners" data-count="3">
           <td><code>Box3WithCorners</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="buildfeedbackview">
+        <tr data-name="buildfeedbackview" data-count="3">
           <td><code>BuildFeedbackView</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="calculatenextprojectilesteptime">
+        <tr data-name="calculatenextprojectilesteptime" data-count="3">
           <td><code>calculateNextProjectileStepTime</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="cellkey">
+        <tr data-name="cellkey" data-count="3">
           <td><code>cellKey</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="clear">
+        <tr data-name="clear" data-count="3">
           <td><code>clear</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="clearhover">
+        <tr data-name="clearhover" data-count="3">
           <td><code>clearHover</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="corners">
+        <tr data-name="corners" data-count="3">
           <td><code>corners</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="countdownvalue">
+        <tr data-name="countdownvalue" data-count="3">
           <td><code>countdownValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createbrowserapplication">
+        <tr data-name="createbrowserapplication" data-count="3">
           <td><code>createBrowserApplication</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createcellgroup">
+        <tr data-name="createcellgroup" data-count="3">
           <td><code>createCellGroup</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createfeedbackelement">
+        <tr data-name="createfeedbackelement" data-count="3">
           <td><code>createFeedbackElement</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createfinaloverlay">
+        <tr data-name="createfinaloverlay" data-count="3">
           <td><code>createFinalOverlay</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createhealthbar">
+        <tr data-name="createhealthbar" data-count="3">
           <td><code>createHealthBar</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createhud">
+        <tr data-name="createhud" data-count="3">
           <td><code>createHud</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createlevelcamera">
+        <tr data-name="createlevelcamera" data-count="3">
           <td><code>createLevelCamera</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createlevelplaceholders">
+        <tr data-name="createlevelplaceholders" data-count="3">
           <td><code>createLevelPlaceholders</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createmarker">
+        <tr data-name="createmarker" data-count="3">
           <td><code>createMarker</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createplacement">
+        <tr data-name="createplacement" data-count="3">
           <td><code>createPlacement</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createroutecells">
+        <tr data-name="createroutecells" data-count="3">
           <td><code>createRouteCells</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createscene">
+        <tr data-name="createscene" data-count="3">
           <td><code>createScene</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="createsnapshot">
+        <tr data-name="createsnapshot" data-count="3">
           <td><code>createSnapshot</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="cursorposition">
+        <tr data-name="cursorposition" data-count="3">
           <td><code>CursorPosition</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="defeatevent">
+        <tr data-name="defeatevent" data-count="3">
           <td><code>defeatEvent</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="discriminant">
+        <tr data-name="discriminant" data-count="3">
           <td><code>discriminant</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="disposed">
+        <tr data-name="disposed" data-count="3">
           <td><code>disposed</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="disposeeffect">
+        <tr data-name="disposeeffect" data-count="3">
           <td><code>disposeEffect</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="entitykind">
+        <tr data-name="entitykind" data-count="3">
           <td><code>EntityKind</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="entryratio">
+        <tr data-name="entryratio" data-count="3">
           <td><code>entryRatio</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="escapedmonsters">
+        <tr data-name="escapedmonsters" data-count="3">
           <td><code>escapedMonsters</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="escapedvalue">
+        <tr data-name="escapedvalue" data-count="3">
           <td><code>escapedValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="finaloverlay">
+        <tr data-name="finaloverlay" data-count="3">
           <td><code>finalOverlay</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="finaloverlay">
+        <tr data-name="finaloverlay" data-count="3">
           <td><code>FinalOverlay</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="firereadytowers">
+        <tr data-name="firereadytowers" data-count="3">
           <td><code>fireReadyTowers</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="fixedsteploop">
+        <tr data-name="fixedsteploop" data-count="3">
           <td><code>FixedStepLoop</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="gamecommand">
+        <tr data-name="gamecommand" data-count="3">
           <td><code>GameCommand</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="getcorners">
+        <tr data-name="getcorners" data-count="3">
           <td><code>getCorners</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="getlevelbounds">
+        <tr data-name="getlevelbounds" data-count="3">
           <td><code>getLevelBounds</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="getpreparationcountdown">
+        <tr data-name="getpreparationcountdown" data-count="3">
           <td><code>getPreparationCountdown</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="getremainingcount">
+        <tr data-name="getremainingcount" data-count="3">
           <td><code>getRemainingCount</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="getroutelength">
+        <tr data-name="getroutelength" data-count="3">
           <td><code>getRouteLength</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="grid_height">
+        <tr data-name="grid_height" data-count="3">
           <td><code>GRID_HEIGHT</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="grid_width">
+        <tr data-name="grid_width" data-count="3">
           <td><code>GRID_WIDTH</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="handleclick">
+        <tr data-name="handleclick" data-count="3">
           <td><code>handleClick</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="handlepointerleave">
+        <tr data-name="handlepointerleave" data-count="3">
           <td><code>handlePointerLeave</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="hud">
+        <tr data-name="hud" data-count="3">
           <td><code>hud</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="hudview">
+        <tr data-name="hudview" data-count="3">
           <td><code>HudView</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="impacttimes">
+        <tr data-name="impacttimes" data-count="3">
           <td><code>impactTimes</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="interpolationalpha">
+        <tr data-name="interpolationalpha" data-count="3">
           <td><code>interpolationAlpha</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="iscellwithingrid">
+        <tr data-name="iscellwithingrid" data-count="3">
           <td><code>isCellWithinGrid</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="isprojectileimpactdue">
+        <tr data-name="isprojectileimpactdue" data-count="3">
           <td><code>isProjectileImpactDue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="isterminal">
+        <tr data-name="isterminal" data-count="3">
           <td><code>isTerminal</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="killedvalue">
+        <tr data-name="killedvalue" data-count="3">
           <td><code>killedValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="lastcursorposition">
+        <tr data-name="lastcursorposition" data-count="3">
           <td><code>lastCursorPosition</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="length">
+        <tr data-name="length" data-count="3">
           <td><code>length</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="lifecycleresult">
+        <tr data-name="lifecycleresult" data-count="3">
           <td><code>lifecycleResult</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="min_viewport_size">
+        <tr data-name="min_viewport_size" data-count="3">
           <td><code>MIN_VIEWPORT_SIZE</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="movemonsters">
+        <tr data-name="movemonsters" data-count="3">
           <td><code>moveMonsters</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="moveprojectiles">
+        <tr data-name="moveprojectiles" data-count="3">
           <td><code>moveProjectiles</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="nextid">
+        <tr data-name="nextid" data-count="3">
           <td><code>nextId</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="nextprogress">
+        <tr data-name="nextprogress" data-count="3">
           <td><code>nextProgress</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="normalizedtargettime">
+        <tr data-name="normalizedtargettime" data-count="3">
           <td><code>normalizedTargetTime</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="onanimationframe">
+        <tr data-name="onanimationframe" data-count="3">
           <td><code>onAnimationFrame</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="onevents">
+        <tr data-name="onevents" data-count="3">
           <td><code>onEvents</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="onrestart">
+        <tr data-name="onrestart" data-count="3">
           <td><code>onRestart</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="onstart">
+        <tr data-name="onstart" data-count="3">
           <td><code>onStart</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="pickcell">
+        <tr data-name="pickcell" data-count="3">
           <td><code>pickCell</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="pixelratio">
+        <tr data-name="pixelratio" data-count="3">
           <td><code>pixelRatio</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="placement">
+        <tr data-name="placement" data-count="3">
           <td><code>placement</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="placementcontroller">
+        <tr data-name="placementcontroller" data-count="3">
           <td><code>PlacementController</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="predictnextmonsterescapetime">
+        <tr data-name="predictnextmonsterescapetime" data-count="3">
           <td><code>predictNextMonsterEscapeTime</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="predictnextprojectileimpacttime">
+        <tr data-name="predictnextprojectileimpacttime" data-count="3">
           <td><code>predictNextProjectileImpactTime</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="predictnexttargetingboundarytime">
+        <tr data-name="predictnexttargetingboundarytime" data-count="3">
           <td><code>predictNextTargetingBoundaryTime</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="presentevents">
+        <tr data-name="presentevents" data-count="3">
           <td><code>presentEvents</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="previous">
+        <tr data-name="previous" data-count="3">
           <td><code>previous</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="projectedcenterx">
+        <tr data-name="projectedcenterx" data-count="3">
           <td><code>projectedCenterX</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="projectedcentery">
+        <tr data-name="projectedcentery" data-count="3">
           <td><code>projectedCenterY</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="projectile_step">
+        <tr data-name="projectile_step" data-count="3">
           <td><code>PROJECTILE_STEP</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="rangeentryprediction">
+        <tr data-name="rangeentryprediction" data-count="3">
           <td><code>rangeEntryPrediction</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="raycaster">
+        <tr data-name="raycaster" data-count="3">
           <td><code>raycaster</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="readablegamestate">
+        <tr data-name="readablegamestate" data-count="3">
           <td><code>ReadableGameState</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="readyat">
+        <tr data-name="readyat" data-count="3">
           <td><code>readyAt</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="remainingvalue">
+        <tr data-name="remainingvalue" data-count="3">
           <td><code>remainingValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="removeentity">
+        <tr data-name="removeentity" data-count="3">
           <td><code>removeEntity</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="removeinvalidprojectiles">
+        <tr data-name="removeinvalidprojectiles" data-count="3">
           <td><code>removeInvalidProjectiles</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="rendered">
+        <tr data-name="rendered" data-count="3">
           <td><code>rendered</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="requiredheight">
+        <tr data-name="requiredheight" data-count="3">
           <td><code>requiredHeight</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="requiredwidth">
+        <tr data-name="requiredwidth" data-count="3">
           <td><code>requiredWidth</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="resizelevelcamera">
+        <tr data-name="resizelevelcamera" data-count="3">
           <td><code>resizeLevelCamera</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="resolvedefeat">
+        <tr data-name="resolvedefeat" data-count="3">
           <td><code>resolveDefeat</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="resolveescapedmonsters">
+        <tr data-name="resolveescapedmonsters" data-count="3">
           <td><code>resolveEscapedMonsters</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="resolveprojectilehits">
+        <tr data-name="resolveprojectilehits" data-count="3">
           <td><code>resolveProjectileHits</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="resolvevictory">
+        <tr data-name="resolvevictory" data-count="3">
           <td><code>resolveVictory</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="scenerenderer">
+        <tr data-name="scenerenderer" data-count="3">
           <td><code>SceneRenderer</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="segmentendprogress">
+        <tr data-name="segmentendprogress" data-count="3">
           <td><code>segmentEndProgress</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="shotevent">
+        <tr data-name="shotevent" data-count="3">
           <td><code>shotEvent</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="showhint">
+        <tr data-name="showhint" data-count="3">
           <td><code>showHint</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="showtoast">
+        <tr data-name="showtoast" data-count="3">
           <td><code>showToast</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="snapshotview">
+        <tr data-name="snapshotview" data-count="3">
           <td><code>SnapshotView</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="spawnduemonsters">
+        <tr data-name="spawnduemonsters" data-count="3">
           <td><code>spawnDueMonsters</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="spawnedmonsterids">
+        <tr data-name="spawnedmonsterids" data-count="3">
           <td><code>spawnedMonsterIds</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="statusvalue">
+        <tr data-name="statusvalue" data-count="3">
           <td><code>statusValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="stepcount">
+        <tr data-name="stepcount" data-count="3">
           <td><code>stepCount</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="timestamp">
+        <tr data-name="timestamp" data-count="3">
           <td><code>timestamp</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="towercostvalue">
+        <tr data-name="towercostvalue" data-count="3">
           <td><code>towerCostValue</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="trail">
+        <tr data-name="trail" data-count="3">
           <td><code>trail</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="traveldistance">
+        <tr data-name="traveldistance" data-count="3">
           <td><code>travelDistance</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="valid_color">
+        <tr data-name="valid_color" data-count="3">
           <td><code>VALID_COLOR</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="victoryevent">
+        <tr data-name="victoryevent" data-count="3">
           <td><code>victoryEvent</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="visible">
+        <tr data-name="visible" data-count="3">
           <td><code>visible</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="webglrenderer">
+        <tr data-name="webglrenderer" data-count="3">
           <td><code>WebGLRenderer</code></td>
           <td class="count">3</td>
         </tr>
-        <tr data-name="activeeffect">
+        <tr data-name="activeeffect" data-count="2">
           <td><code>ActiveEffect</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="activeprojectile">
+        <tr data-name="activeprojectile" data-count="2">
           <td><code>activeProjectile</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="addhitflash">
+        <tr data-name="addhitflash" data-count="2">
           <td><code>addHitFlash</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="addshottrail">
+        <tr data-name="addshottrail" data-count="2">
           <td><code>addShotTrail</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="advanceframe">
+        <tr data-name="advanceframe" data-count="2">
           <td><code>advanceFrame</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="applicationoptions">
+        <tr data-name="applicationoptions" data-count="2">
           <td><code>ApplicationOptions</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="assertvaliddelta">
+        <tr data-name="assertvaliddelta" data-count="2">
           <td><code>assertValidDelta</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="assertvalidframedelta">
+        <tr data-name="assertvalidframedelta" data-count="2">
           <td><code>assertValidFrameDelta</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="bar_height_in_cells">
+        <tr data-name="bar_height_in_cells" data-count="2">
           <td><code>BAR_HEIGHT_IN_CELLS</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="bar_width_in_cells">
+        <tr data-name="bar_width_in_cells" data-count="2">
           <td><code>BAR_WIDTH_IN_CELLS</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="browserapplication">
+        <tr data-name="browserapplication" data-count="2">
           <td><code>BrowserApplication</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="browserapplicationoptions">
+        <tr data-name="browserapplicationoptions" data-count="2">
           <td><code>BrowserApplicationOptions</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="buffergeometry">
+        <tr data-name="buffergeometry" data-count="2">
           <td><code>BufferGeometry</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="build_rejection_messages">
+        <tr data-name="build_rejection_messages" data-count="2">
           <td><code>BUILD_REJECTION_MESSAGES</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="buildable">
+        <tr data-name="buildable" data-count="2">
           <td><code>buildable</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="buildtower">
+        <tr data-name="buildtower" data-count="2">
           <td><code>buildTower</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="calculatediscriminant">
+        <tr data-name="calculatediscriminant" data-count="2">
           <td><code>calculateDiscriminant</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="classname">
+        <tr data-name="classname" data-count="2">
           <td><code>className</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="clientx">
+        <tr data-name="clientx" data-count="2">
           <td><code>clientX</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="clienty">
+        <tr data-name="clienty" data-count="2">
           <td><code>clientY</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="clonestate">
+        <tr data-name="clonestate" data-count="2">
           <td><code>cloneState</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="commandrejectioncode">
+        <tr data-name="commandrejectioncode" data-count="2">
           <td><code>CommandRejectionCode</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="completedsteps">
+        <tr data-name="completedsteps" data-count="2">
           <td><code>completedSteps</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="contentaspect">
+        <tr data-name="contentaspect" data-count="2">
           <td><code>contentAspect</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="copy">
+        <tr data-name="copy" data-count="2">
           <td><code>copy</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="create">
+        <tr data-name="create" data-count="2">
           <td><code>create</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="createapplication">
+        <tr data-name="createapplication" data-count="2">
           <td><code>createApplication</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="createboundary">
+        <tr data-name="createboundary" data-count="2">
           <td><code>createBoundary</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="damage">
+        <tr data-name="damage" data-count="2">
           <td><code>damage</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="discriminanttolerance">
+        <tr data-name="discriminanttolerance" data-count="2">
           <td><code>discriminantTolerance</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="doubleside">
+        <tr data-name="doubleside" data-count="2">
           <td><code>DoubleSide</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="drainpendingevents">
+        <tr data-name="drainpendingevents" data-count="2">
           <td><code>drainPendingEvents</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="dueprojectiles">
+        <tr data-name="dueprojectiles" data-count="2">
           <td><code>dueProjectiles</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="earliestratio">
+        <tr data-name="earliestratio" data-count="2">
           <td><code>earliestRatio</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="edgesgeometry">
+        <tr data-name="edgesgeometry" data-count="2">
           <td><code>EdgesGeometry</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="effect_lifetime_frames">
+        <tr data-name="effect_lifetime_frames" data-count="2">
           <td><code>EFFECT_LIFETIME_FRAMES</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="elapsedwavetime">
+        <tr data-name="elapsedwavetime" data-count="2">
           <td><code>elapsedWaveTime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="entityentry">
+        <tr data-name="entityentry" data-count="2">
           <td><code>EntityEntry</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="escapedids">
+        <tr data-name="escapedids" data-count="2">
           <td><code>escapedIds</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="expireeffects">
+        <tr data-name="expireeffects" data-count="2">
           <td><code>expireEffects</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="findsmallerquadraticroot">
+        <tr data-name="findsmallerquadraticroot" data-count="2">
           <td><code>findSmallerQuadraticRoot</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="gameconfig">
+        <tr data-name="gameconfig" data-count="2">
           <td><code>GameConfig</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getlevelcenter">
+        <tr data-name="getlevelcenter" data-count="2">
           <td><code>getLevelCenter</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getnextentityid">
+        <tr data-name="getnextentityid" data-count="2">
           <td><code>getNextEntityId</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getobject">
+        <tr data-name="getobject" data-count="2">
           <td><code>getObject</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getobjectbyname">
+        <tr data-name="getobjectbyname" data-count="2">
           <td><code>getObjectByName</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="getprojectedlevelbounds">
+        <tr data-name="getprojectedlevelbounds" data-count="2">
           <td><code>getProjectedLevelBounds</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="groundplane">
+        <tr data-name="groundplane" data-count="2">
           <td><code>groundPlane</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="hitpoint">
+        <tr data-name="hitpoint" data-count="2">
           <td><code>hitPoint</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="hot">
+        <tr data-name="hot" data-count="2">
           <td><code>hot</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="initialstate">
+        <tr data-name="initialstate" data-count="2">
           <td><code>initialState</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="invalid_color">
+        <tr data-name="invalid_color" data-count="2">
           <td><code>INVALID_COLOR</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="isbuildrejectioncode">
+        <tr data-name="isbuildrejectioncode" data-count="2">
           <td><code>isBuildRejectionCode</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="ismonsterintowerrange">
+        <tr data-name="ismonsterintowerrange" data-count="2">
           <td><code>isMonsterInTowerRange</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="item">
+        <tr data-name="item" data-count="2">
           <td><code>Item</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="key">
+        <tr data-name="key" data-count="2">
           <td><code>Key</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="lifecycleadvanceresult">
+        <tr data-name="lifecycleadvanceresult" data-count="2">
           <td><code>LifecycleAdvanceResult</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="livingmonsterids">
+        <tr data-name="livingmonsterids" data-count="2">
           <td><code>livingMonsterIds</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="loop">
+        <tr data-name="loop" data-count="2">
           <td><code>loop</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="max_frame_delta_seconds">
+        <tr data-name="max_frame_delta_seconds" data-count="2">
           <td><code>MAX_FRAME_DELTA_SECONDS</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="meta">
+        <tr data-name="meta" data-count="2">
           <td><code>meta</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="nextescapetime">
+        <tr data-name="nextescapetime" data-count="2">
           <td><code>nextEscapeTime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="nextprojectileimpacttime">
+        <tr data-name="nextprojectileimpacttime" data-count="2">
           <td><code>nextProjectileImpactTime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="nextprojectilesteptime">
+        <tr data-name="nextprojectilesteptime" data-count="2">
           <td><code>nextProjectileStepTime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="nexttargetingtime">
+        <tr data-name="nexttargetingtime" data-count="2">
           <td><code>nextTargetingTime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="placementruntime">
+        <tr data-name="placementruntime" data-count="2">
           <td><code>PlacementRuntime</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="placementview">
+        <tr data-name="placementview" data-count="2">
           <td><code>PlacementView</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="plane">
+        <tr data-name="plane" data-count="2">
           <td><code>Plane</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="pointer">
+        <tr data-name="pointer" data-count="2">
           <td><code>pointer</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="predictnexttowerrangeentry">
+        <tr data-name="predictnexttowerrangeentry" data-count="2">
           <td><code>predictNextTowerRangeEntry</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="present">
+        <tr data-name="present" data-count="2">
           <td><code>present</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="presentationframe">
+        <tr data-name="presentationframe" data-count="2">
           <td><code>PresentationFrame</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="quaternion">
+        <tr data-name="quaternion" data-count="2">
           <td><code>quaternion</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="raycaster">
+        <tr data-name="raycaster" data-count="2">
           <td><code>Raycaster</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="reconcilemonster">
+        <tr data-name="reconcilemonster" data-count="2">
           <td><code>reconcileMonster</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="reconcileprojectile">
+        <tr data-name="reconcileprojectile" data-count="2">
           <td><code>reconcileProjectile</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="reconciletower">
+        <tr data-name="reconciletower" data-count="2">
           <td><code>reconcileTower</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="restart">
+        <tr data-name="restart" data-count="2">
           <td><code>restart</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="route">
+        <tr data-name="route" data-count="2">
           <td><code>route</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="runtimeboundary">
+        <tr data-name="runtimeboundary" data-count="2">
           <td><code>RuntimeBoundary</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="sceneview">
+        <tr data-name="sceneview" data-count="2">
           <td><code>SceneView</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="sessionstatus">
+        <tr data-name="sessionstatus" data-count="2">
           <td><code>SessionStatus</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="spawnedthisframe">
+        <tr data-name="spawnedthisframe" data-count="2">
           <td><code>spawnedThisFrame</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="startid">
+        <tr data-name="startid" data-count="2">
           <td><code>startId</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="stepx">
+        <tr data-name="stepx" data-count="2">
           <td><code>stepX</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="stepy">
+        <tr data-name="stepy" data-count="2">
           <td><code>stepY</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="targets">
+        <tr data-name="targets" data-count="2">
           <td><code>targets</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="toast_duration_ms">
+        <tr data-name="toast_duration_ms" data-count="2">
           <td><code>TOAST_DURATION_MS</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="towerrangeentryprediction">
+        <tr data-name="towerrangeentryprediction" data-count="2">
           <td><code>TowerRangeEntryPrediction</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="traverse">
+        <tr data-name="traverse" data-count="2">
           <td><code>traverse</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="validatebuildstate">
+        <tr data-name="validatebuildstate" data-count="2">
           <td><code>validateBuildState</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="vector2">
+        <tr data-name="vector2" data-count="2">
           <td><code>Vector2</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="viewportheight">
+        <tr data-name="viewportheight" data-count="2">
           <td><code>viewportHeight</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="viewportwidth">
+        <tr data-name="viewportwidth" data-count="2">
           <td><code>viewportWidth</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="waypoint">
+        <tr data-name="waypoint" data-count="2">
           <td><code>waypoint</code></td>
           <td class="count">2</td>
         </tr>
-        <tr data-name="antialias">
+        <tr data-name="antialias" data-count="1">
           <td><code>antialias</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="applymatrix4">
+        <tr data-name="applymatrix4" data-count="1">
           <td><code>applyMatrix4</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="args">
+        <tr data-name="args" data-count="1">
           <td><code>args</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="bottom">
+        <tr data-name="bottom" data-count="1">
           <td><code>bottom</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="clone">
+        <tr data-name="clone" data-count="1">
           <td><code>clone</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="depthwrite">
+        <tr data-name="depthwrite" data-count="1">
           <td><code>depthWrite</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="entitykind">
+        <tr data-name="entitykind" data-count="1">
           <td><code>entityKind</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="expandbypoint">
+        <tr data-name="expandbypoint" data-count="1">
           <td><code>expandByPoint</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="frame">
+        <tr data-name="frame" data-count="1">
           <td><code>frame</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="game_not_started">
+        <tr data-name="game_not_started" data-count="1">
           <td><code>GAME_NOT_STARTED</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="gameconfig">
+        <tr data-name="gameconfig" data-count="1">
           <td><code>gameConfig</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="getprojectiletargetdistance">
+        <tr data-name="getprojectiletargetdistance" data-count="1">
           <td><code>getProjectileTargetDistance</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="getworldposition">
+        <tr data-name="getworldposition" data-count="1">
           <td><code>getWorldPosition</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="insufficient_funds">
+        <tr data-name="insufficient_funds" data-count="1">
           <td><code>INSUFFICIENT_FUNDS</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="intersectplane">
+        <tr data-name="intersectplane" data-count="1">
           <td><code>intersectPlane</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="islevelinsidefrustum">
+        <tr data-name="islevelinsidefrustum" data-count="1">
           <td><code>isLevelInsideFrustum</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="lookat">
+        <tr data-name="lookat" data-count="1">
           <td><code>lookAt</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="matrixworldinverse">
+        <tr data-name="matrixworldinverse" data-count="1">
           <td><code>matrixWorldInverse</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="occupied">
+        <tr data-name="occupied" data-count="1">
           <td><code>OCCUPIED</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="opacity">
+        <tr data-name="opacity" data-count="1">
           <td><code>opacity</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="out_of_bounds">
+        <tr data-name="out_of_bounds" data-count="1">
           <td><code>OUT_OF_BOUNDS</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="path_cell">
+        <tr data-name="path_cell" data-count="1">
           <td><code>PATH_CELL</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="project">
+        <tr data-name="project" data-count="1">
           <td><code>project</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="ray">
+        <tr data-name="ray" data-count="1">
           <td><code>ray</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="rotatex">
+        <tr data-name="rotatex" data-count="1">
           <td><code>rotateX</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="rotation">
+        <tr data-name="rotation" data-count="1">
           <td><code>rotation</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="scale">
+        <tr data-name="scale" data-count="1">
           <td><code>scale</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="session_ended">
+        <tr data-name="session_ended" data-count="1">
           <td><code>SESSION_ENDED</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="setfromcamera">
+        <tr data-name="setfromcamera" data-count="1">
           <td><code>setFromCamera</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="setfrompoints">
+        <tr data-name="setfrompoints" data-count="1">
           <td><code>setFromPoints</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="sethex">
+        <tr data-name="sethex" data-count="1">
           <td><code>setHex</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="setpixelratio">
+        <tr data-name="setpixelratio" data-count="1">
           <td><code>setPixelRatio</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="setsize">
+        <tr data-name="setsize" data-count="1">
           <td><code>setSize</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="side">
+        <tr data-name="side" data-count="1">
           <td><code>side</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="top">
+        <tr data-name="top" data-count="1">
           <td><code>top</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="transparent">
+        <tr data-name="transparent" data-count="1">
           <td><code>transparent</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="up">
+        <tr data-name="up" data-count="1">
           <td><code>up</code></td>
           <td class="count">1</td>
         </tr>
-        <tr data-name="updateprojectionmatrix">
+        <tr data-name="updateprojectionmatrix" data-count="1">
           <td><code>updateProjectionMatrix</code></td>
           <td class="count">1</td>
         </tr>
@@ -2032,7 +2040,46 @@
     <script>
       const filter = document.querySelector('#filter');
       const rows = [...document.querySelectorAll('tbody tr')];
+      const tableBody = document.querySelector('tbody');
+      const sortButtons = [...document.querySelectorAll('[data-sort]')];
+      const sortHeaders = [...document.querySelectorAll('[data-column]')];
       const resultCount = document.querySelector('#result-count');
+      const nameCollator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
+      let sortKey = 'count';
+      let sortDirection = 'descending';
+
+      for (const button of sortButtons) {
+        button.addEventListener('click', () => {
+          const nextSortKey = button.dataset.sort;
+          sortDirection =
+            nextSortKey === sortKey
+              ? sortDirection === 'ascending'
+                ? 'descending'
+                : 'ascending'
+              : nextSortKey === 'name'
+                ? 'ascending'
+                : 'descending';
+          sortKey = nextSortKey;
+
+          rows.sort((left, right) => {
+            const comparison =
+              sortKey === 'name'
+                ? nameCollator.compare(left.dataset.name, right.dataset.name)
+                : Number(left.dataset.count) - Number(right.dataset.count);
+
+            if (comparison !== 0) {
+              return sortDirection === 'ascending' ? comparison : -comparison;
+            }
+
+            return nameCollator.compare(left.dataset.name, right.dataset.name);
+          });
+          tableBody.append(...rows);
+
+          for (const header of sortHeaders) {
+            header.setAttribute('aria-sort', header.dataset.column === sortKey ? sortDirection : 'none');
+          }
+        });
+      }
 
       filter.addEventListener('input', () => {
         const query = filter.value.trim().toLocaleLowerCase('en');
