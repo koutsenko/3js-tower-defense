@@ -24,6 +24,18 @@ export function scheduleProjectileImpact(
   projectileImpactTimes.set(projectile, currentTime + distance / (PROJECTILE_SPEED - MONSTER_SPEED));
 }
 
+/**
+ * Прогнозирует ближайший момент попадания активного снаряда в назначенную цель.
+ *
+ * `advanceWave` использует результат как кандидата на следующую временную границу. После перехода к ней
+ * `resolveProjectileHits` проверяет наступившие попадания и применяет урон.
+ *
+ * Прогноз перестаёт быть актуальным, если цель исчезает раньше, и пересчитывается после другой границы.
+ *
+ * @param state Текущее состояние игровой сессии.
+ * @param currentTime Текущее время симуляции.
+ * @returns Время ближайшего возможного попадания или null, если оно не прогнозируется.
+ */
 export function predictNextProjectileImpactTime(state: Readonly<GameState>, currentTime: number): number | null {
   const impactTimes = state.projectiles.flatMap((projectile) => {
     scheduleProjectileImpact(state, projectile, currentTime);

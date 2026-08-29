@@ -6,6 +6,18 @@ import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
 
+/**
+ * Прогнозирует ближайший момент, когда один из живых монстров достигнет выхода с уровня.
+ *
+ * `advanceWave` использует результат как кандидата на следующую временную границу. После перехода к ней
+ * `resolveEscapedMonsters` проверяет фактическое положение монстров и применяет наступившие escapes.
+ *
+ * Прогноз вычисляется при условии, что монстры продолжат текущее движение, и пересчитывается после другой границы.
+ *
+ * @param state Текущее состояние игровой сессии.
+ * @param currentTime Текущее время симуляции.
+ * @returns Время ближайшего возможного escape или null, если живых монстров нет.
+ */
 export function predictNextMonsterEscapeTime(state: Readonly<GameState>, currentTime: number): number | null {
   if (state.monsters.length === 0) {
     return null;

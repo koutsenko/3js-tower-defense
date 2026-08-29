@@ -22,6 +22,16 @@ export function selectTowerTarget(
   return targets[0] ?? null;
 }
 
+/**
+ * Прогнозирует ближайший момент, когда готовая башня сможет выбрать цель или потребуется проверить её готовность.
+ *
+ * `advanceWave` использует результат как кандидата на следующую временную границу. На достигнутой границе
+ * `fireReadyTowers` заново проверяет готовность башен и фактически доступные цели через `selectTowerTarget`.
+ *
+ * @param state Текущее состояние игровой сессии.
+ * @param currentTime Текущее время симуляции.
+ * @returns Время следующей targeting boundary или null, если такая граница не прогнозируется.
+ */
 export function predictNextTargetingBoundaryTime(state: Readonly<GameState>, currentTime: number): number | null {
   let nextTime: number | null = null;
 
@@ -68,8 +78,10 @@ function isMonsterInTowerRange(tower: Readonly<TowerState>, monster: Readonly<Mo
 /**
  * Прогнозирует ближайшее место на оставшемся маршруте, где монстр войдёт в радиус указанной башни.
  *
- * Результат используется для планирования следующей временной границы и не означает, что монстр станет целью.
- * После перехода к этой границе доступные цели заново проверяются через isMonsterInTowerRange.
+ * `predictNextTargetingBoundaryTime` преобразует найденное место во время и передаёт его в boundary loop.
+ * После перехода к этой границе доступность монстра заново проверяется через `isMonsterInTowerRange`.
+ *
+ * Прогноз не означает, что монстр обязательно станет целью: до рассчитанной границы состояние может измениться.
  *
  * @param tower Башня, вход в радиус которой прогнозируется.
  * @param monster Монстр, для которого анализируется оставшийся маршрут.
