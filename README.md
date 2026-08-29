@@ -37,5 +37,5 @@ npm run capture:acceptance          # Создать acceptance-скриншот
 
 Команда `npm run capture:acceptance` запускает приложение в Chromium,
 воспроизводит сценарии `Victory`, `Defeat` и `Restart` и сохраняет скриншоты в
-[`specs/001-core-loop/artifacts/acceptance/`](specs/001-core-loop/artifacts/acceptance/).
+`specs/001-core-loop/artifacts/acceptance/`.
 Существующие файлы с теми же именами перезаписываются.
