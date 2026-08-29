@@ -424,6 +424,15 @@ target из tower range не влияет на projectile. Если рассто
 превышает travel distance этого sub-interval, projectile достигает target и
 наносит ровно 25 damage.
 
+Collision prediction является эфемерным и вычисляется только из current
+projectile position, current target state, route geometry и config. Prediction
+отбрасывается и вычисляется заново после любой более ранней boundary. Persisted
+или module-level impact schedule для homing projectile не используется:
+authoritative collision определяется фактической проверкой достигнутой
+позиции на predicted boundary. Внутренний projectile step допустим как
+дополнительная boundary, но внешний размер `advance(deltaSeconds)` не должен
+влиять на hit timing, events или итоговое state.
+
 При death target либо его достижении exit все назначенные ему unresolved
 projectiles удаляются без retargeting, damage, reward или иных gameplay
 effects. Kill transition с HP выше нуля до 0 выполняется ровно один раз и
@@ -442,6 +451,13 @@ accumulator, events и presentation-only notifications. Renderer удаляет 
 entity objects, которых нет в новом snapshot. Новый state имеет status `Ready`,
 доступную `StartGame`, незапущенный preparation timer и запрещённое до старта
 строительство (`FR-015`, `AC-012`).
+
+Поскольку fixed-step accumulator и transient effects принадлежат application и
+presentation layers, composition root координирует их reset только после
+успешного `Restart`. Отклонённая команда ничего не сбрасывает. До первого render
+новой session active transient effects предыдущей session должны быть удалены,
+а первый gameplay step требует полный новый `FIXED_STEP_SECONDS` browser-time
+contribution.
 
 ## 7. Rendering, input and UI
 

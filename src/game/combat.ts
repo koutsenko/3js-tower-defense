@@ -1,12 +1,16 @@
 import { KILL_REWARD, PROJECTILE_DAMAGE } from '../config/gameConfig';
 import type { GameEvent } from './events';
 import { isProjectileImpactDue } from './projectiles';
+import { getRoutePosition } from './movement';
 import type { GameState } from './types';
 
 export function resolveProjectileHits(state: GameState): readonly GameEvent[] {
   const events: GameEvent[] = [];
   const dueProjectiles = state.projectiles
-    .filter((projectile) => isProjectileImpactDue(projectile, state.simulationTime))
+    .filter((projectile) => {
+      const target = state.monsters.find(({ id }) => id === projectile.targetId);
+      return target !== undefined && isProjectileImpactDue(projectile, getRoutePosition(target.routeProgress));
+    })
     .sort((left, right) => left.id - right.id);
 
   for (const projectile of dueProjectiles) {

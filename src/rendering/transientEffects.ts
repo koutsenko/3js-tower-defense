@@ -52,10 +52,14 @@ export class TransientEffects {
   }
 
   dispose(): void {
+    this.clear();
+    this.root.removeFromParent();
+  }
+
+  clear(): void {
     for (const effect of this.effects.splice(0)) {
       disposeEffect(effect.object);
     }
-    this.root.removeFromParent();
   }
 
   private expireEffects(): void {

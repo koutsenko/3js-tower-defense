@@ -13,6 +13,7 @@ export interface Application {
   readonly runtime: GameRuntime;
   start(): void;
   stop(): void;
+  resetTiming(): void;
 }
 
 export interface ApplicationOptions {
@@ -58,6 +59,10 @@ export function createApplication({ renderFrame, runtime = new GameRuntime() }: 
       animationFrameId = null;
       previousTimestamp = null;
     },
+    resetTiming() {
+      loop.reset();
+      previousTimestamp = null;
+    },
   };
 }
 
@@ -66,6 +71,7 @@ interface SceneView {
   readonly camera: Camera;
   resize(width: number, height: number, pixelRatio?: number): void;
   presentEvents(events: readonly GameEvent[], snapshot: GameSnapshot): void;
+  resetSessionPresentation(): void;
   reconcile(snapshot: GameSnapshot): void;
   render(): void;
   dispose(): void;
@@ -126,15 +132,26 @@ export function createBrowserApplication(
   const placement = createPlacement(canvas, scene.camera, runtime, root);
   scene.scene.add(placement.root);
 
+  let previousStatus = runtime.getSnapshot().status;
+  let resetLoop = (): void => undefined;
+
   const renderFrame: RenderFrame = ({ snapshot, events }) => {
+    const sessionRestarted =
+      (previousStatus === 'Victory' || previousStatus === 'Defeat') && snapshot.status === 'Ready';
+    if (sessionRestarted) {
+      resetLoop();
+      scene.resetSessionPresentation();
+    }
     scene.presentEvents(events, snapshot);
     scene.reconcile(snapshot);
     hud.render(snapshot);
     finalOverlay.render(snapshot);
     onEvents(events);
     scene.render();
+    previousStatus = snapshot.status;
   };
   const animation = createApplication({ runtime, renderFrame });
+  resetLoop = animation.resetTiming;
 
   const resize = (): void => {
     const bounds = root.getBoundingClientRect();
@@ -156,6 +173,7 @@ export function createBrowserApplication(
     canvas,
     start: animation.start,
     stop: animation.stop,
+    resetTiming: animation.resetTiming,
     dispose() {
       if (disposed) {
         return;

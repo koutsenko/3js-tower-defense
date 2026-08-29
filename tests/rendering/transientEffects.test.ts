@@ -65,6 +65,23 @@ describe('transient rendering feedback (FR-008, AC-006, AC-015)', () => {
     expect(effects.root.children).toHaveLength(0);
   });
 
+  it('clears active feedback immediately for a full session reset (FR-015, AC-012)', () => {
+    const state = createInitialState();
+    state.towers = [{ id: 1, cell: { x: 6, y: 3 }, nextShotAt: 0 }];
+    state.monsters = [{ id: 2, spawnIndex: 0, hp: 75, routeProgress: 8 }];
+    const snapshot = createSnapshot(state);
+    const effects = new TransientEffects();
+
+    effects.present(
+      [{ type: 'projectile-shot', projectileId: 3, towerId: 1, targetId: 2 }],
+      snapshot,
+      new EntityReconciler(),
+    );
+    effects.clear();
+
+    expect(effects.root.children).toHaveLength(0);
+  });
+
   it('uses the entrance when a target spawns and resolves within one frame', () => {
     const state = createInitialState();
     state.towers = [{ id: 1, cell: { x: 0, y: 0 }, nextShotAt: 0 }];

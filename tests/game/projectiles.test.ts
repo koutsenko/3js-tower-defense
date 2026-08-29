@@ -25,6 +25,45 @@ describe('projectiles, damage, and kill economy (FR-008, FR-009)', () => {
     expect(runtime.getSnapshot().monsters[0]?.hp).toBe(75);
   });
 
+  it('hits at the factual intercept boundary when the target moves toward the projectile (AC-006)', () => {
+    const state = createCombatState();
+    state.monsters[0]!.routeProgress = 8;
+    state.projectiles = [{ id: 3, targetId: 2, position: { x: 8, y: 3 } }];
+    const runtime = new GameRuntime(state);
+    const interceptDelay = 2 / 9;
+
+    expect(runtime.advance(interceptDelay - 0.001)).toEqual([]);
+    expect(runtime.getSnapshot().monsters[0]?.hp).toBe(100);
+    expect(runtime.advance(0.001)).toEqual([
+      { type: 'projectile-hit', projectileId: 3, targetId: 2, damage: PROJECTILE_DAMAGE },
+    ]);
+    expect(runtime.getSnapshot().monsters[0]?.hp).toBe(75);
+  });
+
+  it('recalculates a factual intercept after the target turns', () => {
+    const state = createCombatState();
+    state.monsters[0]!.routeProgress = 7.8;
+    state.projectiles = [{ id: 3, targetId: 2, position: { x: 6, y: 4 } }];
+    const coarseRuntime = new GameRuntime(state);
+    const partitionedRuntime = new GameRuntime(structuredClone(state));
+
+    const coarseEvents = coarseRuntime.advance(1);
+    const partitionedEvents = [
+      ...partitionedRuntime.advance(0.2),
+      ...partitionedRuntime.advance(0.17),
+      ...partitionedRuntime.advance(0.63),
+    ];
+
+    expect(coarseEvents).toContainEqual({
+      type: 'projectile-hit',
+      projectileId: 3,
+      targetId: 2,
+      damage: PROJECTILE_DAMAGE,
+    });
+    expect(partitionedEvents).toEqual(coarseEvents);
+    expectSnapshotsEquivalent(partitionedRuntime.getSnapshot(), coarseRuntime.getSnapshot());
+  });
+
   it('removes a projectile without effects when its target escapes', () => {
     const state = createCombatState();
     state.coins = 40;

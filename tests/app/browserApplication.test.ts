@@ -73,6 +73,7 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
       monsters: [],
       projectiles: [],
     });
+    expect(fixture.scene.resetSessionPresentation).toHaveBeenCalledOnce();
 
     application.dispose();
   });
@@ -148,6 +149,7 @@ function createSceneSpy() {
     camera: new Camera(),
     resize: vi.fn(),
     presentEvents: vi.fn<(events: readonly GameEvent[], snapshot: GameSnapshot) => void>(),
+    resetSessionPresentation: vi.fn(),
     reconcile: vi.fn<(snapshot: GameSnapshot) => void>(),
     render: vi.fn(),
     dispose: vi.fn(),

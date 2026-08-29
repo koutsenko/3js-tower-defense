@@ -75,6 +75,18 @@ describe('FixedStepLoop', () => {
     expect(runtime.getSnapshot().simulationTime).toBe(0);
   });
 
+  it('clears fractional frame time when application timing is reset', () => {
+    const runtime = new GameRuntime();
+    runtime.dispatch({ type: 'StartGame' });
+    const loop = new FixedStepLoop(runtime, () => undefined);
+
+    loop.advanceFrame(FIXED_STEP_SECONDS * 0.9);
+    loop.reset();
+    loop.advanceFrame(FIXED_STEP_SECONDS * 0.2);
+
+    expect(runtime.getSnapshot().simulationTime).toBe(0);
+  });
+
   it('does not progress terminal gameplay behavior', () => {
     const runtime = new GameRuntime({
       status: 'Victory',

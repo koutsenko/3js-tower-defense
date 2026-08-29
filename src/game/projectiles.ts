@@ -1,28 +1,12 @@
 import { MONSTER_SPEED, PROJECTILE_SPEED } from '../config/gameConfig';
+import { levelConfig } from '../config/levelConfig';
+import { getAxisAlignedSegmentLength } from './grid';
 import { getRoutePosition } from './movement';
 import type { GameState, Position } from './types';
 
 const DISTANCE_TOLERANCE = 1e-9;
+const TIME_TOLERANCE = 1e-9;
 const PROJECTILE_STEP = 1 / 60;
-const projectileImpactTimes = new WeakMap<object, number>();
-
-export function scheduleProjectileImpact(
-  state: Readonly<GameState>,
-  projectile: GameState['projectiles'][number],
-  currentTime: number,
-): void {
-  if (projectileImpactTimes.has(projectile)) {
-    return;
-  }
-
-  const target = state.monsters.find(({ id }) => id === projectile.targetId);
-  if (target === undefined) {
-    return;
-  }
-
-  const distance = getDistance(projectile.position, getRoutePosition(target.routeProgress));
-  projectileImpactTimes.set(projectile, currentTime + distance / (PROJECTILE_SPEED - MONSTER_SPEED));
-}
 
 /**
  * Прогнозирует ближайший момент попадания активного снаряда в назначенную цель.
@@ -38,17 +22,20 @@ export function scheduleProjectileImpact(
  */
 export function predictNextProjectileImpactTime(state: Readonly<GameState>, currentTime: number): number | null {
   const impactTimes = state.projectiles.flatMap((projectile) => {
-    scheduleProjectileImpact(state, projectile, currentTime);
-    const impactTime = projectileImpactTimes.get(projectile);
-    return impactTime === undefined ? [] : [impactTime];
+    const target = state.monsters.find(({ id }) => id === projectile.targetId);
+    if (target === undefined) {
+      return [];
+    }
+
+    const delay = predictProjectileImpactDelay(projectile.position, target.routeProgress);
+    return delay === null ? [] : [currentTime + delay];
   });
 
   return impactTimes.length === 0 ? null : Math.min(...impactTimes);
 }
 
-export function isProjectileImpactDue(projectile: GameState['projectiles'][number], currentTime: number): boolean {
-  const impactTime = projectileImpactTimes.get(projectile);
-  return impactTime !== undefined && impactTime <= currentTime + DISTANCE_TOLERANCE;
+export function isProjectileImpactDue(projectile: GameState['projectiles'][number], targetPosition: Position): boolean {
+  return getDistance(projectile.position, targetPosition) <= DISTANCE_TOLERANCE;
 }
 
 export function calculateNextProjectileStepTime(state: Readonly<GameState>, currentTime: number): number | null {
@@ -110,4 +97,76 @@ export function getProjectileTargetDistance(state: Readonly<GameState>, projecti
 
 function getDistance(left: Position, right: Position): number {
   return Math.hypot(left.x - right.x, left.y - right.y);
+}
+
+function predictProjectileImpactDelay(projectilePosition: Position, targetRouteProgress: number): number | null {
+  const currentTargetPosition = getRoutePosition(targetRouteProgress);
+  if (getDistance(projectilePosition, currentTargetPosition) <= DISTANCE_TOLERANCE) {
+    return 0;
+  }
+
+  let segmentStartProgress = 0;
+
+  for (let index = 1; index < levelConfig.routeWaypoints.length; index += 1) {
+    const segmentStart = levelConfig.routeWaypoints[index - 1]!;
+    const segmentEnd = levelConfig.routeWaypoints[index]!;
+    const segmentLength = getAxisAlignedSegmentLength(segmentStart, segmentEnd);
+    const segmentEndProgress = segmentStartProgress + segmentLength;
+
+    if (segmentEndProgress < targetRouteProgress - DISTANCE_TOLERANCE) {
+      segmentStartProgress = segmentEndProgress;
+      continue;
+    }
+
+    const activeSegmentStartProgress = Math.max(segmentStartProgress, targetRouteProgress);
+    const startDelay = (activeSegmentStartProgress - targetRouteProgress) / MONSTER_SPEED;
+    const endDelay = (segmentEndProgress - targetRouteProgress) / MONSTER_SPEED;
+    const velocity = {
+      x: ((segmentEnd.x - segmentStart.x) / segmentLength) * MONSTER_SPEED,
+      y: ((segmentEnd.y - segmentStart.y) / segmentLength) * MONSTER_SPEED,
+    };
+    const activeSegmentStartPosition = getRoutePosition(activeSegmentStartProgress);
+    const extrapolatedTargetOrigin = {
+      x: activeSegmentStartPosition.x - velocity.x * startDelay,
+      y: activeSegmentStartPosition.y - velocity.y * startDelay,
+    };
+    const relativeOrigin = {
+      x: extrapolatedTargetOrigin.x - projectilePosition.x,
+      y: extrapolatedTargetOrigin.y - projectilePosition.y,
+    };
+    const impactDelay = findInterceptDelay(relativeOrigin, velocity, startDelay, endDelay);
+
+    if (impactDelay !== null) {
+      return impactDelay;
+    }
+
+    segmentStartProgress = segmentEndProgress;
+  }
+
+  return null;
+}
+
+function findInterceptDelay(
+  relativeOrigin: Position,
+  targetVelocity: Position,
+  minimumDelay: number,
+  maximumDelay: number,
+): number | null {
+  const a =
+    targetVelocity.x * targetVelocity.x + targetVelocity.y * targetVelocity.y - PROJECTILE_SPEED * PROJECTILE_SPEED;
+  const b = 2 * (relativeOrigin.x * targetVelocity.x + relativeOrigin.y * targetVelocity.y);
+  const c = relativeOrigin.x * relativeOrigin.x + relativeOrigin.y * relativeOrigin.y;
+  const discriminant = b * b - 4 * a * c;
+
+  if (discriminant < -DISTANCE_TOLERANCE) {
+    return null;
+  }
+
+  const squareRoot = Math.sqrt(Math.max(0, discriminant));
+  const roots = [(-b - squareRoot) / (2 * a), (-b + squareRoot) / (2 * a)].sort((left, right) => left - right);
+
+  return (
+    roots.find((root) => root >= Math.max(0, minimumDelay) - TIME_TOLERANCE && root <= maximumDelay + TIME_TOLERANCE) ??
+    null
+  );
 }

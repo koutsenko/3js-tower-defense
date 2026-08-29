@@ -23,6 +23,10 @@ export class FixedStepLoop {
     private readonly renderFrame: RenderFrame,
   ) {}
 
+  reset(): void {
+    this.accumulatorSeconds = 0;
+  }
+
   advanceFrame(frameDeltaSeconds: number): void {
     assertValidFrameDelta(frameDeltaSeconds);
 

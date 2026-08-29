@@ -43,6 +43,10 @@ export class SceneRenderer {
     this.transientEffects.present(events, snapshot, this.entityReconciler);
   }
 
+  resetSessionPresentation(): void {
+    this.transientEffects.clear();
+  }
+
   dispose(): void {
     this.entityReconciler.dispose();
     this.transientEffects.dispose();
