@@ -150,6 +150,7 @@ For the current feature, use:
 ## Language
 
 - Repository instructions, code identifiers, filenames, and APIs use English.
+- Root `README.md` uses Russian prose with English technical identifiers, filenames, commands, and APIs.
 - Specifications, plans, tasks, and change requests use Russian prose with English technical identifiers.
 - Code comments may use Russian when they explain domain or mathematical intent for the current project audience; keep
   identifiers and API terminology in English.

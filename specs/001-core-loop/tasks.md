@@ -2,7 +2,7 @@
 
 **Feature:** `001-core-loop`
 
-**Status:** Ready
+**Status:** Complete
 
 **Sources:** approved `spec.md` and approved `plan.md`
 
