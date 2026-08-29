@@ -336,6 +336,12 @@ acceptance criteria и поддерживает `NFR-001`.
   session;
 - runtime и browser application Restart regression tests проходят.
 
+**Implementation follow-up verification (2026-08-29):**
+
+- reset распознаётся при переходе terminal status в любой non-terminal status;
+- последовательность `Restart → StartGame` между animation frames не наследует
+  timing или transient presentation state.
+
 ### T-010 — Подтвердить two-tower balance fixture
 
 **Статус:** Complete.
@@ -399,6 +405,12 @@ acceptance criteria и поддерживает `NFR-001`.
 - unit test подтверждает отсутствие simulation step после reset до накопления
   полного нового fixed interval.
 
+**Implementation follow-up verification (2026-08-29):**
+
+- reset выполняется до вычисления и обработки frame delta;
+- regression test подтверждает `simulationTime = 0` после межкадрового
+  `Restart → StartGame` и последующего неполного fixed interval.
+
 ### T-012 — Создать functional placeholder level scene и fixed camera
 
 **Статус:** Complete.
@@ -460,6 +472,11 @@ acceptance criteria и поддерживает `NFR-001`.
 - `TransientEffects.clear()` синхронно удаляет и освобождает active effects;
 - rendering unit test и browser composition test подтверждают очистку при
   полном session reset.
+
+**Implementation follow-up verification (2026-08-29):**
+
+- browser composition regression test подтверждает очистку transient effects,
+  даже если первый snapshot новой session уже имеет status `Preparation`.
 
 ### T-014 — Реализовать mouse placement и rejection feedback
 
@@ -594,6 +611,14 @@ assets.
 - визуально проверены обновлённые `wave-active.png` и
   `wave-earned-build.png`: level, HUD, towers, monsters и HP bars остаются
   видимыми, residual effects новой session не обнаружены.
+
+**Implementation follow-up gate (2026-08-29):**
+
+- `npm test` — 19 test files, 106 tests passed;
+- `npm run lint` — ESLint и Prettier checks passed;
+- `npm run build` — TypeScript check и production Vite build passed;
+- `npm run capture:acceptance` — полный browser acceptance flow прошёл после
+  исправления межкадрового Restart detection.
 
 ### 5.1 Итоговая acceptance matrix
 

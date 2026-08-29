@@ -19,9 +19,14 @@ export interface Application {
 export interface ApplicationOptions {
   readonly renderFrame: RenderFrame;
   readonly runtime?: GameRuntime;
+  readonly shouldResetTimingBeforeFrame?: (snapshot: GameSnapshot) => boolean;
 }
 
-export function createApplication({ renderFrame, runtime = new GameRuntime() }: ApplicationOptions): Application {
+export function createApplication({
+  renderFrame,
+  runtime = new GameRuntime(),
+  shouldResetTimingBeforeFrame = () => false,
+}: ApplicationOptions): Application {
   const loop = new FixedStepLoop(runtime, renderFrame);
   let animationFrameId: number | null = null;
   let previousTimestamp: number | null = null;
@@ -29,6 +34,11 @@ export function createApplication({ renderFrame, runtime = new GameRuntime() }: 
   const onAnimationFrame = (timestamp: number): void => {
     if (animationFrameId === null) {
       return;
+    }
+
+    if (shouldResetTimingBeforeFrame(runtime.getSnapshot())) {
+      loop.reset();
+      previousTimestamp = null;
     }
 
     const deltaSeconds = previousTimestamp === null ? 0 : (timestamp - previousTimestamp) / 1000;
@@ -133,15 +143,7 @@ export function createBrowserApplication(
   scene.scene.add(placement.root);
 
   let previousStatus = runtime.getSnapshot().status;
-  let resetLoop = (): void => undefined;
-
   const renderFrame: RenderFrame = ({ snapshot, events }) => {
-    const sessionRestarted =
-      (previousStatus === 'Victory' || previousStatus === 'Defeat') && snapshot.status === 'Ready';
-    if (sessionRestarted) {
-      resetLoop();
-      scene.resetSessionPresentation();
-    }
     scene.presentEvents(events, snapshot);
     scene.reconcile(snapshot);
     hud.render(snapshot);
@@ -150,8 +152,20 @@ export function createBrowserApplication(
     scene.render();
     previousStatus = snapshot.status;
   };
-  const animation = createApplication({ runtime, renderFrame });
-  resetLoop = animation.resetTiming;
+  const animation = createApplication({
+    runtime,
+    renderFrame,
+    shouldResetTimingBeforeFrame(snapshot) {
+      const previousWasTerminal = previousStatus === 'Victory' || previousStatus === 'Defeat';
+      const currentIsTerminal = snapshot.status === 'Victory' || snapshot.status === 'Defeat';
+      if (!previousWasTerminal || currentIsTerminal) {
+        return false;
+      }
+
+      scene.resetSessionPresentation();
+      return true;
+    },
+  });
 
   const resize = (): void => {
     const bounds = root.getBoundingClientRect();

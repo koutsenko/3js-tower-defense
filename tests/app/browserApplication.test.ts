@@ -2,6 +2,8 @@ import { Camera, Object3D, Scene } from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createBrowserApplication, type BrowserApplicationOptions } from '../../src/app/createApplication';
 import type { GameEvent } from '../../src/game/events';
+import { GameRuntime } from '../../src/game/GameRuntime';
+import { createInitialState } from '../../src/game/state';
 import type { GameSnapshot } from '../../src/game/types';
 
 describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-014, AC-015)', () => {
@@ -75,6 +77,35 @@ describe('browser application composition (FR-001–FR-015; AC-001–AC-012, AC-
     });
     expect(fixture.scene.resetSessionPresentation).toHaveBeenCalledOnce();
 
+    application.dispose();
+  });
+
+  it('resets timing and transient effects when Restart and StartGame happen between frames', () => {
+    const state = createInitialState();
+    state.status = 'Victory';
+    state.simulationTime = 42;
+    state.phaseStartedAt = 20;
+    state.spawnedCount = 10;
+    state.killedCount = 10;
+    const runtime = new GameRuntime(state);
+    const fixture = createFixture();
+    const application = createBrowserApplication(createRoot(1280, 720), {
+      ...fixture.options,
+      runtime,
+    });
+    application.start();
+    fixture.runFrame(0);
+    fixture.runFrame(15);
+
+    expect(runtime.dispatch({ type: 'Restart' })).toEqual({ ok: true });
+    expect(runtime.dispatch({ type: 'StartGame' })).toEqual({ ok: true });
+    fixture.runFrame(18);
+
+    expect(runtime.getSnapshot()).toMatchObject({ status: 'Preparation', simulationTime: 0 });
+    expect(fixture.scene.resetSessionPresentation).toHaveBeenCalledOnce();
+
+    fixture.runFrame(26);
+    expect(runtime.getSnapshot().simulationTime).toBe(0);
     application.dispose();
   });
 });
