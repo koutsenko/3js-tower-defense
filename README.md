@@ -22,8 +22,6 @@ npm install                         # Установить зависимост�
 npm run dev                         # Запустить dev server; URL появится в терминале
 npm run build                       # Создать production-сборку в каталоге dist/
 npm test                            # Запустить полный набор автоматических тестов
-npx playwright install chromium     # Опционально установить Chromium для Playwright
-npm run capture:acceptance          # Опционально создать acceptance-скриншоты
 ```
 
 ## Playwright
@@ -31,6 +29,11 @@ npm run capture:acceptance          # Опционально создать acce
 Playwright используется для опциональной проверки основного игрового цикла и
 создания acceptance-скриншотов. Для обычного запуска, сборки и автоматических
 тестов этот шаг не требуется.
+
+```bash
+npx playwright install chromium     # Установить Chromium для Playwright
+npm run capture:acceptance          # Создать acceptance-скриншоты
+```
 
 Команда `npm run capture:acceptance` запускает приложение в Chromium,
 воспроизводит сценарии `Victory`, `Defeat` и `Restart` и сохраняет скриншоты в
